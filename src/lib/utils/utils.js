@@ -58,7 +58,6 @@ export async function login(user_id) {
 
 
 export async function logout() {
-  // Destroy the session
   cookies().set("session", "", { expires: new Date(0) });
 }
 
