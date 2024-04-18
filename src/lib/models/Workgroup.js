@@ -5,6 +5,4 @@ const workgroupSchema = new mongoose.Schema({
   USER_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
-const Workgroup = mongoose.model('Workgroup', workgroupSchema);
-
-module.exports = Workgroup;
+export const Workgroup = mongoose.models?.Workgroup || mongoose.model('Workgroup', workgroupSchema)

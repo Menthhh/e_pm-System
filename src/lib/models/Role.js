@@ -5,6 +5,4 @@ const roleSchema = new mongoose.Schema({
     ACTION_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Action' }]
 });
 
-const Role = mongoose.model('Role', roleSchema);
-
-module.exports = Role;
+export const Role = mongoose.models?.Role || mongoose.model('Role', roleSchema)

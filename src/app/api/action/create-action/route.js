@@ -1,24 +1,15 @@
 import { connectToDb } from "@/lib/utils/utils.js";
-import {User} from "@/lib/models/User.js";
+import { Action } from "@/lib/models/Action.js";
 import { NextResponse } from 'next/server';
 
 export const POST = async (req, res) => {
     await connectToDb();
     const body = await req.json();
-    const { EMP_NUMBER, EMP_NAME, TEAM, POSITION, EMAIL, SEC, PASSWORD } = body;
+    const { ACTION_NAME } = body;
     try {
-        const user = new User({
-            EMP_NUMBER,
-            EMP_NAME,
-            TEAM,
-            POSITION,
-            EMAIL,
-            SEC,
-            PASSWORD
-        });
-        await user.save();
-        return NextResponse.json({ message: "User created successfully", file: __filename});
+        const action = await Action.create({ ACTION_NAME });
+        return NextResponse.json({ message: "Action created successfully", action });
     } catch(err) {
-        return NextResponse.json({ message: "User creation failed", file: __filename, error: err.message});
+        return NextResponse.json({ message: "Action creation failed", file: __filename, error: err.message });
     }
 };

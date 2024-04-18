@@ -1,15 +1,18 @@
 import { connectToDb } from "@/lib/utils/utils.js";
-import { User } from "@/lib/models/User.js";
+import { Action } from "@/lib/models/Action.js";
 import { NextResponse } from 'next/server';
 
 export const DELETE = async (req, {params}) => {
     await connectToDb();
-    const { user_id } = params;
+    const { action_id } = params;
     try {
-        await User.findByIdAndDelete(user_id);
-        return NextResponse.json({ message: "User deleted successfully", file: __filename});
+        const action = await Action.findByIdAndDelete(action_id);
+        if (!action) {
+            return NextResponse.json({ message: "Action not found", file: __filename });
+        }
+        return NextResponse.json({ message: "Action deleted successfully", action });
     } catch (err) {
-        return NextResponse.json({ message: "User deletion failed", file: __filename, error: err.message});
+        return NextResponse.json({ message: "Action deletion failed", file: __filename, error: err.message });
     }
 
 };

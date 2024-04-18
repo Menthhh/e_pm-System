@@ -1,15 +1,15 @@
 import { connectToDb } from "@/lib/utils/utils.js";
-import { User } from "@/lib/models/User.js";
+import { Role } from "@/lib/models/Role.js";
 import { NextResponse } from 'next/server';
 
 export const DELETE = async (req, {params}) => {
     await connectToDb();
-    const { user_id } = params;
+    const { role_id } = params;
     try {
-        await User.findByIdAndDelete(user_id);
-        return NextResponse.json({ message: "User deleted successfully", file: __filename});
+        await Role.findByIdAndDelete(role_id);
+        return NextResponse.json({ message: "Role deleted successfully" });
     } catch (err) {
-        return NextResponse.json({ message: "User deletion failed", file: __filename, error: err.message});
+        return NextResponse.json({ message: "Role deletion failed", file: __filename, error: err.message });
     }
 
 };

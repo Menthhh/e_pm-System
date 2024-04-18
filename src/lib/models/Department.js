@@ -5,6 +5,4 @@ const departmentSchema = new mongoose.Schema({
   USER_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }] 
 });
 
-const Department = mongoose.model('Department', departmentSchema);
-
-module.exports = Department;
+export const Department = mongoose.models?.Department || mongoose.model('Department', departmentSchema);

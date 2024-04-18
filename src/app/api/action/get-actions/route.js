@@ -1,13 +1,13 @@
 import { connectToDb } from "@/lib/utils/utils.js";
-import { User } from "@/lib/models/User.js";
+import { Action } from "@/lib/models/Action.js";
 import { NextResponse } from 'next/server';
 
 export const GET = async (req) => {
     await connectToDb();
     try {
-        const users = await User.find();
-        return NextResponse.json({ users, file: __filename});
+        const actions = await Action.find();
+        return NextResponse.json({ message: "Read all actions successful", actions });
     } catch (err) {
-        return NextResponse.json({ message: "Read all users failed ", file: __filename, error: err.message});
+        return NextResponse.json({ message: "Read all actions failed", file: __filename, error: err.message });
     }
 };
