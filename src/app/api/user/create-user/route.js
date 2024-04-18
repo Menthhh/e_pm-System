@@ -5,11 +5,12 @@ import { NextResponse } from 'next/server';
 export const POST = async (req, res) => {
     await connectToDb();
     const body = await req.json();
-    const { EMP_NUMBER, EMP_NAME, TEAM, POSITION, EMAIL, SEC, PASSWORD } = body;
+    const { EMP_NUMBER, EMP_NAME, USERNAME, TEAM, POSITION, EMAIL, SEC, PASSWORD } = body;
     try {
         const user = new User({
             EMP_NUMBER,
             EMP_NAME,
+            USERNAME,
             TEAM,
             POSITION,
             EMAIL,
@@ -17,7 +18,7 @@ export const POST = async (req, res) => {
             PASSWORD
         });
         await user.save();
-        return NextResponse.json({ message: "User created successfully", file: __filename});
+        return NextResponse.json({ message: "User created successfully", user });
     } catch(err) {
         return NextResponse.json({ message: "User creation failed", file: __filename, error: err.message});
     }

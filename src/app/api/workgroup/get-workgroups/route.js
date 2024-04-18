@@ -1,13 +1,13 @@
 import { connectToDb } from "@/lib/utils/utils.js";
-import { User } from "@/lib/models/User.js";
+import { Workgroup } from "@/lib/models/Workgroup.js";
 import { NextResponse } from 'next/server';
 
 export const GET = async (req) => {
     await connectToDb();
     try {
-        const users = await User.find();
-        return NextResponse.json({ users, file: __filename});
+        const workgroups = await Workgroup.find();
+        return NextResponse.json({ message: "Read all workgroups successful", workgroups });
     } catch (err) {
-        return NextResponse.json({ message: "Read all users failed ", file: __filename, error: err.message});
+        return NextResponse.json({ message: "Read all workgroups failed", file: __filename, error: err.message });
     }
 };

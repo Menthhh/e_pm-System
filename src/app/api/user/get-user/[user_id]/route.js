@@ -7,7 +7,10 @@ export const GET = async (req, {params}) => {
     const { user_id } = params;
     try {
         const user = await User.findById(user_id);
-        return NextResponse.json({ user, file: __filename});
+        if (!user) {
+            return NextResponse.json({ message: "User not found", file: __filename });
+        }
+        return NextResponse.json({ message: "User found", user });
     } catch (err) {
         return NextResponse.json({ message: "User deletion failed", file: __filename, error: err.message});
     }

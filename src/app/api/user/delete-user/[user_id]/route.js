@@ -6,8 +6,11 @@ export const DELETE = async (req, {params}) => {
     await connectToDb();
     const { user_id } = params;
     try {
-        await User.findByIdAndDelete(user_id);
-        return NextResponse.json({ message: "User deleted successfully", file: __filename});
+        const user = await User.findByIdAndDelete(user_id);
+        if (!user) {
+            return NextResponse.json({ message: "User not found", file: __filename });
+        }
+        return NextResponse.json({ message: "User deleted successfully", user });
     } catch (err) {
         return NextResponse.json({ message: "User deletion failed", file: __filename, error: err.message});
     }

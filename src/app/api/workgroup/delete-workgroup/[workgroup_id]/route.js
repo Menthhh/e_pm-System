@@ -1,15 +1,18 @@
 import { connectToDb } from "@/lib/utils/utils.js";
-import { User } from "@/lib/models/User.js";
+import { Workgroup } from "@/lib/models/Workgroup.js";
 import { NextResponse } from 'next/server';
 
 export const DELETE = async (req, {params}) => {
     await connectToDb();
-    const { user_id } = params;
+    const { workgroup_id } = params;
     try {
-        await User.findByIdAndDelete(user_id);
-        return NextResponse.json({ message: "User deleted successfully", file: __filename});
+        const workgroup = await Workgroup.findByIdAndDelete(workgroup_id);
+        if (!workgroup) {
+            return NextResponse.json({ message: "Workgroup not found", file: __filename });
+        }
+        return NextResponse.json({ message: "Workgroup deleted successfully", workgroup });
     } catch (err) {
-        return NextResponse.json({ message: "User deletion failed", file: __filename, error: err.message});
+        return NextResponse.json({ message: "Workgroup deletion failed", file: __filename, error: err.message });
     }
 
 };

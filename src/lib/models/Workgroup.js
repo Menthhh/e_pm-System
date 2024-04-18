@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const workgroupSchema = new mongoose.Schema({
   WORKGROUP_NAME: { type: String, required: true },

@@ -6,7 +6,7 @@ export const GET = async (req) => {
     await connectToDb();
     try {
         const users = await User.find();
-        return NextResponse.json({ users, file: __filename});
+        return NextResponse.json({ message: "Read all users successful", users });
     } catch (err) {
         return NextResponse.json({ message: "Read all users failed ", file: __filename, error: err.message});
     }
