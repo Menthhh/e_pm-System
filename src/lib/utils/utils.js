@@ -1,8 +1,7 @@
 import mongoose from "mongoose"
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
-import { User } from "@/lib/models/User.js";
+
 
 const secretKey = "secret";
 const key = new TextEncoder().encode(secretKey);
@@ -40,18 +39,13 @@ export async function decrypt(input) {
 }
 
 export async function login(user_id) {
-  await connectToDb();
-  const user = await User.findById(user_id);
-
+  
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + 7);
   const expires = expirationDate
-  const session = await encrypt({ user, expires });
+  const session = await encrypt({ user_id, expires });
 
   cookies().set("session", session, { expires, httpOnly: true });
-
-  console.log(cookies());
-
 
   return session;
 }
@@ -63,7 +57,6 @@ export async function logout() {
 
 export async function getSession() {
   const session = cookies().get("session")?.value;
-  // console.log(cookies())
   if (!session) return { message: "Session not found" };
   return await decrypt(session);
 }
@@ -76,11 +69,8 @@ export async function updateSession(request) {
 
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + 7);
-
   parsed.expires = expirationDate;
-
-  console.log("Expires", parsed.expires);
-
+  
   const res = new NextResponse();
   res.cookies.set({
     name: "session",
