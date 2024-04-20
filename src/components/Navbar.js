@@ -1,7 +1,10 @@
+import { getSession } from '@/lib/utils/utils';
 import { TypeAnimation } from 'react-type-animation';
 
 
 const Navbar = () => {
+    const session = getSession();
+    console.log(session)
     return (
         <nav className="w-full h-auto p-4 bg-gray-500 flex gap-5 -z-10">
             <TypeAnimation

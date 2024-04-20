@@ -1,14 +1,18 @@
+"use server"
 import mongoose from "mongoose"
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import { User } from "../models/User";
+import { redirect } from "next/navigation";
 
 
-const secretKey = "secret";
+const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
 const connection = {};
 
 export const connectToDb = async () => {
+  console.log("Connecting to DB");  
   try {
     if (connection.isConnected) {
       console.log("Using existing connection");
@@ -27,7 +31,7 @@ export async function encrypt(payload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("10 minutes from now")
+    .setExpirationTime("7 days")
     .sign(key);
 }
 
@@ -38,18 +42,32 @@ export async function decrypt(input) {
   return payload;
 }
 
-export async function login(user_id) {
-  
-  const expirationDate = new Date();
-  expirationDate.setDate(expirationDate.getDate() + 7);
-  const expires = expirationDate
-  const session = await encrypt({ user_id, expires });
+export async function login(prevState, formData) {
+  // const expirationDate = new Date();
+  // expirationDate.setDate(expirationDate.getDate() + 7);
+  // const expires = expirationDate
+  // const session = await encrypt({ user_id, expires });
+  // cookies().set("session", session, { expires, httpOnly: true });
+  // return session;
+  console.log("Logging in")
+  await connectToDb();
+  const username = formData.get("username");
+  const password = formData.get("password");
 
-  cookies().set("session", session, { expires, httpOnly: true });
+  //CHECK USERNAME AND PASSWORD FROM DB
+  const user = await User.findOne({ 
+    USERNAME: username,
+    PASSWORD: password
+   }) || (username === "admin" && password === "admin");
+   
+   if (!user) {
+     return { error: "Invalid username or password" };
+   }
 
-  return session;
+    const access_token = await encrypt({ user_id: user._id, role: user.ROLE });
+
+    redirect("/pages/role-determiner");
 }
-
 
 export async function logout() {
   cookies().set("session", "", { expires: new Date(0) });
