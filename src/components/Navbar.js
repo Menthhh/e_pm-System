@@ -1,4 +1,3 @@
-import { getSession } from '@/lib/utils/utils';
 import { TypeAnimation } from 'react-type-animation';
 
 
@@ -7,7 +6,6 @@ const Navbar = () => {
         <nav className="w-full h-auto p-4 bg-gray-500 flex gap-5 -z-10">
             <TypeAnimation
                 sequence={[
-                    // Same substring at the start will only be typed out once, initially
                     'e_pm',
                     5000,
                     "",
