@@ -16,11 +16,13 @@ export default function LoginForm() {
           <input
             className="ring-1 ring-black p-4 rounded-sm w-64"
             type="text"
+            name="username"
             placeholder="username"
           />
           <input
             className="ring-1 ring-black p-4 rounded-sm w-64"
             type="text"
+            name="password"
             placeholder="password"
           />
           <button className="bg-blue-600 text-white py-3 w-full rounded-md hover:bg-blue-500">

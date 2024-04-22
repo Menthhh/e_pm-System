@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const TableComponent = ({ headers, datas, searchColumn}) => {
+const TableComponent = ({ headers, datas, searchColumn = ""}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const pageSize = 10; // Number of rows per page

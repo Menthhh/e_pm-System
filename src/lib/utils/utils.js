@@ -53,7 +53,7 @@ export async function login(prevState, formData) {
   await connectToDb();
   const username = formData.get("username");
   const password = formData.get("password");
-
+  console.log(username, password)
   //CHECK USERNAME AND PASSWORD FROM DB
   const user = await User.findOne({ 
     USERNAME: username,
@@ -64,7 +64,6 @@ export async function login(prevState, formData) {
      return { error: "Invalid username or password" };
    }
 
-    const access_token = await encrypt({ user_id: user._id, role: user.ROLE });
 
     redirect("/pages/role-determiner");
 }
