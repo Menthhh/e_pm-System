@@ -56,14 +56,14 @@ const Listbox = ({ data, handleSelectedList  }) => {
                     </li>
                 ))}
             </ul>
-            <div>
+            {/* <div>
                 <p>Selected items:</p>
                 <ul>
                     {selectedItems.map((itemId, index) => (
                         <li key={index}>{getItemName(itemId)}</li>
                     ))}
                 </ul>
-            </div>
+            </div> */}
         </div>
     );
 };

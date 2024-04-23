@@ -65,7 +65,7 @@ export async function login(prevState, formData) {
    }
 
 
-    redirect("/pages/role-determiner");
+    redirect("/pages/create-role");
 }
 
 export async function logout() {

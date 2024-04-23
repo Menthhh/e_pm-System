@@ -2,24 +2,48 @@ import { TypeAnimation } from 'react-type-animation';
 import { IconButton } from '@mui/material';
 import { ExitToApp } from '@mui/icons-material';
 import Link from 'next/link';
+import { useState } from 'react';
 
 const Navbar = () => {
+    const [showMenu, setShowMenu] = useState(false);
+
+    const toggleMenu = () => {
+        setShowMenu(!showMenu);
+    };
+
+    const closeMenu = () => {
+        setShowMenu(false);
+    };
 
     return (
-        <nav className="w-full h-auto p-4 bg-blue-500 flex justify-between items-center shadow-lg text-white font-bold">
-            <TypeAnimation 
-                sequence={[
-                    'e_pm',
-                    5000,
-                    "",
-                    5000,
-                ]}
-                wrapper="span"
-                speed={50}
-                style={{ fontSize: '2em', display: 'inline-block' }}
-                repeat={Infinity}
-            />
-            <IconButton color="inherit">
+        <nav className="w-full h-16 p-4 bg-blue-500 flex justify-between items-center shadow-lg text-white font-bold relative">
+            <div className="flex flex-col gap-2 cursor-pointer" onClick={toggleMenu}>
+                <div className={`bg-white w-8 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div> 
+                <div className={`bg-white w-8 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div> 
+                <div className={`bg-white w-8 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div> 
+            </div>
+            <div className={`bg-blue-400 h-screen z-50 left-0 top-0 absolute w-1/4 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'}`}>
+                <button className="absolute top-4 right-4" onClick={closeMenu}>
+                    <span className="sr-only">Close</span>
+                    <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <ul className="mt-10 text-white">
+                    <li className="mb-4">
+                        <Link href="/pages/create-role"  className="block px-4 py-2 hover:bg-blue-600 " >
+                            Create Role
+                        </Link>
+                    </li>
+                    <li className="mb-4">
+                        <Link href="/pages/create-workgroup"  className="block px-4 py-2 hover:bg-blue-600">
+                            Create WorkGroup
+                        </Link>
+                    </li>
+                </ul>
+            </div>
+            <IconButton color="inherit" className="flex gap-3 font-medium text-sm">
+                <p className="text-sm">Tonkla Pokaew</p>
                 <Link href="/pages/login">
                     <ExitToApp />
                 </Link>

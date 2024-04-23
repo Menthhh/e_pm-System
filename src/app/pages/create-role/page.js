@@ -2,15 +2,16 @@
 import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import TableComponent from "@/components/TableComponent";
-import axios from "axios";
 import Link from "next/link";
 
+const headers = ["ID", "Role", "Action"];
 
 const Page = () => {
     const [roles, setRoles] = useState([]);
     const [newRoles, setNewRoles] = useState(false);
     const newRoleInput = useRef(null);
     const [refresh, setRefresh] = useState(false);
+
 
     useEffect(() => {
         fetchRoles();
@@ -29,8 +30,6 @@ const Page = () => {
         }
     };
 
-    const headers = ["ID", "Role", "Action"];
-
     const data = roles.map((role, index) => ({
         id: index + 1,
         Role: role.ROLE_NAME,
@@ -41,7 +40,7 @@ const Page = () => {
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     href={
                         {
-                            pathname: "/pages/role-edit",
+                            pathname: "/pages/edit-role",
                             query: { role_id: role._id },
 
                         }
@@ -110,6 +109,7 @@ const Page = () => {
         </form>
     );
 
+
     return (
         <div className="w-full h-screen flex flex-col gap-4 items-center relative">
             <Navbar />
@@ -134,13 +134,6 @@ const Page = () => {
                     </button>
                 )}
                 {newRoles && newRoleFormInput}
-            </div>
-            <div>
-                <dialog open>
-                    <h1>Are you sure you want to delete this role?</h1>
-                    <button>Yes</button>
-                    <button>No</button>
-                </dialog>
             </div>
             
         </div>
