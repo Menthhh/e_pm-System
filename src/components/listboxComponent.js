@@ -1,41 +1,63 @@
 import React, { useState } from 'react';
 
-// Import necessary libraries
-
 // Define the Listbox component
-const Listbox = ({nameList, idList}) => {
+const Listbox = ({ data }) => {
     // State for storing the search query
-
-    // console.log(nameList)
     const [searchQuery, setSearchQuery] = useState('');
+    const [selectedItems, setSelectedItems] = useState([]);
 
-    // State for storing the list of items
-    //const [items, setItems] = useState('');
-    
     // Function to handle search query change
     const handleSearchQueryChange = (event) => {
         setSearchQuery(event.target.value);
     };
 
-    const filteredItems = nameList.filter((item) =>
-        item.toLowerCase().includes(searchQuery.toLowerCase())
+    // Function to handle checkbox change
+    const handleCheckboxChange = (itemId) => {
+        if (selectedItems.includes(itemId)) {
+            // Remove item from selectedItems
+            setSelectedItems(selectedItems.filter(id => id !== itemId));
+        } else {
+            // Add item to selectedItems
+            setSelectedItems([...selectedItems, itemId]);
+        }
+        console.log(selectedItems)
+    };
+
+    // Filter items based on search query
+    const filteredItems = data.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     return (
-        <div style={{'border':'1px solid gray','padding':'10px',borderRadius:'5px'} } >
+        <div style={{ border: '1px solid gray', padding: '10px', borderRadius: '5px' }}>
             <input
                 type="text"
-                style={{'border':'1px solid #ccc','border-radius':'5px','padding':'5px'}}
+                style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '5px' }}
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={handleSearchQueryChange}
             />
             <p></p>
-            <ul style={{border:'1px solid gray'}} className="overflow-scroll h-96">
+            <ul style={{ border: '1px solid gray', maxHeight: '200px', overflowY: 'auto' }}>
                 {filteredItems.map((item, index) => (
-                    <li key={index}><input id={ idList }type='checkbox' />&nbsp;&nbsp;&nbsp;{nameList}</li>
+                    <li key={index}>
+                        <input
+                            id={item._id}
+                            type='checkbox'
+                            checked={selectedItems.includes(item._id)}
+                            onChange={() => handleCheckboxChange(item._id)}
+                        />&nbsp;&nbsp;&nbsp;{item.name}
+                    </li>
                 ))}
             </ul>
+            <div>
+                <p>Selected items:</p>
+                <ul>
+                    {selectedItems.map((itemId, index) => (
+                        <li key={index}>{itemId}</li>
+                    ))}
+                </ul>
+            </div>
         </div>
     );
 };

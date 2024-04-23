@@ -80,14 +80,13 @@ const Page = () => {
     const handleDelete = async (id) => {
         try {
             await axios.delete(`http://localhost:3000/api/role/delete-role/${id}`);
-            setNewRoles(!newRoles); // Trigger page refresh by toggling newRoles state
         } catch (error) {
             console.error("Error deleting role:", error);
         }
     };
 
     const newRoleFormInput = (
-        <form onSubmit={createRole} className="flex gap-4">
+        <form onSubmit={createRole} className="flex gap-4 fixed">
             <input
                 type="text"
                 placeholder="Role Name"
@@ -107,9 +106,9 @@ const Page = () => {
     );
 
     return (
-        <div className="w-full h-screen flex flex-col gap-10 items-center relative">
+        <div className="w-full h-screen flex flex-col gap-4 items-center relative">
             <Navbar />
-            <div className="container mx-auto px-4">
+            <div className="container mx-auto px-4 h-1/2 overflow-scrol">
                 {roles.length > 0 && (
                     <TableComponent
                         headers={headers}
@@ -118,12 +117,12 @@ const Page = () => {
                     />
                 )}
             </div>
-            <div className="flex gap-5 absolute left-6 bottom-5">
+            <div className="flex gap-5 absolute left-6 bottom-11 fixed">
                 {newRoles ? (
                     " "
                 ) : (
                     <button
-                        className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md"
+                        className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md fixed"
                         onClick={onClickNewRole}
                     >
                         New Role

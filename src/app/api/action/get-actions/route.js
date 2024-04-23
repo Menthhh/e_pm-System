@@ -6,7 +6,12 @@ export const GET = async (req) => {
     await connectToDb();
     try {
         const actions = await Action.find();
-        return NextResponse.json({ message: "Read all actions successful", actions });
+        const data = actions.map((action) => ({
+            _id: action._id,
+            name: action.ACTION_NAME,
+           
+        }));
+        return NextResponse.json({ actionList:data, status: "200" });
     } catch (err) {
         return NextResponse.json({ message: "Read all actions failed", file: __filename, error: err.message });
     }
