@@ -1,32 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// Define the Listbox component
-const Listbox = ({ data }) => {
-    // State for storing the search query
+const Listbox = ({ data, handleSelectedList  }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedItems, setSelectedItems] = useState([]);
 
-    // Function to handle search query change
     const handleSearchQueryChange = (event) => {
         setSearchQuery(event.target.value);
     };
 
-    // Function to handle checkbox change
     const handleCheckboxChange = (itemId) => {
-        if (selectedItems.includes(itemId)) {
-            // Remove item from selectedItems
-            setSelectedItems(selectedItems.filter(id => id !== itemId));
-        } else {
-            // Add item to selectedItems
-            setSelectedItems([...selectedItems, itemId]);
-        }
-        console.log(selectedItems)
+        // Toggle the selection of the clicked item
+        const newSelectedItems = selectedItems.includes(itemId)
+            ? selectedItems.filter(id => id !== itemId) // Remove item if already selected
+            : [...selectedItems, itemId]; // Add item if not selected
+    
+        // Update the selectedItems state immediately
+        setSelectedItems(newSelectedItems);
+    
+        // Pass the updated selectedItems to the parent component
+        handleSelectedList(newSelectedItems);
     };
+    
+    useEffect(() => {
+        handleSelectedList(selectedItems);
+    }, [selectedItems]);
 
-    // Filter items based on search query
     const filteredItems = data.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
     );
+
+    const getItemName = (itemId) => {
+        const selectedItem = data.find(item => item._id === itemId);
+        return selectedItem ? selectedItem.name : '';
+    };
 
     return (
         <div style={{ border: '1px solid gray', padding: '10px', borderRadius: '5px' }}>
@@ -54,7 +60,7 @@ const Listbox = ({ data }) => {
                 <p>Selected items:</p>
                 <ul>
                     {selectedItems.map((itemId, index) => (
-                        <li key={index}>{itemId}</li>
+                        <li key={index}>{getItemName(itemId)}</li>
                     ))}
                 </ul>
             </div>

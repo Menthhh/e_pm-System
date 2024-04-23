@@ -10,10 +10,11 @@ const Page = () => {
     const [roles, setRoles] = useState([]);
     const [newRoles, setNewRoles] = useState(false);
     const newRoleInput = useRef(null);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         fetchRoles();
-    }, [newRoles]);
+    }, [refresh]);
 
     const fetchRoles = async () => {
         try {
@@ -62,25 +63,29 @@ const Page = () => {
 
     const createRole = async () => {
         try {
-            await axios.post("http://localhost:3000/api/role/create-role", {
-                ROLE_NAME: newRoleInput.current.value,
+            await fetch("http://localhost:3000/api/role/create-role", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    ROLE_NAME: newRoleInput.current.value,
+                }),
             });
-            setNewRoles(!newRoles);
-            newRoleInput.current.value = "";
+            setRefresh(!refresh);
         } catch (error) {
             console.error("Error creating role:", error);
         }
     };
 
-    const onClickNewRole = () => {
-        setNewRoles(!newRoles);
-    };
-
-
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`http://localhost:3000/api/role/delete-role/${id}`);
-        } catch (error) {
+        try{
+            await fetch(`http://localhost:3000/api/role/delete-role/${id}`, {
+                method: "DELETE",
+            });
+            setRefresh(!refresh);
+        }
+        catch (error) {
             console.error("Error deleting role:", error);
         }
     };
@@ -117,19 +122,27 @@ const Page = () => {
                     />
                 )}
             </div>
-            <div className="flex gap-5 absolute left-6 bottom-11 fixed">
+            <div className="flex gap-5 left-6 bottom-11 fixed">
                 {newRoles ? (
                     " "
                 ) : (
                     <button
                         className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md fixed"
-                        onClick={onClickNewRole}
+                        onClick={()=>setNewRoles(!newRoles)}
                     >
                         New Role
                     </button>
                 )}
                 {newRoles && newRoleFormInput}
             </div>
+            <div>
+                <dialog open>
+                    <h1>Are you sure you want to delete this role?</h1>
+                    <button>Yes</button>
+                    <button>No</button>
+                </dialog>
+            </div>
+            
         </div>
     );
 };
