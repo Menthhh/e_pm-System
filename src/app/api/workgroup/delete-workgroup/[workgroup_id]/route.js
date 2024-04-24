@@ -1,5 +1,6 @@
 import { connectToDb } from "@/lib/utils/utils.js";
 import { Workgroup } from "@/lib/models/Workgroup.js";
+import { User } from "@/lib/models/User.js";
 import { NextResponse } from 'next/server';
 
 export const DELETE = async (req, {params}) => {
@@ -7,6 +8,8 @@ export const DELETE = async (req, {params}) => {
     const { workgroup_id } = params;
     try {
         const workgroup = await Workgroup.findByIdAndDelete(workgroup_id);
+        // 1 user can be in multiple workgroups
+        // 1 workgroup can have multiple users
         if (!workgroup) {
             return NextResponse.json({ message: "Workgroup not found", file: __filename });
         }

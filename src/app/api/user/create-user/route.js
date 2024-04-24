@@ -18,8 +18,8 @@ export const POST = async (req, res) => {
             PASSWORD
         });
         await user.save();
-        return NextResponse.json({ message: "User created successfully", user });
+        return NextResponse.json({ status: 200, user });
     } catch(err) {
-        return NextResponse.json({ message: "User creation failed", file: __filename, error: err.message});
+        return NextResponse.json({status: 500, file: __filename, error: err.message});
     }
 };

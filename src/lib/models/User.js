@@ -9,16 +9,16 @@ const userSchema = new mongoose.Schema({
     EMAIL: { type: String, required: true },
     SEC: { type: String, required: true },
     PASSWORD: { type: String, required: true },
-    DEPARTMENT: { type: mongoose.Schema.Types.ObjectId, ref: 'Department' },
-    ROLE: { type: mongoose.Schema.Types.ObjectId, ref: 'Role' },
-    JOB_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job' }],
-    JOB_TEMPLATE_TRANSACTION_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'JobTemplateTransaction' }],
-    NOTIFIED_GROUP_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NotifiedGroup' }],
-    SCHEDULE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Schedule' }],
-    WORKGROUP_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Workgroup' }],
-    APPROVE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ApproveList' }]
-});
+    DEPARTMENT: { type: mongoose.Schema.Types.ObjectId, ref: 'Department', default: null },
+    //ROLE: { type: mongoose.Schema.Types.ObjectId, ref: 'Role', default: null },
+    JOB_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Job', default: [] }],
+    JOB_TEMPLATE_TRANSACTION_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'JobTemplateTransaction', default: [] }],
+    NOTIFIED_GROUP_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NotifiedGroup', default: [] }],
+    SCHEDULE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Schedule', default: [] }],
+    WORKGROUP_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Workgroup', default: [] }],
+    APPROVE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ApproveList', default: [] }]
+}, { timestamps: true });
 
-export const User = mongoose.models?.User || mongoose.model('User', userSchema) 
+export const User = mongoose.models?.User || mongoose.model('User', userSchema);
 
 

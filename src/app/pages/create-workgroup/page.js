@@ -52,7 +52,7 @@ const Page = () => {
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           href={{
             pathname: "/pages/edit-workgroup",
-            query: { workgroup: workgroup._id },
+            query: { workgroup_id: workgroup._id },
           }}
         >
           Edit
@@ -70,11 +70,6 @@ const Page = () => {
   }));
 
   const createWorkgroup = async () => {
-    if(!confirmAddWorkgroup) {
-        setShowConfirmationDialog(false);
-        return;
-    }
-    setShowConfirmationDialog(false);
     try {
       await fetch("http://localhost:3000/api/workgroup/create-workgroup", {
         method: "POST",

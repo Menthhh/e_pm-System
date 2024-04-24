@@ -1,5 +1,6 @@
 import { connectToDb } from "@/lib/utils/utils.js";
 import { Workgroup } from "@/lib/models/Workgroup.js";
+import { User } from "@/lib/models/User.js";
 import { NextResponse } from 'next/server';
 
 export const GET = async (req, {params}) => {
@@ -10,9 +11,14 @@ export const GET = async (req, {params}) => {
         if (!workgroup) {
             return NextResponse.json({ message: "Workgroup not found", file: __filename });
         }
-        return NextResponse.json({ message: "Workgroup found", workgroup });
+
+        const data = {
+            _id: workgroup._id,
+            name: workgroup.WORKGROUP_NAME,
+        }
+        return NextResponse.json({ status: 200, workgroup:data });
     } catch (err) {
-        return NextResponse.json({ message: "Workgroup retrieval failed", file: __filename, error: err.message });
+        return NextResponse.json({ status: 500, file: __filename, error: err.message });
     }
 
 };

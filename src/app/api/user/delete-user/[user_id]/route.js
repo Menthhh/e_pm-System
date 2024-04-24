@@ -10,9 +10,9 @@ export const DELETE = async (req, {params}) => {
         if (!user) {
             return NextResponse.json({ message: "User not found", file: __filename });
         }
-        return NextResponse.json({ message: "User deleted successfully", user });
+        return NextResponse.json({ status: 200, user });
     } catch (err) {
-        return NextResponse.json({ message: "User deletion failed", file: __filename, error: err.message});
+        return NextResponse.json({status: 500, file: __filename, error: err.message});
     }
 
 };

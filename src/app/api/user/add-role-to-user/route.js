@@ -1,11 +1,13 @@
 import { connectToDb } from "@/lib/utils/utils.js";
 import { User } from "@/lib/models/User.js";
 import { Role } from "@/lib/models/Role.js";
+import { UserHasRole } from "@/lib/models/UserHasRole";
 import { NextResponse } from 'next/server';
 
 export const POST = async (req, res) => {
     await connectToDb();
-    const { user_id, role_id } = await req.json();
+    const body = await req.json();
+    const { user_id, role_id } = body;
     try {
         const user = await User.findById(user_id);
         if (!user) {
@@ -15,10 +17,13 @@ export const POST = async (req, res) => {
         if (!role) {
             return NextResponse.json({ message: "Role not found" });
         }
-        user.ROLE = role._id;
-        await user.save();
-        return NextResponse.json({ message: "Role added to user", user });
+        const userHasRole = new UserHasRole({
+            USER_ID: user_id,
+            ROLE_ID: role_id,
+        });
+        await userHasRole.save();
+        return NextResponse.json({ status: 200, userHasRole });
     } catch (err) {
-        return NextResponse.json({ message: "Role addition failed", file: __filename, error: err.message });
+        return NextResponse.json({status: 500, file: __filename, error: err.message});
     }
 };

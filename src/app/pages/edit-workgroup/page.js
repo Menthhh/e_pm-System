@@ -4,168 +4,147 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Listbox from "@/components/listboxComponent";
 import { useState, useEffect } from "react";
+import TableComponent from "@/components/TableComponent";
+
+const workgroupHeader = ["id","EMP_number", "Email" ,"Name", "Role", "Action"];
+const userHeader = ["id","EMP_number", "Email", "Name", "Role", "Action"];
+
 
 const Page = () => {
   const searchParams = useSearchParams();
-  const role_id = searchParams.get("role_id");
-
-  const [dataRole, setDataRole] = useState([]);
-  const [roleActions, setRoleActions] = useState([]);
-  const [actionList, setActionList] = useState([]);
-  const [selectedRoleActions, setSelectedRoleActions] = useState([]);
+  const workgroup_id = searchParams.get("workgroup_id");
   const [refresh, setRefresh] = useState(false);
- 
+
+  const [workgroup, setWorkgroup] = useState({});
+  const [usersWorkgroup, setUsersWorkgroup] = useState([]);
+  const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    fetchRole();
-    fetchActions();
-    fetchRoleActions();
+    fetchWorkgroup();
+    fetchUsersWorkgroup();
+    fetchUsers();
   }, [refresh]);
 
-  const fetchRole = async () => {
+  const fetchWorkgroup = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/role/get-role/${role_id}`
+        `http://localhost:3000/api/workgroup/get-workgroup/${workgroup_id}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch roles");
+        throw new Error("Failed to fetch workgroup");
       }
-      const res = await response.json();
-      setDataRole(res);
+      const data = await response.json();
+      setWorkgroup(data.workgroup);
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const fetchActions = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/action/get-actions`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch roles");
-      }
-      const res = await response.json();
-      setActionList(res.actionList);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const fetchRoleActions = async () => {
-    try {
-      const response = await fetch(
-        `http://localhost:3000/api/role/get-action-role/${role_id}`
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch roles");
-      }
-      const res = await response.json();
-      setRoleActions(res.role_actions);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  function handleSelectedList(selectedItems) {
-    setSelectedRoleActions(() => selectedItems);
   }
 
-  const handdleAddToRole = async () => {
+  const fetchUsersWorkgroup = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/role/add-action-to-role`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            role_id: role_id,
-            action_id: selectedRoleActions,
-          }),
-        }
+        `http://localhost:3000/api/workgroup/get-users-from-workgroup/${workgroup_id}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch roles");
+        throw new Error("Failed to fetch users");
       }
+      const data = await response.json();
+      setUsersWorkgroup(data.users);
 
-      setRefresh(!refresh);
     } catch (error) {
       console.error(error);
     }
-    console.log(selectedRoleActions);
-  };
+  }
 
-  const handdleRemoveFromRole = async () => {
+  const fetchUsers = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/role/remove-action-from-role`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            role_id: role_id,
-            actionListID: selectedRoleActions,
-          }),
-        }
+        `http://localhost:3000/api/user/get-users-from-workgroup/${workgroup_id}`
       );
       if (!response.ok) {
-        throw new Error("Failed to fetch roles");
+        throw new Error("Failed to fetch users");
       }
-
-      setRefresh(!refresh);
+      const data = await response.json();
+      setUsers(data.user);
     } catch (error) {
       console.error(error);
     }
-    console.log(selectedRoleActions);
-  };
+  }
+
+  const handleDelete = async (user_id) => {
+    await fetch("http://localhost:3000/api/user/remove-user-from-workgroup", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id,
+        workgroup_id,
+      }),
+    });
+    setRefresh(!refresh);
+  }
+
+  const handleAdd = async (user_id) => {
+    await fetch("http://localhost:3000/api/user/add-user-to-workgroup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        user_id,
+        workgroup_id,
+      }),
+    });
+    setRefresh(!refresh);
+  }
+
+  const dataUsersWorkgroup = usersWorkgroup.map((user, index) => ({
+    id: index + 1,
+    EMP_number: user.emp_number,
+    Email: user.email,
+    Name: user.name,
+    Role: user.role,
+    action: [
+      <span className="pl-4">
+        <button
+          onClick={() => handleDelete(user._id)}
+          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Remove
+        </button>
+      </span>,
+    ],
+  }));
+
+  const dataUsers = users
+  .filter(user => !usersWorkgroup.some(u => u._id === user._id)) // Filter out users already in the UsersWorkgroup
+  .map((user, index) => ({
+    id: index + 1,
+    EMP_number: user.emp_number,
+    Email: user.email,
+    Name: user.name,
+    Role: user.role,
+    action: [
+      <span className="pl-4">
+        <button
+          onClick={() => handleAdd(user._id)}
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Add
+        </button>
+      </span>,
+    ],
+  }));
 
   return (
-    <SALayout className="flex flex-col items-center gap-9 p-12">
-      <>
-        <h1 className="text-2xl font-bold">Role {dataRole.name}</h1>
-        <div className="flex gap-20 container mx-auto left-0 right-0 justify-center p-6 items-center">
-          <div className="flex flex-col">
-            <p>This {dataRole.name}'s actions</p>
-            <Listbox
-              data={roleActions}
-              handleSelectedList={handleSelectedList}
-            />
-          </div>
-          <div className="flex flex-col gap-4">
-            <button
-              className="bg-green-500 px-5 py-2 rounded-md hover:bg-green-600"
-              onClick={handdleAddToRole}
-            >
-              Add to role
-            </button>
-            <button
-              className="bg-red-500 px-5 py-2 rounded-md hover:bg-red-600"
-              onClick={handdleRemoveFromRole}
-            >
-              Remove from role
-            </button>
-          </div>
-          <div className="flex flex-col">
-            <p>All Actions</p>
-            <Listbox
-              data={actionList}
-              handleSelectedList={handleSelectedList}
-            />
-          </div>
-        
-        </div>
-        <Link
-          href="/pages/create-role"
-          className="absolute right-5 bottom-2 bg-yellow-400 px-5 py-2 rounded-md hover:bg-yellow-500"
-        >
-          Back to Create Role
-        </Link>
-
-      </>
+    <SALayout className="flex flex-col items-center">
+      <div className="container mx-0 left-0 right-0 flex flex-col justify-center items-center p-10 gap-5">
+        <h1 className="text-2xl font-bold">Workgroup name <b>{workgroup.name}</b></h1>
+        <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} />
+        <hr className="w-full" />
+        <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} />
+      </div>
     </SALayout>
   );
 };
