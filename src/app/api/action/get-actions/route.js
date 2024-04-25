@@ -11,7 +11,7 @@ export const GET = async (req) => {
             name: action.ACTION_NAME,
            
         }));
-        return NextResponse.json({ actionList:data, status: "200" });
+        return NextResponse.json({ actions:data , status: "200" });
     } catch (err) {
         return NextResponse.json({ message: "Read all actions failed", file: __filename, error: err.message });
     }

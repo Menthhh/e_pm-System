@@ -13,7 +13,6 @@ export const GET = async (req, {params}) => {
             return NextResponse.json({ message: "Workgroup not found", file: __filename });
         }
         let users = []
-        console.log(workgroup.USER_LIST)
         for (let i = 0; i < workgroup.USER_LIST.length; i++) {
             const user = await User.findById(workgroup.USER_LIST[i]);
             let role_name

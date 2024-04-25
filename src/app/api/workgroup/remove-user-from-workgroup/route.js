@@ -1,11 +1,11 @@
 import { connectToDb } from "@/lib/utils/utils.js";
 import { User } from "@/lib/models/User.js";
-import { Workgroup } from "@/lib/models/Workgroup.js";
+import { Workgroup } from "@/lib/models/Workgroup";
 import { NextResponse } from 'next/server';
 
-export const POST = async (req, res) => {
+export const DELETE = async (req, res) => {
     await connectToDb();
-    const { workgroup_id, user_id } = await req.json();
+    const {user_id, workgroup_id} = await req.json();
     try {
         const workgroup = await Workgroup.findById(workgroup_id);
         if (!workgroup) {
@@ -15,10 +15,13 @@ export const POST = async (req, res) => {
         if (!user) {
             return NextResponse.json({ message: "User not found" });
         }
-        workgroup.USER_LIST.push(user_id);
+        workgroup.USER_LIST.pull(user_id);
+        user.ROLE = null;
+        await user.save();
         await workgroup.save();
         return NextResponse.json({ status:200, workgroup });
     } catch (err) {
         return NextResponse.json({status: 500, file: __filename, error: err.message});
     }
+
 };

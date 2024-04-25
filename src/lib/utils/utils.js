@@ -4,6 +4,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { User } from "../models/User";
 import { redirect } from "next/navigation";
+import nextConfig from "../../../next.config.mjs";
 
 
 const secretKey = process.env.SECRET_KEY;
@@ -43,18 +44,12 @@ export async function decrypt(input) {
 }
 
 export async function login(prevState, formData) {
-  // const expirationDate = new Date();
-  // expirationDate.setDate(expirationDate.getDate() + 7);
-  // const expires = expirationDate
-  // const session = await encrypt({ user_id, expires });
-  // cookies().set("session", session, { expires, httpOnly: true });
-  // return session;
-  console.log("Logging in")
+
   await connectToDb();
   const username = formData.get("username");
   const password = formData.get("password");
   console.log(username, password)
-  //CHECK USERNAME AND PASSWORD FROM DB
+
   const user = await User.findOne({ 
     USERNAME: username,
     PASSWORD: password
@@ -65,7 +60,38 @@ export async function login(prevState, formData) {
    }
 
 
-    redirect("/pages/create-role");
+    redirect("/pages/SA/create-role");
+}
+
+export async function register(prevState, formData) {
+
+  await connectToDb();
+  const empNumber = formData.get("employeeNumber");
+  const empName = formData.get("employeeName");
+  const email = formData.get("email");
+  const username = formData.get("username");
+  const password = formData.get("password");
+  const team = formData.get("team");
+  
+  console.log(username, password, empNumber, empName, email, team)
+
+  await fetch(`${nextConfig.host}/api/auth/register`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      emp_number: empNumber,
+      emp_name: empName,
+      email: email,
+      username: username,
+      password: password,
+      team: team
+    }),
+  });
+  return { message: "User created successfully" };
+
+  // redirect("/pages/login");
 }
 
 export async function logout() {

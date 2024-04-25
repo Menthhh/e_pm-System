@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Listbox from "@/components/listboxComponent";
 import { useState, useEffect } from "react";
+import nextConfig from "../../../../../next.config.mjs";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -24,7 +25,7 @@ const Page = () => {
   const fetchRole = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/role/get-role/${role_id}`
+        `${nextConfig.host}/api/role/get-role/${role_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -39,13 +40,13 @@ const Page = () => {
   const fetchActions = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/action/get-actions`
+        `${nextConfig.host}/api/action/get-actions`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
       }
       const res = await response.json();
-      setActionList(res.actionList);
+      setActionList(res.actions);
     } catch (error) {
       console.error(error);
     }
@@ -54,7 +55,7 @@ const Page = () => {
   const fetchRoleActions = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/role/get-action-role/${role_id}`
+        `${nextConfig.host}/api/role/get-action-from-role/${role_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -73,7 +74,7 @@ const Page = () => {
   const handdleAddToRole = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/role/add-action-to-role`,
+        `${nextConfig.host}/api/role/add-action-to-role`,
         {
           method: "POST",
           headers: {
@@ -81,7 +82,7 @@ const Page = () => {
           },
           body: JSON.stringify({
             role_id: role_id,
-            action_id: selectedRoleActions,
+            actions_id: selectedRoleActions,
           }),
         }
       );
@@ -99,7 +100,7 @@ const Page = () => {
   const handdleRemoveFromRole = async () => {
     try {
       const response = await fetch(
-        `http://localhost:3000/api/role/remove-action-from-role`,
+        `${nextConfig.host}/api/role/remove-action-from-role`,
         {
           method: "DELETE",
           headers: {
@@ -107,7 +108,7 @@ const Page = () => {
           },
           body: JSON.stringify({
             role_id: role_id,
-            actionListID: selectedRoleActions,
+            actions_id: selectedRoleActions,
           }),
         }
       );
@@ -155,7 +156,7 @@ const Page = () => {
           </div>
         </div>
         <Link
-          href="/pages/create-role"
+          href="/pages/SA/create-role"
           className="absolute right-5 bottom-2 bg-yellow-400 px-5 py-2 rounded-md hover:bg-yellow-500"
         >
           Back to Create Role

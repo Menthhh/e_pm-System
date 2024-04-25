@@ -5,6 +5,7 @@ import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
 import SALayout from "@/components/SALayout";
 import MessageBox from "@/components/MessageBox";
+import nextConfig from "../../../../../next.config.mjs";
 
 const headers = ["ID", "WorkGroup", "Action"];
 
@@ -30,7 +31,7 @@ const Page = () => {
   const fetchWorkgroups = async () => {
     try {
       const response = await fetch(
-        "http://localhost:3000/api/workgroup/get-workgroups"
+        `${nextConfig.host}/api/workgroup/get-workgroups`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -51,7 +52,7 @@ const Page = () => {
           id="1"
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           href={{
-            pathname: "/pages/edit-workgroup",
+            pathname: "/pages/SA/edit-workgroup",
             query: { workgroup_id: workgroup._id },
           }}
         >
@@ -71,7 +72,7 @@ const Page = () => {
 
   const createWorkgroup = async () => {
     try {
-      await fetch("http://localhost:3000/api/workgroup/create-workgroup", {
+      await fetch( `${nextConfig.host}/api/workgroup/create-workgroup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -89,7 +90,7 @@ const Page = () => {
   const handleDelete = async (id) => {
     try {
       await fetch(
-        `http://localhost:3000/api/workgroup/delete-workgroup/${id}`,
+        `${nextConfig.host}/api/workgroup/delete-workgroup/${id}`,
         {
           method: "DELETE",
         }
@@ -120,13 +121,9 @@ const Page = () => {
     </form>
   );
 
-//   const setShowConfirmationDialog = (value) => {
-//     setShowConfirmationDialog(value);
-//   };
 
   return (
-    <SALayout>
-      <div className="w-full h-screen flex flex-col gap-4 p-3 items-center relative">
+    <SALayout className="w-full h-screen flex flex-col gap-4 p-3 items-center relative">
         <div className="container mx-auto px-4 h-1/2 overflow-scrol">
           {workgroups.length > 0 && (
             <TableComponent
@@ -149,11 +146,10 @@ const Page = () => {
           )}
           {newWorkgroup && newWorkgroupFormInput}
         </div>
-      </div>
+
       {showConfirmationDialog && (<MessageBox message={"Are you sure you want to delete this workgroup?"} />)}
     </SALayout>
   );
 };
-// };onYes={() => setShowConfirmationDialog(false)} onNo={() => setShowConfirmationDialog(false)
 
 export default Page;

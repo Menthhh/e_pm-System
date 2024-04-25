@@ -39,7 +39,7 @@ const TableComponent = ({ headers, datas, searchColumn = "" }) => {
                 />
             </div>
 
-            <table className="table-auto container mx-auto w-4/4">
+            <table className="table-auto container mx-auto w-full">
                 <thead className="border-t-2 border-b-4">
                     <tr>
                         {headers.map((header) => (
