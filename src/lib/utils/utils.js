@@ -19,7 +19,7 @@ export const connectToDb = async () => {
       console.log("Using existing connection");
       return;
     }
-    const db = await mongoose.connect("mongodb://localhost:27017/e_pm");
+    const db = await mongoose.connect("mongodb://103.76.182.69:27017/e_pm");
     connection.isConnected = db.connections[0].readyState;
     console.log("New connection");
   } catch (error) {
