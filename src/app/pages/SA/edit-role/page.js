@@ -94,7 +94,7 @@ const Page = () => {
     } catch (error) {
       console.error(error);
     }
-    console.log(selectedRoleActions);
+
   };
 
   const handdleRemoveFromRole = async () => {
@@ -120,7 +120,6 @@ const Page = () => {
     } catch (error) {
       console.error(error);
     }
-    console.log(selectedRoleActions);
   }
 
   return (

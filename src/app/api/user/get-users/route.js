@@ -2,9 +2,11 @@ import { connectToDb } from "@/lib/utils/utils.js";
 import { User } from "@/lib/models/User.js";
 import { NextResponse } from "next/server";
 import { Role } from "@/lib/models/Role";
+import { getSession } from "@/lib/utils/utils.js";
 
 export const GET = async (req, paramress) => {
   await connectToDb();
+  const session = await getSession();
   try {
     const users = await User.find();
     if (!users) {

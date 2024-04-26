@@ -1,11 +1,11 @@
-"use server"
-import mongoose from "mongoose"
+"use server";
+import mongoose from "mongoose";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
-import { User } from "../models/User";
 import { redirect } from "next/navigation";
 import nextConfig from "../../../next.config.mjs";
-
+import { Role } from "./Role";
+import { NextResponse } from "next/server";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
@@ -13,13 +13,13 @@ const key = new TextEncoder().encode(secretKey);
 const connection = {};
 
 export const connectToDb = async () => {
-  console.log("Connecting to DB");  
+  console.log("Connecting to DB");
   try {
     if (connection.isConnected) {
       console.log("Using existing connection");
       return;
     }
-    const db = await mongoose.connect("mongodb://103.76.182.69:27017/e_pm");
+    const db = await mongoose.connect("mongodb://localhost:27017/e_pm");
     connection.isConnected = db.connections[0].readyState;
     console.log("New connection");
   } catch (error) {
@@ -32,7 +32,7 @@ export async function encrypt(payload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
-    .setExpirationTime("7 days")
+    .setExpirationTime("7d")
     .sign(key);
 }
 
@@ -44,27 +44,48 @@ export async function decrypt(input) {
 }
 
 export async function login(prevState, formData) {
-
   await connectToDb();
   const username = formData.get("username");
   const password = formData.get("password");
-  console.log(username, password)
 
-  const user = await User.findOne({ 
-    USERNAME: username,
-    PASSWORD: password
-   }) || (username === "admin" && password === "admin");
-   
-   if (!user) {
-     return { error: "Invalid username or password" };
-   }
+  const res = await fetch(`${nextConfig.host}/api/auth/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: username,
+      password: password,
+    }),
+  });
+  const data = await res.json();
+  if (data.status === 200) {
+    cookies().set("token", data.token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: true,
+    });
+    routing(data.user.Role);
+    console.log(data.user.Role)
 
+  } else{
+    return { message: "wrong credential Please try again" };
+  }
+}
 
-    redirect("/pages/SA/create-role");
+const routing = (role_id) => {
+  switch (role_id) {
+    case process.env.SA_ROLE_ID:
+      return  redirect("/pages/SA/create-role");
+    case process.env.ADMIN_GROUP_ROLE_ID:
+      return  redirect("/pages/admin/add-user-to-workgroup");
+    default:
+      console.log("redirecting to denied page");
+      return  redirect("/pages/denied");
+  }
 }
 
 export async function register(prevState, formData) {
-
   await connectToDb();
   const empNumber = formData.get("employeeNumber");
   const empName = formData.get("employeeName");
@@ -72,10 +93,8 @@ export async function register(prevState, formData) {
   const username = formData.get("username");
   const password = formData.get("password");
   const team = formData.get("team");
-  
-  console.log(username, password, empNumber, empName, email, team)
 
-  await fetch(`${nextConfig.host}/api/auth/register`, {
+  const res = await fetch(`${nextConfig.host}/api/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -86,20 +105,24 @@ export async function register(prevState, formData) {
       email: email,
       username: username,
       password: password,
-      team: team
+      team: team,
     }),
   });
-  return { message: "User created successfully" };
+  const data = await res.json();
+  if (data.status === 500) {
+    return { message: data.error };
+  }
 
-  // redirect("/pages/login");
+  return { message: "User registered successfully" };
 }
 
 export async function logout() {
-  cookies().set("session", "", { expires: new Date(0) });
+  console.log("logging out")
+  cookies().set("token", "", { expires: new Date(0) });
 }
 
 export async function getSession() {
-  const session = cookies().get("session")?.value;
+  const session = cookies().get("token")?.value;
   if (!session) return { message: "Session not found" };
   return await decrypt(session);
 }
@@ -113,7 +136,7 @@ export async function updateSession(request) {
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + 7);
   parsed.expires = expirationDate;
-  
+
   const res = new NextResponse();
   res.cookies.set({
     name: "session",
@@ -122,4 +145,10 @@ export async function updateSession(request) {
     expires: parsed.expires,
   });
   return res;
+}
+
+export async function getRoleName(role_id) {
+  await connectToDb();
+  const role = await Role.findById(role_id);
+  return role ? role.ROLE_NAME : "No role";
 }

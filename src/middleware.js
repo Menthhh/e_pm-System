@@ -1,29 +1,61 @@
-import { redirect, NextResponse } from "next/server.js";
-// import { getSession, updateSession } from "./lib/utils/utils.js";
+"use server"
+import { NextResponse } from "next/server.js";
+import { getSession } from "./lib/utils/utils.js";
 
-export async function middleware(request) {
-    // const { pathname } = new URL(request.url);
+const publicRoutes = [
+    "/pages/login",
+    "/pages/register",
+    "/api/auth/login",
+    "/api/auth/register",
+    "/next/dist/server/next-server",
+];
 
-    // // Exclude routes for serving static assets
-    // if (pathname.startsWith("/_next/") || pathname.startsWith("/static/")) {
-    //     return NextResponse.next();
-    // }
+const SA = {
+    "role_id": process.env.SA_ROLE_ID, 
+    "role_name": "SA",
+    "unaccessible_routes": [
+        "/pages/admin/add-user-to-workgroup",
+    ]
+}
 
-    // // Exclude specific routes
-    // if (pathname === "/api/auth/login" || pathname === "/api/auth/register" || pathname === "/pages/login") {
-    //     return NextResponse.next();
-    // }
+const ADMIN_GROUP = {
+    "role_id": process.env.ADMIN_GROUP_ROLE_ID,
+    "role_name": "Admin Group",
+    "unaccessible_routes": [
+        "/pages/SA/create-role",
+        "/pages/SA/create-workgroup",
+        "/pages/SA/edit-role",
+        "/pages/SA/edit-workgroup",
+    ]
+}
 
-    // try {
-    //     const session = await getSession(request);
-    //     if (session.message === "Session not found") {
-    //         return NextResponse.json({ message: "User not logged in"});
-    //     }
-    //     return NextResponse.next();
-    // } catch (error) {
-    //     console.error("JWTExpired:", error.message);
-    //     return NextResponse.json({ message: "Session has expired" }, { status: 401 });
-    // }
 
-    return NextResponse.next();
+
+export default async function middleware(req) {
+    const endpoint = req.nextUrl.pathname;
+    
+    if (publicRoutes.includes(endpoint)) {
+        return NextResponse.next();
+    }
+    
+    const token = await getSession();
+    const userRoleId = token.Role;
+    
+    if (!userRoleId) {
+        return NextResponse.redirect(new URL('/pages/login', req.nextUrl));
+    }
+    else if (
+        (userRoleId === SA.role_id && SA.unaccessible_routes.includes(endpoint)) ||
+        (userRoleId === ADMIN_GROUP.role_id && ADMIN_GROUP.unaccessible_routes.includes(endpoint)) 
+       
+    ) {
+        
+        return NextResponse.redirect(new URL('/pages/denied', req.nextUrl));
+    } else {
+        return NextResponse.next();
+    }
+}
+
+export const config = {
+    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
 }

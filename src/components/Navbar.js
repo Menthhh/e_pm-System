@@ -1,11 +1,24 @@
 import { IconButton } from '@mui/material';
 import { ExitToApp } from '@mui/icons-material';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getSession, logout } from '@/lib/utils/utils';
 
 const Navbar = ({ menu }) => {
    
     const [showMenu, setShowMenu] = useState(false);
+    const [user, setUser] = useState("");
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
+    const getUser = async () => {
+        const userData = await getSession();
+        setUser(userData);
+        
+    };
+    
 
     const toggleMenu = () => {
         setShowMenu(!showMenu);
@@ -15,6 +28,10 @@ const Navbar = ({ menu }) => {
         setShowMenu(false);
     };
 
+    const handleLogout = async () => {
+        await logout();
+    }
+    console.log(user)
     return (
         <nav className="w-full h-16 p-4 bg-blue-500 flex justify-between items-center shadow-lg text-white font-bold relative">
             <div className="flex flex-col gap-2 cursor-pointer" onClick={toggleMenu}>
@@ -24,6 +41,7 @@ const Navbar = ({ menu }) => {
             </div>
             <div className={`bg-blue-400 h-screen z-50 left-0 top-0 absolute w-1/4 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'}`}>
                 <button className="absolute top-4 right-4" onClick={closeMenu}>
+        
                     <span className="sr-only">Close</span>
                     <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -40,8 +58,9 @@ const Navbar = ({ menu }) => {
                 </ul>
             </div>
             <IconButton color="inherit" className="flex gap-3 font-medium text-sm">
-                <p className="text-sm">Tonkla Pokaew</p>
-                <Link href="/pages/login">
+                <p className="text-sm">{user.username}</p>
+                <Link href="/pages/login" onClick={handleLogout}>
+                
                     <ExitToApp />
                 </Link>
             </IconButton>

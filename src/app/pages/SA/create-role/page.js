@@ -63,7 +63,7 @@ const Page = () => {
 
   const createRole = async () => {
     try {
-      await fetch(`${nextConfig.host}/api/role/create-rol`, {
+      await fetch(`${nextConfig.host}/api/role/create-role`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
