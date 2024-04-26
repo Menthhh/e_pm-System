@@ -13,23 +13,27 @@ const publicRoutes = [
 const SA = {
     "role_id": process.env.SA_ROLE_ID, 
     "role_name": "SA",
-    "unaccessible_routes": [
+    "unaccessible_pages": [
         "/pages/admin/add-user-to-workgroup",
+    ],
+    "unaccessible_api": [
+        
     ]
 }
 
 const ADMIN_GROUP = {
     "role_id": process.env.ADMIN_GROUP_ROLE_ID,
     "role_name": "Admin Group",
-    "unaccessible_routes": [
+    "unaccessible_pages": [
         "/pages/SA/create-role",
         "/pages/SA/create-workgroup",
         "/pages/SA/edit-role",
         "/pages/SA/edit-workgroup",
+    ],
+    "unaccessible_api": [
+        
     ]
 }
-
-
 
 export default async function middleware(req) {
     const endpoint = req.nextUrl.pathname;
@@ -40,13 +44,13 @@ export default async function middleware(req) {
     
     const token = await getSession();
     const userRoleId = token.Role;
-    
+    console.log(userRoleId);
     if (!userRoleId) {
         return NextResponse.redirect(new URL('/pages/login', req.nextUrl));
     }
     else if (
-        (userRoleId === SA.role_id && SA.unaccessible_routes.includes(endpoint)) ||
-        (userRoleId === ADMIN_GROUP.role_id && ADMIN_GROUP.unaccessible_routes.includes(endpoint)) 
+        (userRoleId === SA.role_id && SA.unaccessible_pages.includes(endpoint)) ||
+        (userRoleId === ADMIN_GROUP.role_id && ADMIN_GROUP.unaccessible_pages.includes(endpoint)) 
        
     ) {
         

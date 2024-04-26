@@ -5,7 +5,6 @@ import { useState, useEffect } from "react";
 import TableComponent from "@/components/TableComponent";
 import EditIcon from '@mui/icons-material/Edit';
 import nextConfig from "../../../../../next.config.mjs";
-import { getRoleName } from "@/lib/utils/utils";
 
 const workgroupHeader = ["id","EMP_number", "Email" ,"Name", "Role", "Action"];
 const userHeader = ["id","EMP_number", "Email", "Name", "Role", "Action"];

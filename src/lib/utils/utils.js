@@ -65,8 +65,9 @@ export async function login(prevState, formData) {
       sameSite: "strict",
       secure: true,
     });
-    routing(data.user.Role);
     console.log(data.user.Role)
+    const path = routing(data.user.Role);
+    redirect(path);
 
   } else{
     return { message: "wrong credential Please try again" };
@@ -76,12 +77,12 @@ export async function login(prevState, formData) {
 const routing = (role_id) => {
   switch (role_id) {
     case process.env.SA_ROLE_ID:
-      return  redirect("/pages/SA/create-role");
+      return  "/pages/SA/create-role";
     case process.env.ADMIN_GROUP_ROLE_ID:
-      return  redirect("/pages/admin/add-user-to-workgroup");
+      return  "/pages/admin/add-user-to-workgroup";
     default:
       console.log("redirecting to denied page");
-      return  redirect("/pages/denied");
+      return  "/pages/denied";
   }
 }
 
