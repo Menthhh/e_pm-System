@@ -9,6 +9,7 @@ import { NextResponse } from "next/server";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
+const db_url = process.env.MONGODB_URI;
 
 const connection = {};
 
@@ -19,7 +20,7 @@ export const connectToDb = async () => {
       console.log("Using existing connection");
       return;
     }
-    const db = await mongoose.connect("mongodb://localhost:27017/e_pm");
+    const db = await mongoose.connect(db_url);
     connection.isConnected = db.connections[0].readyState;
     console.log("New connection");
   } catch (error) {
@@ -70,7 +71,7 @@ export async function login(prevState, formData) {
     redirect(path);
 
   } else{
-    return { message: "wrong credential Please try again" };
+    return { message: "Wrong credential Please try again" };
   }
 }
 

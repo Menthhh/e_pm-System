@@ -31,13 +31,14 @@ const Navbar = ({ menu }) => {
     const handleLogout = async () => {
         await logout();
     }
-    console.log(user)
+
+
     return (
         <nav className="w-full h-16 p-4 bg-blue-500 flex justify-between items-center shadow-lg text-white font-bold relative">
             <div className="flex flex-col gap-2 cursor-pointer" onClick={toggleMenu}>
-                <div className={`bg-white w-8 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div>
-                <div className={`bg-white w-8 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
-                <div className={`bg-white w-8 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div>
+                <div className={`bg-white w-7 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div>
+                <div className={`bg-white w-7 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
+                <div className={`bg-white w-7 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div>
             </div>
             <div className={`bg-blue-400 h-screen z-50 left-0 top-0 absolute w-1/4 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'}`}>
                 <button className="absolute top-4 right-4" onClick={closeMenu}>

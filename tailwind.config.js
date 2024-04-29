@@ -7,8 +7,18 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Open Sans', 'sans-serif'],
+      },
       screens: {
         'ipadmini': '800px',
+      },
+      colors: {
+        'primary': '#0c487f',
+        'end': '#4398e7',
+        'secondary':'#878787',
+        'extra':'#083148'
+
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

@@ -66,7 +66,7 @@ const Page = () => {
         throw new Error("Failed to fetch users");
       }
       const usersData = await response.json();
-      const filteredUsers = usersData.users.filter(user => user.role !== "SA");
+      const filteredUsers = usersData.users.filter(user => user.role !== "SA" && user.role !== "Admin Group");
 
       setUsers(filteredUsers);
 

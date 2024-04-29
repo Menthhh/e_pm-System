@@ -110,8 +110,9 @@ const Page = () => {
   );
 
   return (
-    <SALayout className="w-full h-screen flex flex-col gap-4 items-center relative p-5">
-      <div className="container mx-auto px-4 h-1/2 overflow-scrol">
+    <SALayout className="w-full h-screen flex flex-col gap-4 items-center relative p-5 bg-gray-100 justify-start font-sans">
+      <div className="w-full h-full bg-white  p-8 rounded-lg ">
+      <div className="px-4  overflow-scrol">
         {roles.length > 0 && (
           <TableComponent
             headers={headers}
@@ -132,6 +133,7 @@ const Page = () => {
           </button>
         )}
         {newRoles && newRoleFormInput}
+      </div>
       </div>
     </SALayout>
   );

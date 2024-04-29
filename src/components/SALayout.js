@@ -1,6 +1,6 @@
-import Navbar from "@/components/Navbar"; 
+import Navbar from "@/components/Navbar";
 
-const SALayout = ({ children, className="" }) => {
+const SALayout = ({ children, className = "" }) => {
     const menus = [
         {
             "name": "Create Role",
@@ -13,14 +13,16 @@ const SALayout = ({ children, className="" }) => {
     ];
     return (
         <div >
-            <Navbar 
-            menu={menus}
-            /> 
-            <div className={className}>
-            {children}  
-            </div>     
+            <Navbar
+                menu={menus}
+            />
+
+            <div className={` ${className} `}>
+                {children}
+            </div>
+
         </div>
     );
-} 
+}
 
 export default SALayout;

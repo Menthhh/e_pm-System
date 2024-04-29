@@ -39,17 +39,17 @@ const TableComponent = ({ headers, datas, searchColumn = "" }) => {
                 />
             </div>
 
-            <table className="table-auto container mx-auto w-full">
-                <thead className="border-t-2 border-b-4">
+            <table className="table-auto container mx-auto w-full drop-shadow-sm">
+                <thead className="border-t-2 bg-[#F6F6F6] shadow-lg drop-shadow-lg [box-shadow:_0px_2px_0px_rgb(0_0_0_/_25%)] text-[#878787]">
                     <tr>
                         {headers.map((header) => (
-                            <th key={header} className="px-4 py-4">{header}</th>
+                            <th key={header} className="px-4 py-1">{header}</th>
                         ))}
                     </tr>
                 </thead>
                 <tbody className="text-center">
                     {currentPageData.map((item) => (
-                        <tr key={item.id} className="hover:bg-gray-300 hover:shadow-lg border-b-2 border-gray-200">
+                        <tr key={item.id} className="hover:shadow-lg  bg-white h-16 border-b-2 border-[#C6C6C6] hover:bg-gray-100">
                             {Object.keys(item).map((key) => (
                                 key === 'action' ? (
                                     <td key={key} className="px-4 py-3">
