@@ -1,5 +1,5 @@
 "use client"
-import AdminLayout from "@/components/AdminLayout";
+import Layout from "@/components/Layout";
 import TableComponent from "@/components/TableComponent";
 import { getSession } from "@/lib/utils/utils";
 import { useEffect, useState } from "react";
@@ -255,7 +255,7 @@ const Page = () => {
 
 
   return (
-    <AdminLayout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
+    <Layout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
       <div className="w-full h-full bg-white container px-8  rounded-lg flex flex-col gap-8">
         <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {user.workgroup} </h1>
         <h1 className="text-1xl font-semibold">Add User to Workgroup</h1>
@@ -267,26 +267,9 @@ const Page = () => {
           <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} />
         </div>
       </div>
-    </AdminLayout>
+    </Layout>
   );
 
-
-  return (
-    <AdminLayout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
-      <div className="w-full h-full bg-white container px-8  rounded-lg flex flex-col gap-8">
-        <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {user.workgroup} </h1>
-        <h1 className="text-1xl font-semibold">Add User to Workgroup</h1>
-        <div className="mt-4">
-          <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} />
-        </div>
-        <hr className="w-full" />
-        <div className="mt-4">
-          <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} />
-        </div>
-      </div>
-
-    </AdminLayout>
-  )
 }
 
 export default Page;

@@ -10,7 +10,7 @@ const publicRoutes = [
 ];
 
 const developingRoutes = [
-    "/pages/dashboard"
+    // "/pages/dashboard"
 ]
 
 const SA = {
@@ -18,6 +18,7 @@ const SA = {
     "role_name": "SA",
     "unaccessible_pages": [
         "/pages/admin/add-user-to-workgroup",
+        "/pages/dashboard"
     ],
     "unaccessible_api": [
         
