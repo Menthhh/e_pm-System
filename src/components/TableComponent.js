@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
 
 const TableComponent = ({ headers, datas, searchColumn = "" }) => {
     const [currentPage, setCurrentPage] = useState(1);
@@ -28,10 +29,11 @@ const TableComponent = ({ headers, datas, searchColumn = "" }) => {
     };
 
     return (
-        <div className="flex flex-col justify-center gap-5 items-center">
-            <div className='pl-6'>
+        <div className="flex flex-col justify-center gap-5 items-center relative">
+            <div className='my-8 '>
+                <SearchIcon className="absolute left-2 z-50 top-10"/>
                 <input
-                    className="border border-gray-300 rounded-md p-2"
+                    className="border border-gray-300 rounded-md p-2 pl-9 absolute left-0 w-64"
                     type="text"
                     placeholder="Search..."
                     value={searchTerm}
@@ -39,8 +41,10 @@ const TableComponent = ({ headers, datas, searchColumn = "" }) => {
                 />
             </div>
 
-            <table className="table-auto container mx-auto w-full drop-shadow-sm">
-                <thead className="border-t-2 bg-[#F6F6F6] shadow-lg drop-shadow-lg [box-shadow:_0px_2px_0px_rgb(0_0_0_/_25%)] text-[#878787]">
+            <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start shadow-inner drop-shadow-md">
+            <h1 className="p-2 text-slate-700 text-lg">Table Name</h1>
+            <table className="table-auto w-full">
+                <thead className=" bg-[#F6F6F6] text-[#878787]">
                     <tr>
                         {headers.map((header) => (
                             <th key={header} className="px-4 py-1">{header}</th>
@@ -49,7 +53,7 @@ const TableComponent = ({ headers, datas, searchColumn = "" }) => {
                 </thead>
                 <tbody className="text-center">
                     {currentPageData.map((item) => (
-                        <tr key={item.id} className="hover:shadow-lg  bg-white h-16 border-b-2 border-[#C6C6C6] hover:bg-gray-100">
+                        <tr key={item.id} className="hover:shadow-lg  bg-white h-16 border-b boder-solid border-[#C6C6C6] hover:bg-gray-100 font-bold">
                             {Object.keys(item).map((key) => (
                                 key === 'action' ? (
                                     <td key={key} className="px-4 py-3">
@@ -65,6 +69,7 @@ const TableComponent = ({ headers, datas, searchColumn = "" }) => {
                     ))}
                 </tbody>
             </table>
+            </div>
 
             <div className="mt-4">
                 <button

@@ -1,3 +1,4 @@
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 
 const AdminLayout = ({ children, className = "" }) => {
@@ -8,12 +9,15 @@ const AdminLayout = ({ children, className = "" }) => {
         }
     ];
   return (
-    <div className={className}>
-      <Navbar 
-      menu = {menus}
+    <div className="flex flex-col min-h-screen">
+      <Navbar
+          menu={menus}
       />
-      {children}
-    </div>
+      <div className={`flex-1 ${className} pt-24 pb-24`}>
+          {children}
+      </div>
+      <Footer />
+</div>
   );
 };
 

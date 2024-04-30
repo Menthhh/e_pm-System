@@ -50,13 +50,13 @@ const Page = () => {
         </Link>
       </span>,
       <span className="pl-4">
-        {role.ROLE_NAME === "Admin Group" ? ( "" ) : (
-        <button
-          onClick={() => handleDelete(role._id)}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Delete
-        </button>)}
+        {role.ROLE_NAME === "Admin Group" || role.ROLE_NAME === "SA" ? ("") : (
+          <button
+            onClick={() => handleDelete(role._id)}
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          >
+            Delete
+          </button>)}
       </span>,
     ],
   }));
@@ -90,7 +90,7 @@ const Page = () => {
   };
 
   const newRoleFormInput = (
-    <form onSubmit={createRole} className="flex gap-4 fixed">
+    <form onSubmit={createRole} className="flex gap-4 ">
       <input
         type="text"
         placeholder="Role Name"
@@ -110,30 +110,32 @@ const Page = () => {
   );
 
   return (
-    <SALayout className="w-full h-screen flex flex-col gap-4 items-center relative p-5 bg-gray-100 justify-start font-sans">
-      <div className="w-full h-full bg-white  p-8 rounded-lg ">
-      <div className="px-4  overflow-scrol">
-        {roles.length > 0 && (
-          <TableComponent
-            headers={headers}
-            datas={data}
-            searchColumn={"Role"}
-          />
-        )}
-      </div>
-      <div className="flex gap-5 left-6 bottom-11 fixed">
-        {newRoles ? (
-          " "
-        ) : (
-          <button
-            className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md fixed"
-            onClick={() => setNewRoles(!newRoles)}
-          >
-            New Role
-          </button>
-        )}
-        {newRoles && newRoleFormInput}
-      </div>
+    <SALayout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
+      <div className="w-full h-full bg-white container px-8  rounded-lg flex flex-col gap-8">
+        <h1 className="text-2xl font-bold text-primary flex items-center">{">"} Manage Role </h1>
+    
+          <form onSubmit={createRole} className="flex gap-4 ">
+            <input
+              type="text"
+              placeholder="Role Name"
+              ref={newRoleInput}
+              className="py-2 px-4 ring-1 ring-black rounded-md"
+            />
+            <button className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md">
+              Add Role
+            </button>
+          
+          </form>
+   
+        <div >
+          {roles.length > 0 && (
+            <TableComponent
+              headers={headers}
+              datas={data}
+              searchColumn={"Role"}
+            />
+          )}
+        </div>
       </div>
     </SALayout>
   );

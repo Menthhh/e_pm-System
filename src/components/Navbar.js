@@ -3,6 +3,7 @@ import { ExitToApp } from '@mui/icons-material';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getSession, logout } from '@/lib/utils/utils';
+import nextConfig from '../../next.config.mjs';
 
 const Navbar = ({ menu }) => {
    
@@ -15,11 +16,24 @@ const Navbar = ({ menu }) => {
 
     const getUser = async () => {
         const userData = await getSession();
-        setUser(userData);
         
+        await fetchUser(userData.user_id);
+    };
+
+    const fetchUser = async (user_id) => {
+        try {
+            const response = await fetch( `${nextConfig.host}/api/user/get-user/${user_id}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch user data");
+            }
+            const data = await response.json();
+            setUser(data.user);
+            await fetchUsersWorkgroup(data.user.workgroup_id);
+        } catch (error) {
+            console.error(error);
+        }
     };
     
-
     const toggleMenu = () => {
         setShowMenu(!showMenu);
     };
@@ -34,37 +48,45 @@ const Navbar = ({ menu }) => {
 
 
     return (
-        <nav className="w-full h-16 p-4 bg-blue-500 flex justify-between items-center shadow-lg text-white font-bold relative">
-            <div className="flex flex-col gap-2 cursor-pointer" onClick={toggleMenu}>
-                <div className={`bg-white w-7 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div>
-                <div className={`bg-white w-7 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
-                <div className={`bg-white w-7 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div>
+        <nav className="w-full h-16 p-4 bg-white flex justify-between items-center text-secondary font-bold  font-sans z-[200] shadow-md rounded-b-lg fixed">
+            <div className="flex flex-col gap-2 cursor-pointer " onClick={toggleMenu}>
+                <div className={`bg-secondary w-7 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div>
+                <div className={`bg-secondary w-7 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
+                <div className={`bg-secondary w-7 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div>
             </div>
-            <div className={`bg-blue-400 h-screen z-50 left-0 top-0 absolute w-1/4 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'}`}>
-                <button className="absolute top-4 right-4" onClick={closeMenu}>
+            <div className={`bg-slate-800 h-screen  left-0 top-0 absolute w-1/4 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'} `}>
+                <button className="absolute top-4 right-4 z-[300]" onClick={closeMenu} >
         
                     <span className="sr-only">Close</span>
                     <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
-                <ul className="mt-10 text-white">
+                <div className="h-16 w-full  flex justify-center items-center shadow-lg drop-shadow-xl">
+                    <h1 className="text-2xl text-white">E_PM</h1>
+                </div>
+               
+                <ul className="mt-5 text-white font-semibold ml-2">
                     {menu.map((item, index) => (
                         <li className="mb-4" key={index}>
-                            <Link href={item.path} className="block px-4 py-2 hover:bg-blue-600">
+                            <Link href={item.path} className="block px-4 py-2 hover:text-slate-500">
                                 {item.name}
                             </Link>
                         </li>
                     ))}
                 </ul>
             </div>
-            <IconButton color="inherit" className="flex gap-3 font-medium text-sm">
-                <p className="text-sm">{user.username}</p>
-                <Link href="/pages/login" onClick={handleLogout}>
-                
-                    <ExitToApp />
-                </Link>
-            </IconButton>
+            <div className="flex gap-3 items-center">
+                <div>
+                    <p className="text-md text-secondary font-bold">{user.name}</p> 
+                    <p className="text-sm text-right" >{user.role} </p>
+                </div>
+                <IconButton color="inherit"  >
+                    <Link href="/pages/login" onClick={handleLogout}>
+                        <ExitToApp className="size-8" />
+                    </Link>
+                </IconButton>
+            </div>
         </nav>
     );
 }

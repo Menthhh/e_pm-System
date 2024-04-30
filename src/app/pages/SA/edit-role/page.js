@@ -46,6 +46,7 @@ const Page = () => {
         throw new Error("Failed to fetch roles");
       }
       const res = await response.json();
+     
       setActionList(res.actions);
     } catch (error) {
       console.error(error);
@@ -61,6 +62,7 @@ const Page = () => {
         throw new Error("Failed to fetch roles");
       }
       const res = await response.json();
+      console.log(res)
       setRoleActions(res.role_actions);
     } catch (error) {
       console.error(error);
@@ -123,7 +125,7 @@ const Page = () => {
   }
 
   return (
-    <SALayout className="flex flex-col items-center gap-9 p-12">
+    <SALayout className="flex flex-col items-center gap-9 p-12 ">
       <>
         <h1 className="text-2xl font-bold">Role {dataRole.name}</h1>
         <div className="flex gap-20 container mx-auto left-0 right-0 justify-center p-6 items-center">
@@ -136,12 +138,12 @@ const Page = () => {
           </div>
           <div className="flex flex-col gap-4">
             <button
-              className="bg-green-500 px-5 py-2 rounded-md hover:bg-green-600"
+              className="bg-green-500 px-5 py-2 rounded-md hover:bg-green-600 text-white font-sans font-semibold"
               onClick={handdleAddToRole}
             >
               Add to role
             </button>
-            <button className="bg-red-500 px-5 py-2 rounded-md hover:bg-red-600"  onClick= {handdleRemoveFromRole}>
+            <button className="bg-red-500 px-5 py-2 rounded-md hover:bg-red-600 text-white font-sans font-semibold"  onClick= {handdleRemoveFromRole}>
               Remove from role
              
             </button>

@@ -1,7 +1,6 @@
 import { connectToDb } from "@/lib/utils/utils.js";
 import { User } from "@/lib/models/User.js";
 import { Role } from "@/lib/models/Role.js";
-import { UserHasRole } from "@/lib/models/UserHasRole";
 import { NextResponse } from 'next/server';
 
 export const POST = async (req, res) => {

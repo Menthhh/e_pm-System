@@ -7,8 +7,11 @@ const publicRoutes = [
     "/pages/register",
     "/api/auth/login",
     "/api/auth/register",
-    "/next/dist/server/next-server",
 ];
+
+const developingRoutes = [
+    "/pages/dashboard"
+]
 
 const SA = {
     "role_id": process.env.SA_ROLE_ID, 
@@ -38,26 +41,23 @@ const ADMIN_GROUP = {
 export default async function middleware(req) {
     const endpoint = req.nextUrl.pathname;
     
-    if (publicRoutes.includes(endpoint)) {
-        return NextResponse.next();
-    }
+    if (publicRoutes.includes(endpoint)) return NextResponse.next();
+
+    if (developingRoutes.includes(endpoint)) return NextResponse.next(); 
     
     const token = await getSession();
     const userRoleId = token.Role;
-    console.log(userRoleId);
-    if (!userRoleId) {
-        return NextResponse.redirect(new URL('/pages/login', req.nextUrl));
-    }
+
+    if (!userRoleId) return NextResponse.redirect(new URL('/pages/login', req.nextUrl));
+    
     else if (
         (userRoleId === SA.role_id && SA.unaccessible_pages.includes(endpoint)) ||
-        (userRoleId === ADMIN_GROUP.role_id && ADMIN_GROUP.unaccessible_pages.includes(endpoint)) 
-       
-    ) {
+        (userRoleId === ADMIN_GROUP.role_id && ADMIN_GROUP.unaccessible_pages.includes(endpoint))    
+    ) return NextResponse.redirect(new URL('/pages/denied', req.nextUrl));
+     
         
-        return NextResponse.redirect(new URL('/pages/denied', req.nextUrl));
-    } else {
-        return NextResponse.next();
-    }
+    else return NextResponse.next();
+    
 }
 
 export const config = {

@@ -153,14 +153,9 @@ const Page = () => {
   );
 
   return (
-    <SALayout className="flex flex-col items-center">
-      <div className="container mx-0 left-0 right-0 flex flex-col justify-center items-center p-10 gap-5">
-        <h1 className="text-2xl font-bold flex items-center justify-center gap-2">
-          <b>{workgroup.name}</b>
-          <EditIcon
-            onClick={() => setEdit(!edit)}
-            className="cursor-pointer"/>
-        </h1>
+    <SALayout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
+      <div className="w-full h-full bg-white container px-8 rounded-lg flex flex-col gap-8">
+      <h1 className="text-2xl font-bold text-primary flex items-center"> Edit {">"} {workgroup.name} </h1>
         <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} />
         <hr className="w-full" />
         <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} />

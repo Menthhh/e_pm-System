@@ -25,6 +25,12 @@ export const GET = async (req, {params}) => {
         
         const data = await Promise.all(filteredRoleHasAction.map(async (roleHasAction) => {
             const action = await Action.findOne({ _id: roleHasAction.ACTION_ID });
+            if (!action) {
+                return {
+                    _id: "",
+                    name: "",
+                };
+            }
             return {
                 _id: action._id.toString(),
                 name: action.ACTION_NAME,
@@ -35,5 +41,4 @@ export const GET = async (req, {params}) => {
     } catch (err) {
         return NextResponse.json({ message: "Role retrieval failed", file: __filename, error: err.message });
     }
-
 };
