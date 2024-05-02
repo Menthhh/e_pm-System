@@ -11,6 +11,7 @@ const userHeader = ["id", "EMP_number", "Email", "Name", "Role", "Action"];
 const enabledFunctoon = {
   "add-user-to-workgroup": "66309730242be72e399d5a82",
   "remove-user-from-workgroup": "66309740242be72e399d5a84",
+  "view-user-in-workgroup": "6632e932eccb576a719dfa75"
 }
 
 const Page = () => {

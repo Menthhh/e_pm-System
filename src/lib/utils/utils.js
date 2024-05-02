@@ -80,8 +80,9 @@ const routing = (role_id) => {
     case process.env.SA_ROLE_ID:
       return  "/pages/SA/create-role";
     case process.env.ADMIN_GROUP_ROLE_ID:
-      return  "/pages/admin/add-user-to-workgroup";
+      return  "/pages/dashboard";
     default:
+      //have error
       console.log("redirecting to denied page");
       return  "/pages/denied";
   }
