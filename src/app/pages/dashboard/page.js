@@ -8,6 +8,8 @@ import { getSession } from "@/lib/utils/utils";
 import Layout from "@/components/Layout";
 
 
+
+
 const headers = ["ID", "Role", "Action"];
 const body = [
     {
@@ -68,7 +70,7 @@ const Page = () => {
                 <div className="z-50">
                     <h1 className="text-3xl text-black font-bold pt-4"> Dashboard</h1>
 
-                    <div className="flex flex-wrap mt-9 gap-8 justify-between">
+                    <div className="flex flex-wrap mt-9 gap-8 justify-start">
                         {cards.map((card, index) => {
                             return (
                                 <Card
@@ -76,6 +78,7 @@ const Page = () => {
                                     title={card.TITLE}
                                     detail={card.DETAIL}
                                     link={card.LINK}
+                                    logo_path={card.LOGO_PATH}
                                 />
                             );
                         }
@@ -86,6 +89,7 @@ const Page = () => {
                             headers={headers}
                             datas={body}
                             searchColumn={"Role"}
+                            
                         />
                     </div>
                 </div>

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "swagger": "node ./src/swagger-generator.js"
   },
   "dependencies": {
     "@chakra-ui/next-js": "^2.2.0",
@@ -22,19 +23,24 @@
     "@mui/material": "^5.15.15",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.0-alpha1",
+    "express": "^4.19.2",
     "framer-motion": "^11.1.7",
     "jose": "^5.2.4",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.5.0",
     "mongoose": "^8.3.2",
     "next": "14.2.2",
+    "next-swagger-doc": "^0.4.0",
     "react": "^18",
     "react-dom": "^18",
     "react-hook-form": "^7.51.3",
-    "react-type-animation": "^3.2.0"
+    "react-select": "^5.8.0",
+    "react-type-animation": "^3.2.0",
+    "swagger-ui-react": "^5.17.2"
   },
   "devDependencies": {
     "postcss": "^8",
+    "swagger-autogen": "^2.23.7",
     "tailwindcss": "^3.4.1"
   }
 }

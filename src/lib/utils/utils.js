@@ -4,7 +4,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import nextConfig from "../../../next.config.mjs";
-import { Role } from "./Role";
+import { Role } from "./Roles";
 import { NextResponse } from "next/server";
 
 const secretKey = process.env.SECRET_KEY;
@@ -66,7 +66,9 @@ export async function login(prevState, formData) {
       sameSite: "strict",
       secure: true,
     });
-    console.log(data.user.Role)
+    if (!data.user.Role) {
+      return { message: "User is not assigned role." };
+    }
     const path = routing(data.user.Role);
     redirect(path);
 
@@ -78,13 +80,9 @@ export async function login(prevState, formData) {
 const routing = (role_id) => {
   switch (role_id) {
     case process.env.SA_ROLE_ID:
-      return  "/pages/SA/create-role";
-    case process.env.ADMIN_GROUP_ROLE_ID:
-      return  "/pages/dashboard";
+      return "/pages/SA/create-role";
     default:
-      //have error
-      console.log("redirecting to denied page");
-      return  "/pages/denied";
+      return "/pages/dashboard";
   }
 }
 
@@ -114,6 +112,14 @@ export async function register(prevState, formData) {
   const data = await res.json();
   if (data.status === 500) {
     return { message: data.error };
+  }
+
+  //get role id
+  const role_id = data.user.Role;
+  console.log(role_id)
+  //if role id is null then return error
+  if (!role_id) {
+    return { message: "Role not found" };
   }
 
   return { message: "User registered successfully" };

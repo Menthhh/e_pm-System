@@ -62,7 +62,6 @@ const Page = () => {
         throw new Error("Failed to fetch roles");
       }
       const res = await response.json();
-      console.log(res)
       setRoleActions(res.role_actions);
     } catch (error) {
       console.error(error);
@@ -126,7 +125,6 @@ const Page = () => {
 
   return (
     <SALayout className="flex flex-col items-center gap-9 p-12 ">
-      <>
         <h1 className="text-2xl font-bold">Role {dataRole.name}</h1>
         <div className="flex gap-20 container mx-auto left-0 right-0 justify-center p-6 items-center">
           <div className="flex flex-col">
@@ -160,9 +158,8 @@ const Page = () => {
           href="/pages/SA/create-role"
           className="absolute right-5 bottom-2 bg-yellow-400 px-5 py-2 rounded-md hover:bg-yellow-500"
         >
-          Back to Create Role
+          Back to Manage Role
         </Link>
-      </>
     </SALayout>
   );
 };

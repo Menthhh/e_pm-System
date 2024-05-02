@@ -142,7 +142,6 @@ const Page = () => {
         throw new Error("Failed to fetch user data");
       }
       const data = await response.json();
-      console.log(data.userActions)
       setUserEnableFunctions(data.userActions);
 
     } catch (error) {
@@ -261,11 +260,11 @@ const Page = () => {
         <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {user.workgroup} </h1>
         <h1 className="text-1xl font-semibold">Add User to Workgroup</h1>
         <div className="mt-4">
-          <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} />
+          <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} TableName={"Members"}/>
         </div>
         <hr className="w-full" />
         <div className="mt-4">
-          <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} />
+          <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} TableName={"All users"}/>
         </div>
       </div>
     </Layout>

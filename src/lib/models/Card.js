@@ -4,7 +4,8 @@ const cardSchema = new mongoose.Schema({
     TITLE: { type: String, required: true },
     DETAIL: { type: String, default: "" },
     LINK: { type: String, required: true },
-    ACTION_LIST : { type: Array, default: [] }
+    ACTION_LIST : { type: Array, default: [] },
+    LOGO_PATH: { type: String, default: "" },
 
 }, { timestamps: true });
 

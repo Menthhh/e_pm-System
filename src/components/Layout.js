@@ -4,6 +4,7 @@ import Navbar from "./Navbar";
 import HomeIcon from '@mui/icons-material/Home';
 import { getSession } from "@/lib/utils/utils";
 import nextConfig from "../../next.config.mjs";
+import Image from 'next/image';
 
 const Layout = ({ children, className = "" }) => {
   const [menus, setMenus] = useState([]);
@@ -35,8 +36,6 @@ const Layout = ({ children, className = "" }) => {
         throw new Error("Failed to fetch roles");
       }
       const data = await response.json();
-      console.log(data)
-      
       setCards(data.cards);
     } catch (error) {
       console.error(error);
@@ -53,7 +52,7 @@ const Layout = ({ children, className = "" }) => {
    
     menus.push(...cards.map((card) => {
       return {
-        "name": card.TITLE, 
+        "name": <div className="flex justify-start items-center gap-3"><Image src={card.LOGO_PATH} width={24} height={24} style={{ filter: "invert(100%)", }}/> <p className="text-xl">{card.TITLE}</p></div>, 
         "path": card.LINK 
       };
   }));

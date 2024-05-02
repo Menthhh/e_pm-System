@@ -144,6 +144,7 @@ const Page = () => {
             headers={headers}
             datas={data}
             searchColumn={"Workgroup"}
+            TableName={"All Workgroups"}
           />
         )}
       </div>

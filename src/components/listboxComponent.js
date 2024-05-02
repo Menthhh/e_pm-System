@@ -35,35 +35,28 @@ const Listbox = ({ data, handleSelectedList  }) => {
     };
 
     return (
-        <div style={{ border: '1px solid gray', padding: '10px', borderRadius: '5px' }}>
+        <div className="border border-gray-300 rounded-lg p-4">
             <input
                 type="text"
-                style={{ border: '1px solid #ccc', borderRadius: '5px', padding: '5px' }}
+                className="border border-gray-300 rounded-md p-2 mb-4 w-full"
                 placeholder="Search..."
                 value={searchQuery}
                 onChange={handleSearchQueryChange}
             />
-            <p></p>
-            <ul style={{ border: '1px solid gray', maxHeight: '200px', overflowY: 'auto' }}>
+            <ul className="max-h-48 overflow-y-auto">
                 {filteredItems.map((item, index) => (
-                    <li key={index}>
+                    <li key={index} className="flex items-center mb-2">
                         <input
                             id={item._id}
                             type='checkbox'
                             checked={selectedItems.includes(item._id)}
                             onChange={() => handleCheckboxChange(item._id)}
-                        />&nbsp;&nbsp;&nbsp;{item.name}
+                            className="mr-2"
+                        />
+                        <label htmlFor={item._id}>{item.name}</label>
                     </li>
                 ))}
             </ul>
-            {/* <div>
-                <p>Selected items:</p>
-                <ul>
-                    {selectedItems.map((itemId, index) => (
-                        <li key={index}>{getItemName(itemId)}</li>
-                    ))}
-                </ul>
-            </div> */}
         </div>
     );
 };

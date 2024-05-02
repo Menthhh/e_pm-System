@@ -1,6 +1,7 @@
 "use server"
 import { NextResponse } from "next/server.js";
 import { getSession } from "./lib/utils/utils.js";
+import { Roles } from "./lib/utils/Roles.js";
 
 const publicRoutes = [
     "/pages/login",
@@ -10,12 +11,12 @@ const publicRoutes = [
 ];
 
 const developingRoutes = [
-    // "/pages/dashboard"
+    "/pages/job-template"
 ]
 
 const SA = {
-    "role_id": process.env.SA_ROLE_ID, 
-    "role_name": "SA",
+    "ID": Roles.SUPER_ADMIN_ID, 
+    "name": Roles.SUPER_ADMIN,
     "unaccessible_pages": [
         "/pages/admin/add-user-to-workgroup",
         "/pages/dashboard"
@@ -26,8 +27,8 @@ const SA = {
 }
 
 const ADMIN_GROUP = {
-    "role_id": process.env.ADMIN_GROUP_ROLE_ID,
-    "role_name": "Admin Group",
+    "ID": Roles.ADMIN_GROUP_ID,
+    "name": Roles.ADMIN_GROUP,
     "unaccessible_pages": [
         "/pages/SA/create-role",
         "/pages/SA/create-workgroup",
@@ -52,8 +53,8 @@ export default async function middleware(req) {
     if (!userRoleId) return NextResponse.redirect(new URL('/pages/login', req.nextUrl));
     
     else if (
-        (userRoleId === SA.role_id && SA.unaccessible_pages.includes(endpoint)) ||
-        (userRoleId === ADMIN_GROUP.role_id && ADMIN_GROUP.unaccessible_pages.includes(endpoint))    
+        (userRoleId === SA.ID && SA.unaccessible_pages.includes(endpoint)) ||
+        (userRoleId === ADMIN_GROUP.ID && ADMIN_GROUP.unaccessible_pages.includes(endpoint))    
     ) return NextResponse.redirect(new URL('/pages/denied', req.nextUrl));
      
         

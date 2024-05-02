@@ -133,6 +133,7 @@ const Page = () => {
               headers={headers}
               datas={data}
               searchColumn={"Role"}
+              TableName="All Roles"
             />
           )}
         </div>

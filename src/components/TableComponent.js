@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 
-const TableComponent = ({ headers, datas, searchColumn = "" }) => {
+const TableComponent = ({ headers, datas, searchColumn = "", TableName="Table Name" }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const pageSize = 4; // Number of rows per page
@@ -42,7 +42,7 @@ const TableComponent = ({ headers, datas, searchColumn = "" }) => {
             </div>
 
             <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start shadow-inner drop-shadow-md">
-            <h1 className="p-2 text-slate-700 text-lg">Table Name</h1>
+            <h1 className="p-2 text-slate-700 text-lg">{TableName}</h1>
             <table className="table-auto w-full">
                 <thead className=" bg-[#F6F6F6] text-[#878787]">
                     <tr>

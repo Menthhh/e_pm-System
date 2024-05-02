@@ -2,6 +2,7 @@ import { connectToDb } from "@/lib/utils/utils.js";
 import { Role } from "@/lib/models/Role.js";
 import { NextResponse } from 'next/server';
 
+
 export const POST = async (req, res) => {
     await connectToDb();
     const body = await req.json();
