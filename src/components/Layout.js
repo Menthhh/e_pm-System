@@ -3,7 +3,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import HomeIcon from '@mui/icons-material/Home';
 import { getSession } from "@/lib/utils/utils";
-import nextConfig from "../../next.config.mjs";
+import { config } from "../config/config.js";
 import Image from 'next/image';
 
 const Layout = ({ children, className = "" }) => {
@@ -30,7 +30,7 @@ const Layout = ({ children, className = "" }) => {
     
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/user/get-card-from-user/${user_id}`
+        `${config.host}/api/user/get-card-from-user/${user_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");

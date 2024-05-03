@@ -4,7 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Listbox from "@/components/listboxComponent";
 import { useState, useEffect } from "react";
-import nextConfig from "../../../../../next.config.mjs";
+import { config } from "../../../../config/config.js";
 
 const Page = () => {
   const searchParams = useSearchParams();
@@ -25,7 +25,7 @@ const Page = () => {
   const fetchRole = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/role/get-role/${role_id}`
+        `${config.host}/api/role/get-role/${role_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -40,7 +40,7 @@ const Page = () => {
   const fetchActions = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/action/get-actions`
+        `${config.host}/api/action/get-actions`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -56,7 +56,7 @@ const Page = () => {
   const fetchRoleActions = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/role/get-action-from-role/${role_id}`
+        `${config.host}/api/role/get-action-from-role/${role_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -75,7 +75,7 @@ const Page = () => {
   const handdleAddToRole = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/role/add-action-to-role`,
+        `${config.host}/api/role/add-action-to-role`,
         {
           method: "POST",
           headers: {
@@ -101,7 +101,7 @@ const Page = () => {
   const handdleRemoveFromRole = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/role/remove-action-from-role`,
+        `${config.host}/api/role/remove-action-from-role`,
         {
           method: "DELETE",
           headers: {

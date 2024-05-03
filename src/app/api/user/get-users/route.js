@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { Role } from "@/lib/models/Role";
 import { getSession } from "@/lib/utils/utils.js";
 
+
+
 export const GET = async (req, paramress) => {
   await connectToDb();
   const session = await getSession();

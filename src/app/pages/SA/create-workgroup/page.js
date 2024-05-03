@@ -5,7 +5,7 @@ import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
 import SALayout from "@/components/SALayout";
 import MessageBox from "@/components/MessageBox";
-import nextConfig from "../../../../../next.config.mjs";
+import {config} from "../../../../config/config.js";
 
 const headers = ["ID", "WorkGroup", "Action"];
 
@@ -31,7 +31,7 @@ const Page = () => {
   const fetchWorkgroups = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/workgroup/get-workgroups`
+        `${config.host}/api/workgroup/get-workgroups`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -72,7 +72,7 @@ const Page = () => {
 
   const createWorkgroup = async () => {
     try {
-      await fetch(`${nextConfig.host}/api/workgroup/create-workgroup`, {
+      await fetch(`${config.host}/api/workgroup/create-workgroup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -90,7 +90,7 @@ const Page = () => {
   const handleDelete = async (id) => {
     try {
       await fetch(
-        `${nextConfig.host}/api/workgroup/delete-workgroup/${id}`,
+        `${config.host}/api/workgroup/delete-workgroup/${id}`,
         {
           method: "DELETE",
         }

@@ -3,7 +3,7 @@ import { ExitToApp } from '@mui/icons-material';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { getSession, logout } from '@/lib/utils/utils';
-import nextConfig from '../../next.config.mjs';
+import {config} from '../config/config.js';
 
 const Navbar = ({ menu }) => {
    
@@ -22,7 +22,7 @@ const Navbar = ({ menu }) => {
 
     const fetchUser = async (user_id) => {
         try {
-            const response = await fetch( `${nextConfig.host}/api/user/get-user/${user_id}`);
+            const response = await fetch( `${config.host}/api/user/get-user/${user_id}`);
             if (!response.ok) {
                 throw new Error("Failed to fetch user data");
             }

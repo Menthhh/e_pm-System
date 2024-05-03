@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Navbar from "@/components/Navbar";
 import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
-import nextConfig from "../../../../../next.config.mjs";
+import {config} from "../../../../config/config.js";
 import SALayout from "@/components/SALayout";
 
 const headers = ["ID", "Role", "Action"];
@@ -20,7 +20,7 @@ const Page = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${nextConfig.host}/api/role/get-roles`);
+      const response = await fetch(`${config.host}/api/role/get-roles`);
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
       }
@@ -63,7 +63,7 @@ const Page = () => {
 
   const createRole = async () => {
     try {
-      await fetch(`${nextConfig.host}/api/role/create-role`, {
+      await fetch(`${config.host}/api/role/create-role`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ const Page = () => {
 
   const handleDelete = async (id) => {
     try {
-      await fetch(`${nextConfig.host}/api/role/delete-role/${id}`, {
+      await fetch(`${config.host}/api/role/delete-role/${id}`, {
         method: "DELETE",
       });
       setRefresh(!refresh);

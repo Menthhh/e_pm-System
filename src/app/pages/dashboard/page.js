@@ -1,6 +1,6 @@
 "use client"
 import TableComponent from "@/components/TableComponent";
-import nextConfig from "../../../../next.config.mjs";
+import {config} from "../../../config/config.js";
 
 import Card from "@/components/Card";
 import { useEffect, useState } from "react";
@@ -53,7 +53,7 @@ const Page = () => {
     const fetchCard = async (user_id) => {
         try {
             const response = await fetch(
-                `${nextConfig.host}/api/user/get-card-from-user/${user_id}`
+                `${config.host}/api/user/get-card-from-user/${user_id}`
             );
             if (!response.ok) {
                 throw new Error("Failed to fetch roles");

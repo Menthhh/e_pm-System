@@ -1,15 +1,14 @@
 import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 
-const TableComponent = ({ headers, datas, searchColumn = "", TableName="Table Name" }) => {
+const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
-    const pageSize = 4; // Number of rows per page
-
+    const pageSize = PageSize || 4; 
     const data = datas;
 
     const filteredData = data.filter((item) =>
-        item[searchColumn].toLowerCase().includes(searchTerm.toLowerCase())
+        searchColumn ? item[searchColumn].toLowerCase().includes(searchTerm.toLowerCase()) : item
     );
 
     const totalPages = Math.ceil(filteredData.length / pageSize);
@@ -29,7 +28,7 @@ const TableComponent = ({ headers, datas, searchColumn = "", TableName="Table Na
     };
 
     return (
-        <div className="flex flex-col justify-center gap-5 items-center relative">
+        <div className="flex flex-col justify-center gap-5 items-center relative ">
             <div className='my-8 '>
                 <SearchIcon className="absolute left-2 z-50 top-10"/>
                 <input
@@ -42,7 +41,7 @@ const TableComponent = ({ headers, datas, searchColumn = "", TableName="Table Na
             </div>
 
             <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start shadow-inner drop-shadow-md">
-            <h1 className="p-2 text-slate-700 text-lg">{TableName}</h1>
+            <h1 className="p-2 text-slate-700 text-lg">{TableName || "Table Name"}</h1>
             <table className="table-auto w-full">
                 <thead className=" bg-[#F6F6F6] text-[#878787]">
                     <tr>

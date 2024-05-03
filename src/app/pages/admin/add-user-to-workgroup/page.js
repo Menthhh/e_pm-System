@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import TableComponent from "@/components/TableComponent";
 import { getSession } from "@/lib/utils/utils";
 import { useEffect, useState } from "react";
-import nextConfig from "../../../../../next.config.mjs";
+import {config} from "../../../../config/config.js";
 
 const workgroupHeader = ["id", "EMP_number", "Email", "Name", "Role", "Action"];
 const userHeader = ["id", "EMP_number", "Email", "Name", "Role", "Action"];
@@ -42,7 +42,7 @@ const Page = () => {
   const fetchUser = async (user_id) => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/user/get-user/${user_id}`
+        `${config.host}/api/user/get-user/${user_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
@@ -59,7 +59,7 @@ const Page = () => {
   const fetchUsersWorkgroup = async (workgroup_id) => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/workgroup/get-users-from-workgroup/${workgroup_id}`
+        `${config.host}/api/workgroup/get-users-from-workgroup/${workgroup_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -75,7 +75,7 @@ const Page = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/user/get-users`
+        `${config.host}/api/user/get-users`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -91,7 +91,7 @@ const Page = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${nextConfig.host}/api/role/get-roles`, {
+      const response = await fetch(`${config.host}/api/role/get-roles`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -136,7 +136,7 @@ const Page = () => {
   const fetchUserEnabledFunction = async (user_id) => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/action/get-user-action/${user_id}`
+        `${config.host}/api/action/get-user-action/${user_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
@@ -152,7 +152,7 @@ const Page = () => {
   const handleAdd = async (user_id, role_id) => {
     const workgroup_id = user.workgroup_id;
     // Update user role
-    const res = await fetch(`${nextConfig.host}/api/user/update-user/${user_id}`, {
+    const res = await fetch(`${config.host}/api/user/update-user/${user_id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -164,7 +164,7 @@ const Page = () => {
 
 
     // Add user to workgroup
-    await fetch(`${nextConfig.host}/api/workgroup/add-user-to-workgroup-admin`, {
+    await fetch(`${config.host}/api/workgroup/add-user-to-workgroup-admin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -182,7 +182,7 @@ const Page = () => {
     const workgroup_id = user.workgroup_id;
 
     // Remove user from workgroup
-    await fetch(`${nextConfig.host}/api/workgroup/remove-user-from-workgroup`, {
+    await fetch(`${config.host}/api/workgroup/remove-user-from-workgroup`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

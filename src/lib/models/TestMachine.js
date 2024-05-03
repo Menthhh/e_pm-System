@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const testMachineSchema = new mongoose.Schema({
-    JOBTEMPLATE_ID: { type: mongoose.Schema.Types.ObjectId, ref: "JobTemplate", required: true },
+    JOB_TEMPLATE_ID: { type: mongoose.Schema.Types.ObjectId, ref: "JobTemplate", required: true },
     MACHINE_ID: { type: mongoose.Schema.Types.ObjectId, ref: "Machine", required: true },
 });
 

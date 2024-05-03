@@ -3,8 +3,7 @@ import SALayout from "@/components/SALayout";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import TableComponent from "@/components/TableComponent";
-import EditIcon from '@mui/icons-material/Edit';
-import nextConfig from "../../../../../next.config.mjs";
+import { config } from "../../../../config/config.js";
 
 const workgroupHeader = ["id","EMP_number", "Email" ,"Name", "Role", "Action"];
 const userHeader = ["id","EMP_number", "Email", "Name", "Role", "Action"];
@@ -29,7 +28,7 @@ const Page = () => {
   const fetchWorkgroup = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/workgroup/get-workgroup/${workgroup_id}`
+        `${config.host}/api/workgroup/get-workgroup/${workgroup_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch workgroup");
@@ -44,7 +43,7 @@ const Page = () => {
   const fetchUsersWorkgroup = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/workgroup/get-users-from-workgroup/${workgroup_id}`
+        `${config.host}/api/workgroup/get-users-from-workgroup/${workgroup_id}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -60,7 +59,7 @@ const Page = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        `${nextConfig.host}/api/user/get-users`
+        `${config.host}/api/user/get-users`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -76,7 +75,7 @@ const Page = () => {
   }
 
   const handleDelete = async (user_id) => {
-    await fetch(`${nextConfig.host}/api/workgroup/remove-user-from-workgroup`, {
+    await fetch(`${config.host}/api/workgroup/remove-user-from-workgroup`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -90,7 +89,7 @@ const Page = () => {
   }
 
   const handleAdd = async (user_id) => {
-    await fetch(`${nextConfig.host}/api/workgroup/add-user-to-workgroup`, {
+    await fetch(`${config.host}/api/workgroup/add-user-to-workgroup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

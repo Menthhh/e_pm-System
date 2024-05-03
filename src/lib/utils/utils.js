@@ -3,9 +3,8 @@ import mongoose from "mongoose";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import nextConfig from "../../../next.config.mjs";
-import { Role } from "./Roles";
 import { NextResponse } from "next/server";
+import { config } from "../../config/config.js";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
@@ -49,7 +48,7 @@ export async function login(prevState, formData) {
   const username = formData.get("username");
   const password = formData.get("password");
 
-  const res = await fetch(`${nextConfig.host}/api/auth/login`, {
+  const res = await fetch(`${config.host}/api/auth/login`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -95,7 +94,7 @@ export async function register(prevState, formData) {
   const password = formData.get("password");
   const team = formData.get("team");
 
-  const res = await fetch(`${nextConfig.host}/api/auth/register`, {
+  const res = await fetch(`${config.host}/api/auth/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -112,14 +111,6 @@ export async function register(prevState, formData) {
   const data = await res.json();
   if (data.status === 500) {
     return { message: data.error };
-  }
-
-  //get role id
-  const role_id = data.user.Role;
-  console.log(role_id)
-  //if role id is null then return error
-  if (!role_id) {
-    return { message: "Role not found" };
   }
 
   return { message: "User registered successfully" };
