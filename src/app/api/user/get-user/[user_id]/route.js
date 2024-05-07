@@ -2,8 +2,8 @@ import { connectToDb } from "@/lib/utils/utils.js";
 import { User } from "@/lib/models/User.js";
 import { NextResponse } from 'next/server';
 import { Workgroup } from "@/lib/models/Workgroup";
-import { Role } from "@/lib/models/Role";
 import mongoose from 'mongoose';
+import { RoleHasAction } from "@/lib/models/RoleHasAction";
 
 export const GET = async (req, { params }) => {
     await connectToDb();
@@ -57,14 +57,43 @@ export const GET = async (req, { params }) => {
 
         let workgroupName = workgroupData.length > 0 ? workgroupData[0].workgroup : "No workgroup";
 
+        //get user's actions
+        const user_roleID = new mongoose.Types.ObjectId(user.ROLE);
+
+        const userActions = await RoleHasAction.aggregate([
+            {
+                $match: { ROLE_ID: user_roleID }
+            },
+            {
+                $lookup: {
+                    from: "actions",
+                    localField: "ACTION_ID",
+                    foreignField: "_id",
+                    as: "actionDetails"
+                }
+            },
+            {
+                $unwind: "$actionDetails"
+            },
+            {
+                $project: {
+                    _id: "$actionDetails._id",
+                    name: "$actionDetails.ACTION_NAME"
+                }
+            }
+        ]);
+
+
         let data = {
             _id: user._id,
             emp_number: user.EMP_NUMBER,
             email: user.EMAIL,
             name: user.EMP_NAME,
             role: userData[0].role || "No role", 
+            team: user.TEAM,
             workgroup: workgroupName,
-            workgroup_id: workgroupId // Include workgroup ID
+            workgroup_id: workgroupId,
+            actions: userActions 
         };
         
         return NextResponse.json({ status: 200, user: data });

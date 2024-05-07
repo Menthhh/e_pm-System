@@ -28,7 +28,6 @@ const Navbar = ({ menu }) => {
             }
             const data = await response.json();
             setUser(data.user);
-            await fetchUsersWorkgroup(data.user.workgroup_id);
         } catch (error) {
             console.error(error);
         }
@@ -54,7 +53,7 @@ const Navbar = ({ menu }) => {
                 <div className={`bg-secondary w-7 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
                 <div className={`bg-secondary w-7 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div>
             </div>
-            <div className={`bg-slate-800 h-screen  left-0 top-0 absolute w-1/4 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'} `}>
+            <div className={`bg-slate-800 h-screen  left-0 top-0 absolute lg:w-1/4 w-1/2 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'} `}>
                 <button className="absolute top-4 right-4 z-[300]" onClick={closeMenu} >
         
                     <span className="sr-only">Close</span>

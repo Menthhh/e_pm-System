@@ -127,28 +127,5 @@ export async function getSession() {
   return await decrypt(session);
 }
 
-export async function updateSession(request) {
-  const session = request.cookies.get("session")?.value;
-  if (!session) return { message: "Session not found" };
 
-  const parsed = await decrypt(session);
 
-  const expirationDate = new Date();
-  expirationDate.setDate(expirationDate.getDate() + 7);
-  parsed.expires = expirationDate;
-
-  const res = new NextResponse();
-  res.cookies.set({
-    name: "session",
-    value: await encrypt(parsed),
-    httpOnly: true,
-    expires: parsed.expires,
-  });
-  return res;
-}
-
-export async function getRoleName(role_id) {
-  await connectToDb();
-  const role = await Role.findById(role_id);
-  return role ? role.ROLE_NAME : "No role";
-}

@@ -1,14 +1,15 @@
 import { connectToDb } from "@/lib/utils/utils.js";
-import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { NextResponse } from 'next/server';
+import { JobTemplate } from "@/lib/models/JobTemplate";
 import { Machine } from "@/lib/models/Machine";
 
-
-export const GET = async (req, res) => {
+export const GET = async (req, {params}) => {
     await connectToDb();
-
+    const { workgroup_id } = params;
     try {
-        const jobTemplates = await JobTemplate.find();
+        const allJobTemplates = await JobTemplate.find();
+        const jobTemplates = allJobTemplates.filter(jobTemplate => jobTemplate.WORKGROUP_ID === workgroup_id);
+
         const data = await Promise.all(jobTemplates.map(async jobTemplate => {
             const machines = await Machine.find({ _id: jobTemplate.MACHINE_ID });
             const machineName = machines.length > 0 ? machines[0].MACHINE_NAME : null;
@@ -27,13 +28,10 @@ export const GET = async (req, res) => {
 
             };
         }));
-        return NextResponse.json({ status: 200, jobTemplates: data }); 
+        return NextResponse.json({ status: 200, jobTemplates: data });
     }
-    catch(err) {
-        return NextResponse.json({status: 500, file: __filename, error: err.message});
+    catch (err) {
+        return NextResponse.json({ status: 500, file: __filename, error: err.message });
     }
+      
 };
-
-
-    
-

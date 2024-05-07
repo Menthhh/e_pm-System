@@ -9,8 +9,8 @@ import Link from "next/link";
 const jobItemTemplateHeader = ["ID", "Job Template Name", "Machine", "Created At", "Action"];
 
 const enabledFunction = {
-    "edit-job-template": "663313bbeccb576a719dfa9c",
-    "remove-job-template": "663313b1eccb576a719dfa9a",
+    "activate-job-template": "66389056d81a314967236e07",
+    "remove-job": "6638906bd81a314967236e09",
 };
 
 const Page = () => {
@@ -21,7 +21,7 @@ const Page = () => {
     const [userEnableFunctions, setUserEnableFunctions] = useState([]);
 
     useEffect(() => {
-       
+        
         retrieveSession();
     }, [refresh]);
 
@@ -85,27 +85,13 @@ const Page = () => {
             Action: (
                 <div className="flex gap-2 items-center justify-center">
                     <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded"
+                        className="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
                         onClick={() => handleRemove(jobTemplate._id)}
-                        disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["remove-job-template"])}
-                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["remove-job-template"]) ? "not-allowed" : "pointer" }}
+                        disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"])}
+                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"]) ? "not-allowed" : "pointer" }}
                     >
-                        Remove
+                        Activate
                     </button>
-                    <Link
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
-                        href={{
-                            pathname: "/pages/job-item-template/add-job-item-template",
-                            query: { jobTemplate_id: jobTemplate._id },
-                        }}
-                        onClick={() => {
-                            console.log("Edit Job Template");
-                        }}
-                        disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"])}
-                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"]) ? "not-allowed" : "pointer" }}
-                    >
-                        add Item
-                    </Link>
                 </div>
             ),
         };
@@ -113,6 +99,7 @@ const Page = () => {
 
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
+            <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
             <h1 className="text-2xl font-bold">Job Templates</h1>
             <TableComponent
                 headers={jobItemTemplateHeader}

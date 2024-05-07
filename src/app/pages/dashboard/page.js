@@ -38,6 +38,7 @@ const Page = () => {
     const [cards, setCards] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const [session, setSession] = useState({});
+    const [user, setUser] = useState({});
 
     useEffect(() => {
         fetchSession();
@@ -48,6 +49,22 @@ const Page = () => {
         const session = await getSession();
         setSession(session);
         await fetchCard(session.user_id);
+        await fetchUser(session.user_id);
+    };
+
+    const fetchUser = async (user_id) => {
+        try {
+            const response = await fetch(
+                `${config.host}/api/user/get-user/${user_id}`
+            );
+            if (!response.ok) {
+                throw new Error("Failed to fetch roles");
+            }
+            const data = await response.json();
+            setUser(data.user);
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const fetchCard = async (user_id) => {
@@ -68,7 +85,10 @@ const Page = () => {
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 ">
                
                 <div className="z-50">
-                    <h1 className="text-3xl text-black font-bold pt-4"> Dashboard</h1>
+                    <div className="flex flex-col gap-4">
+                    <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
+                    <h1 className="text-2xl font-semibold">Team: {user.team}</h1>
+                    </div>
 
                     <div className="flex flex-wrap mt-9 gap-8 justify-start">
                         {cards.map((card, index) => {

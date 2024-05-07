@@ -30,9 +30,9 @@ const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) =
     return (
         <div className="flex flex-col justify-center gap-5 items-center relative ">
             <div className='my-8 '>
-                <SearchIcon className="absolute left-2 z-50 top-10"/>
+                <SearchIcon className="absolute left-2  top-10 z-40"/>
                 <input
-                    className="border border-gray-300 rounded-md p-2 pl-9 absolute left-0 w-64"
+                    className="border border-gray-300 rounded-md p-2 pl-9 absolute left-0 w-64 z-20"
                     type="text"
                     placeholder="Search..."
                     value={searchTerm}

@@ -13,8 +13,9 @@ export const POST = async (req, res) => {
         DOC_NUMBER,
         DUE_DATE,
         CHECKLIST_VERSION,
+        MACHINE_ID,
         WORKGROUP_ID,
-        APPROVERS_ID //list of user id
+        APPROVERS_ID 
     } = body;
     try {
         const jobTemplate = new JobTemplate({
@@ -23,6 +24,7 @@ export const POST = async (req, res) => {
             DOC_NUMBER,
             DUE_DATE,
             CHECKLIST_VERSION,
+            MACHINE_ID,
             WORKGROUP_ID
         });
         await jobTemplate.save();
