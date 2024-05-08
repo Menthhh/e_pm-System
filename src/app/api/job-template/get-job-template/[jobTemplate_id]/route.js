@@ -23,6 +23,7 @@ export const GET = async (req, { params }) => {
             MACHINE_ID: jobTemplate.MACHINE_ID,
             MACHINE_NAME: machineName,
             WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
+            JobTemplateCreateID: jobTemplate.JobTemplateCreateID,
             createdAt: createdAt,
         };
         

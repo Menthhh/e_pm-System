@@ -129,3 +129,17 @@ export async function getSession() {
 
 
 
+export const generateUniqueKey = async () => {
+  const timestamp = Date.now().toString(16); 
+  const randomSuffix = Math.random().toString(16).substring(2); 
+  return `${timestamp}-${randomSuffix}`;
+}
+
+
+export const convertKeyToDate = async (uniqueKey) => {
+  const [timestampHex, randomSuffix] = uniqueKey.split('-');
+  const timestamp = parseInt(timestampHex, 16);
+  const date = new Date(timestamp);
+  
+  return date;
+}

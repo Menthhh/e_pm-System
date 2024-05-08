@@ -109,7 +109,8 @@ const Page = () => {
             UPPER_SPEC_LIMIT: form.get("upper_spec"),
             LOWER_SPEC_LIMIT: form.get("lower_spec"),
             TEST_METHOD: form.get("test_method"),
-            JOB_TEMPLATE_ID: jobTemplate_id
+            JOB_TEMPLATE_ID: jobTemplate_id,
+            JobTemplateCreateID: jobTemplate.JobTemplateCreateID,
         };
         try {
             const response = await fetch(`${config.host}/api/job-item-template/create-job-item-template`, {
@@ -145,8 +146,9 @@ const Page = () => {
             console.log(err);
         }
     }
-
-
+    
+    
+    console.log(jobTemplate.JobTemplateCreateID)
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-7">
             <div className="flex flex-col gap-3">

@@ -113,6 +113,7 @@ const Page = () => {
 
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
+            <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
             <h1 className="text-2xl font-bold">Job Templates</h1>
             <TableComponent
                 headers={jobItemTemplateHeader}

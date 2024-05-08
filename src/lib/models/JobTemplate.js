@@ -8,6 +8,7 @@ const jobTemplateSchema = new mongoose.Schema({
     CHECKLIST_VERSION: { type: String, required: true },
     MACHINE_ID: { type: String, required: true },
     WORKGROUP_ID: { type: String, required: true },
+    JobTemplateCreateID: { type: String, required: true },
 }, { timestamps: true });
 
 export const JobTemplate = mongoose.models?.JobTemplate || mongoose.model('JobTemplate', jobTemplateSchema);
