@@ -66,6 +66,7 @@ const Page = () => {
             const response = await fetch(`${config.host}/api/job-item-template/get-job-item-template/${jobTemplate_id}`);
             const data = await response.json();
             if (data.status === 200) {
+                console.log(data.jobItemTemplates)
                 setJobItemTemplates(data.jobItemTemplates);
             }
         } catch (err) {
@@ -78,8 +79,8 @@ const Page = () => {
             ID: index + 1,
             Title: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
             Name: jobItemTemplate.JOB_ITEM_TEMPLATE_NAME,
-            Upper_Spec: jobItemTemplate.UPPER_SPEC_LIMIT,
-            Lower_Spec: jobItemTemplate.LOWER_SPEC_LIMIT,
+            Upper_Spec: jobItemTemplate.UPPER_SPEC,
+            Lower_Spec: jobItemTemplate.LOWER_SPEC,
             Test_Method: jobItemTemplate.TEST_METHOD,
             "Create At": jobItemTemplate.createdAt,
             Action: (
@@ -106,8 +107,8 @@ const Page = () => {
             AUTHOR_ID: user._id,
             JOB_ITEM_TEMPLATE_TITLE: form.get("job_item_template_title"),
             JOB_ITEM_TEMPLATE_NAME: form.get("job_item_template_name"),
-            UPPER_SPEC_LIMIT: form.get("upper_spec"),
-            LOWER_SPEC_LIMIT: form.get("lower_spec"),
+            UPPER_SPEC: form.get("upper_spec"),
+            LOWER_SPEC: form.get("lower_spec"),
             TEST_METHOD: form.get("test_method"),
             JOB_TEMPLATE_ID: jobTemplate_id,
             JobTemplateCreateID: jobTemplate.JobTemplateCreateID,

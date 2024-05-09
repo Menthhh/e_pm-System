@@ -3877,6 +3877,11 @@ react-style-singleton@^2.2.1:
     invariant "^2.2.4"
     tslib "^2.0.0"
 
+react-style-text@^0.2.8:
+  version "0.2.8"
+  resolved "https://registry.yarnpkg.com/react-style-text/-/react-style-text-0.2.8.tgz#373e3182130c94a08933d33c5e1783c7d1c00c7f"
+  integrity sha512-k8Zqgoqt32oImPLQndOEZxTYgFuv3Srfv4xK25rxHg4Kj5q9z05jdzo2AkMuUkdMSTBgWSyCGoxYs3GvZGYD9g==
+
 react-syntax-highlighter@^15.5.0:
   version "15.5.0"
   resolved "https://registry.yarnpkg.com/react-syntax-highlighter/-/react-syntax-highlighter-15.5.0.tgz#4b3eccc2325fa2ec8eff1e2d6c18fa4a9e07ab20"
