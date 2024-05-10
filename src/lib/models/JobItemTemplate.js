@@ -10,9 +10,11 @@ const jobItemTemplateSchema = new mongoose.Schema({
     TEST_METHOD: { type: String, required: true },
     
     JOB_TEMPLATE_ID: { type: mongoose.Schema.Types.ObjectId, ref: "JobTemplate", required: true },
-    JobTemplateCreateID: { type: String, required: true },
+    TEST_LOCATION_ID: { type: mongoose.Schema.Types.ObjectId, ref: "TestLocation", required: true },
     
+    JobTemplateCreateID: { type: String, required: true },
     JobItemTemplateCreateID: { type: String, required: true },
+
 }, { timestamps: true });
 
 export const JobItemTemplate = mongoose.models?.JobItemTemplate || mongoose.model('JobItemTemplate', jobItemTemplateSchema);

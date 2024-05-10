@@ -87,7 +87,6 @@ const Page = () => {
                 }),
             });
             const responseData = await response.json();
-            console.log(responseData);
             if (responseData.status === 200) {
                 setRefresh(!refresh);
             }
@@ -102,7 +101,6 @@ const Page = () => {
             const response = await fetch(`${config.host}/api/job/get-jobs-from-workgroup/${workgroup_id}`);
             const data = await response.json();
             if (data.status === 200) {
-                console.log(data.jobs)
                 setJobs(data.jobs);
 
             }
@@ -229,7 +227,7 @@ const Page = () => {
                     </button>
                     <div className="flex flex-col gap-3">
                     <h1 className="text-2xl font-bold">How to retrieve the Data ?</h1>
-                    <p className="text-sm text-secondary">You can use the following url pattern follow by job id that was sent to you after you have activated through above url.</p>
+                    <p className="text-sm text-secondary">You can use the following URL pattern followed by the job ID that was sent to you after activation through the above URL.</p>
                     <p className="text-sm text-black bg-gray-300 p-2 font-bold">Example: {`${config.host}/api/job/get-job-value?job_id=job_id`}</p>
                     </div>
                 </div>

@@ -16,6 +16,7 @@ const JobItemSchema = new mongoose.Schema({
     UPPER_SPEC: { type: String, required: true },
     LOWER_SPEC: { type: String, required: true },
     TEST_METHOD: { type: String, required: true },
+    TEST_LOCATION_ID: { type: mongoose.Schema.Types.ObjectId, ref: "TestLocation", required: true },
 
 }, { timestamps: true });
 

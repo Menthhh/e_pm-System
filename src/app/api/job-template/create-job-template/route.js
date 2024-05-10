@@ -7,7 +7,6 @@ import { generateUniqueKey } from "@/lib/utils/utils.js";
 export const POST = async (req, res) => {
     await connectToDb();
     const JobTemplateCreateID = await generateUniqueKey();
-    console.log(JobTemplateCreateID)
     const body = await req.json();
     const {
         AUTHOR_ID,

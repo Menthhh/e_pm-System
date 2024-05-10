@@ -98,9 +98,6 @@ const Page = () => {
                             pathname: "/pages/job-item-template/add-job-item-template",
                             query: { jobTemplate_id: jobTemplate._id },
                         }}
-                        onClick={() => {
-                            console.log("Edit Job Template");
-                        }}
                         disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"])}
                         style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"]) ? "not-allowed" : "pointer" }}
                     >

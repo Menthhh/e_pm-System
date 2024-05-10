@@ -31,7 +31,6 @@ export const POST = async (req, res) => {
         if (!approvers) {
             return NextResponse.json({ status: 404, file: __filename, error: "Approvers not found" });
         }
-        console.log("approvers", approvers)
         //1.3 create job
         const job = new Job({
             JOB_NAME: jobTemplate.JOB_TEMPLATE_NAME,
@@ -45,7 +44,6 @@ export const POST = async (req, res) => {
         await job.save();
 
         //2 update to jobtemplateactivate
-        console.log("jobID", jobTemplate._id);
         const jobTemplateActivate = new JobTemplateActivate({
             JobTemplateID: jobTemplate._id,
             JobTemplateCreateID: JobTemplateCreateID,
@@ -69,6 +67,7 @@ export const POST = async (req, res) => {
                 UPPER_SPEC: jobItemTemplate.UPPER_SPEC,
                 LOWER_SPEC: jobItemTemplate.LOWER_SPEC,
                 TEST_METHOD: jobItemTemplate.TEST_METHOD,
+                TEST_LOCATION_ID: jobItemTemplate.TEST_LOCATION_ID,
             });
             await jobItem.save();
             //4 update approves jobitemtemplateactivate

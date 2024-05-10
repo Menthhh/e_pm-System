@@ -10,10 +10,7 @@ import { AnimatedComponent, Typewriter } from "react-style-text";
 
 const jobItemTemplateHeader = ["ID", "Job Template Name", "Machine", "Create At", "Action"];
 
-// const enabledFunction = {
-//     "edit-job-template": "663313bbeccb576a719dfa9c",
-//     "remove-job-template": "663313b1eccb576a719dfa9a",
-// };
+
 const jobsActiveHeader = [
     "ID",
     "Job Name",
@@ -23,24 +20,6 @@ const jobsActiveHeader = [
     "Activator",
     "Action"
 ]
-
-// const jobsActiveBody = [
-//     {
-//         "ID": "1",
-//         "Job Name": "Job 1",
-//         "Document no.": "1234567890",
-//         "Status": "eqw",
-//         "Active": "2022-01-01",
-//         "Activator":"DSA",
-//         "Action":
-//             <Link
-//                 className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
-//                 href="#"
-//             >
-//                 Views 
-//             </Link>
-//     },
-// ]
 
 const Page = () => {
     const [refresh, setRefresh] = useState(false);

@@ -184,8 +184,6 @@ const Page = () => {
         const formattedDate = currentDate.toISOString().split("T")[0];
         setDueDate(formattedDate);
     };
-
-    console.log(userEnableFunctions)
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
             <h1 className="text-2xl font-bold">Job Template</h1>

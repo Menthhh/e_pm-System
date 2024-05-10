@@ -32,6 +32,7 @@ export const POST = async (req, res) => {
         UPPER_SPEC,
         LOWER_SPEC,
         TEST_METHOD,
+        TEST_LOCATION_ID,
         JobTemplateCreateID,
         JOB_TEMPLATE_ID,
     } = body;
@@ -44,11 +45,11 @@ export const POST = async (req, res) => {
             LOWER_SPEC,
             TEST_METHOD,
             JOB_TEMPLATE_ID,
+            TEST_LOCATION_ID,
             JobTemplateCreateID,
             JobItemTemplateCreateID
         });
         await jobItemTemplate.save();
-        console.log(jobItemTemplate);
 
         return NextResponse.json({ status: 200, jobItemTemplate });
     }

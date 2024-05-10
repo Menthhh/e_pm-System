@@ -13,7 +13,6 @@ export const GET = async (req, { params }) => {
         // Fetch activater name for each job
         const activaterPromises = jobs.map(async (job) => {
             const user = await User.findOne({ _id: job.ACTIVATE_USER });
-            console.log(user?.EMP_NAME); // Check if EMP_NAME is fetched correctly
             const activaterName = user?.EMP_NAME || 'Unknown'; // Use optional chaining and provide a default value if user is null
             return { ...job.toObject(), ACTIVATER_NAME: activaterName }; // Merge activaterName into the job object
         });

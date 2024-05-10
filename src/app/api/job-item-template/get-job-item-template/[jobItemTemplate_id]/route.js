@@ -4,6 +4,7 @@ import { connectToDb } from "@/lib/utils/utils.js";
 import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { NextResponse } from 'next/server.js';
 import { User } from "@/lib/models/User.js";
+import { TestLocation } from "@/lib/models/TestLocation";
 
 export const GET = async (req, { params }) => {
     await connectToDb();
@@ -13,6 +14,8 @@ export const GET = async (req, { params }) => {
         const jobItemTemplates = await JobItemTemplate.find({ JOB_TEMPLATE_ID: jobItemTemplate_id })
         const data = await Promise.all(jobItemTemplates.map(async jobItemTemplate => {
             const user = await User.findById(jobItemTemplate.AUTHOR_ID);
+            const location = await TestLocation.findById(jobItemTemplate.TEST_LOCATION_ID);
+            console.log(jobItemTemplate.TEST_LOCATION_ID)
             const createdAt = new Date(jobItemTemplate.createdAt).toLocaleString();
             return {
                 _id: jobItemTemplate._id,
@@ -23,6 +26,7 @@ export const GET = async (req, { params }) => {
                 UPPER_SPEC: jobItemTemplate.UPPER_SPEC,
                 LOWER_SPEC: jobItemTemplate.LOWER_SPEC,
                 TEST_METHOD: jobItemTemplate.TEST_METHOD,
+                TEST_LOCATION_NAME: location? location.LocationName : "",
                 JOB_TEMPLATE_ID: jobItemTemplate.JOB_TEMPLATE_ID,
                 createdAt: createdAt
             };

@@ -5,16 +5,15 @@ import { JobItem } from "@/lib/models/JobItem.js";
 import { Machine } from "@/lib/models/Machine";
 import { Workgroup } from "@/lib/models/Workgroup";
 import { User } from "@/lib/models/User.js";
+import { TestLocation } from "@/lib/models/TestLocation";
 
 
 export const GET = async (req, res) => {
     await connectToDb();
     const searchParams = req.nextUrl.searchParams;
     const JobID = searchParams.get("job_id");
-    console.log(JobID)
     try {
         const job = await Job.findOne({ _id: JobID });
-        console.log(job)
         const jobItems = await JobItem.find({ JOB_ID: JobID });
         const machine = await Machine.findOne({ _id: job.MACHINE_ID });
         const machineName = machine ? machine.MACHINE_NAME : null;
@@ -23,7 +22,7 @@ export const GET = async (req, res) => {
         const workgroupName = workgroup ? workgroup.WORKGROUP_NAME : null;
         const user = await User.findOne({ _id: job ? job.ACTIVATE_USER : null });
         const activatedBy = user ? user.EMP_NAME : null;
-
+    
         const jobData = {
             "JobID": JobID,
             "Status": job.JOB_STATUS_ID,
@@ -38,22 +37,21 @@ export const GET = async (req, res) => {
             "ActivatedAt": job.createdAt.toLocaleString(),
         }
 
-        const jobItemData = 
-        {
-            "JobItems": jobItems.map(jobItem => {
-                return {
-                    "JobItemTitle" : jobItem.JOB_ITEM_TITLE,
-                    "JobItemName": jobItem.JOB_ITEM_NAME,
-                    "UpperSpec": jobItem.UPPER_SPEC,
-                    "LowerSpec": jobItem.LOWER_SPEC,
-                    "TestMethod": jobItem.TEST_METHOD,
-                    "TestLocation": jobItem.TEST_LOCATION_ID,
-                    "ActualValue": jobItem.ACTUAL_VALUE,
-                    "Comment": jobItem.COMMENT,
-                    "ExecuteDate": jobItem.EXECUTE_DATE,
-                }
-            })
-        }
+        const jobItemData = await Promise.all(jobItems.map(async (jobItem) => {
+            const location = await TestLocation.findById(jobItem.TEST_LOCATION_ID);
+            return {
+                "JobItemTitle": jobItem.JOB_ITEM_TITLE,
+                "JobItemName": jobItem.JOB_ITEM_NAME,
+                "UpperSpec": jobItem.UPPER_SPEC,
+                "LowerSpec": jobItem.LOWER_SPEC,
+                "TestMethod": jobItem.TEST_METHOD,
+                "ActualValue": jobItem.ACTUAL_VALUE,
+                "Comment": jobItem.COMMENT,
+                "TestLocationName": location ? location.LocationName : "",
+                "ExecuteDate": jobItem.EXECUTE_DATE,
+            };
+        }));
+        
     
 
         return NextResponse.json({ status: 200, jobData: jobData, jobItemData: jobItemData });

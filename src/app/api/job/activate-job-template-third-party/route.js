@@ -46,7 +46,7 @@ export const GET = async (req, res) => {
         await job.save();
 
         //2 update to jobtemplateactivate
-        console.log("jobID", jobTemplate._id);
+
         const jobTemplateActivate = new JobTemplateActivate({
             JobTemplateID: jobTemplate._id,
             JobTemplateCreateID: JobTemplateCreateID,
