@@ -9,6 +9,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import AddCommentIcon from '@mui/icons-material/AddComment';
 import { config } from "@/config/config.js";
 import Swal from 'sweetalert2'
+import useFetchStatus from "@/lib/hooks/useFetchStatus";
 
 
 
@@ -24,7 +25,10 @@ const Page = () => {
     const [AddCommentForm, setAddCommentForm,] = useState(false);
     const [commentDetail, setCommentDetail] = useState(null);
     const [inputValues, setInputValues] = useState([]);
+    const { status } = useFetchStatus(refresh);
 
+
+    console.log(status)
     const toggleJobInfo = () => {
         setIsShowJobInfo(!isShowJobInfo);
     }
@@ -363,9 +367,17 @@ const Page = () => {
                     </div>
                     <div className="flex flex-col">
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">Status</label>
-                        <input type="text" className="mb-5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder=""
+                        {/* <input type="text" className="mb-5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder=""
                             name="status"
-                        />
+                        /> */}
+
+                        <select className="mb-5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                            name="status"
+                        >
+                            {status.map((item, index) => (
+                                <option key={index} value={item._id}>{item.status_name}</option>
+                            ))}
+                        </select>
                     </div>
                     <div className="flex flex-col">
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">Timeout</label>

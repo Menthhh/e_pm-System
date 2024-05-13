@@ -6,6 +6,7 @@ import { Machine } from "@/lib/models/Machine";
 import { Workgroup } from "@/lib/models/Workgroup";
 import { User } from "@/lib/models/User.js";
 import { TestLocation } from "@/lib/models/TestLocation";
+import { Status } from "@/lib/models/Status";
 
 
 export const GET = async (req, res) => {
@@ -22,10 +23,12 @@ export const GET = async (req, res) => {
         const workgroupName = workgroup ? workgroup.WORKGROUP_NAME : null;
         const user = await User.findOne({ _id: job ? job.ACTIVATE_USER : null });
         const activatedBy = user ? user.EMP_NAME : null;
+        const status = Status.findOne({ _id: job.JOB_STATUS_ID });
+        const statusName = status ? status.status_name : null;
     
         const jobData = {
             "JobID": JobID,
-            "Status": job.JOB_STATUS_ID,
+            "Status": statusName,
             "Timeout": job.TIMEOUT,
             "Name": job.JOB_NAME,
             "DocumentNo": job.DOC_NUMBER,

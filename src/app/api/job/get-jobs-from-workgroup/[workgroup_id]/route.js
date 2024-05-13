@@ -2,6 +2,7 @@ import { connectToDb } from "@/lib/utils/utils";
 import { Job } from "@/lib/models/Job";
 import { NextResponse } from 'next/server';
 import { User } from "@/lib/models/User";
+import { Status } from "@/lib/models/Status";
 
 export const GET = async (req, { params }) => {
     await connectToDb();
@@ -13,12 +14,20 @@ export const GET = async (req, { params }) => {
         // Fetch activater name for each job
         const activaterPromises = jobs.map(async (job) => {
             const user = await User.findOne({ _id: job.ACTIVATE_USER });
-            const activaterName = user?.EMP_NAME || 'Unknown'; // Use optional chaining and provide a default value if user is null
-            return { ...job.toObject(), ACTIVATER_NAME: activaterName }; // Merge activaterName into the job object
+            const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
+            const activaterName = user?.EMP_NAME || 'Unknown';
+            const statusName = status?.status_name || 'Unknown';
+            return {
+                ...job.toObject(),
+                ACTIVATER_NAME: activaterName,
+                STATUS_NAME: statusName
+            };
         });
 
         // Await all activater name promises
         const jobsWithActivater = await Promise.all(activaterPromises);
+
+
 
         // Return JSON response with jobs including activater names
         return NextResponse.json({ status: 200, jobs: jobsWithActivater });

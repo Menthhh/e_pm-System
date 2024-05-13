@@ -32,7 +32,7 @@ const Page = () => {
             "ID": index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": job.STATUS ? job.STATUS : "pending",
+            "Status": job.STATUS_NAME ? job.STATUS_NAME : "pending",
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action":
