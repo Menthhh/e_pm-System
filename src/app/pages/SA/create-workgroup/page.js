@@ -88,6 +88,7 @@ const Page = () => {
   };
 
   const handleDelete = async (id) => {
+
     try {
       await fetch(
         `${config.host}/api/workgroup/delete-workgroup/${id}`,

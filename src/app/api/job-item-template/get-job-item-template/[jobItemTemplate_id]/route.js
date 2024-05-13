@@ -15,7 +15,6 @@ export const GET = async (req, { params }) => {
         const data = await Promise.all(jobItemTemplates.map(async jobItemTemplate => {
             const user = await User.findById(jobItemTemplate.AUTHOR_ID);
             const location = await TestLocation.findById(jobItemTemplate.TEST_LOCATION_ID);
-            console.log(jobItemTemplate.TEST_LOCATION_ID)
             const createdAt = new Date(jobItemTemplate.createdAt).toLocaleString();
             return {
                 _id: jobItemTemplate._id,

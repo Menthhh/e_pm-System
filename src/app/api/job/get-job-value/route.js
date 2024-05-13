@@ -35,20 +35,24 @@ export const GET = async (req, res) => {
             "WorkgroupName": workgroupName,
             "ActivatedBy": activatedBy,
             "ActivatedAt": job.createdAt.toLocaleString(),
+            "LastestUpdate": job.updatedAt.toLocaleString(),
         }
 
         const jobItemData = await Promise.all(jobItems.map(async (jobItem) => {
             const location = await TestLocation.findById(jobItem.TEST_LOCATION_ID);
             return {
+                "JobItemID": jobItem._id,
                 "JobItemTitle": jobItem.JOB_ITEM_TITLE,
                 "JobItemName": jobItem.JOB_ITEM_NAME,
                 "UpperSpec": jobItem.UPPER_SPEC,
                 "LowerSpec": jobItem.LOWER_SPEC,
                 "TestMethod": jobItem.TEST_METHOD,
+                "BeforeValue": jobItem.BEFORE_VALUE,
                 "ActualValue": jobItem.ACTUAL_VALUE,
                 "Comment": jobItem.COMMENT,
                 "TestLocationName": location ? location.LocationName : "",
                 "ExecuteDate": jobItem.EXECUTE_DATE,
+                "LastestUpdate": jobItem.updatedAt.toLocaleString(),
             };
         }));
         
