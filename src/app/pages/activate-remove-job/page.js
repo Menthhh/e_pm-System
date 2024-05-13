@@ -5,6 +5,7 @@ import { getSession } from "@/lib/utils/utils";
 import { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 import CloseIcon from '@mui/icons-material/Close';
+import Swal from 'sweetalert2';
 
 
 const jobTemplatesHeader = ["ID", "Job Template Name", "Machine", "Created At", "Action"];
@@ -33,7 +34,7 @@ const Page = () => {
     const [jobs, setJobs] = useState([]);
     const [isShowDetail, setIsShowDetail] = useState(false);
     const [detail, setDetail] = useState({});
-    
+
     useEffect(() => {
 
         retrieveSession();
@@ -110,21 +111,57 @@ const Page = () => {
     };
 
     const handleRemove = async (job_id) => {
-        try {
-            const response = await fetch(`${config.host}/api/job/remove-job`, {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ job_id }),
-            });
-            const data = await response.json();
-            if (data.status === 200) {
-                setRefresh((prev) => !prev);
+
+        const swalWithBootstrapButtons = Swal.mixin({
+            customClass: {
+                confirmButton: "btn btn-success",
+                cancelButton: "btn btn-danger"
+            },
+            buttonsStyling: true
+        });
+
+        swalWithBootstrapButtons.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "No, cancel!",
+            reverseButtons: true
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`${config.host}/api/job/remove-job`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ job_id }),
+                    });
+                    swalWithBootstrapButtons.fire({
+                        title: "Deleted!",
+                        text: "Your file has been deleted.",
+                        icon: "success"
+                    });
+                    const data = await response.json();
+                    if (data.status === 200) {
+                        setRefresh((prev) => !prev);
+                    }
+                } catch (error) {
+                    console.error("Error deleting workgroup:", error);
+                }
+
+            } else if (
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire({
+                    title: "Cancelled",
+                    text: "Your imaginary file is safe :)",
+                    icon: "error"
+                });
             }
-        } catch (err) {
-            console.log(err);
-        }
+        });
+
     }
 
     const jobTemplatesBody = jobTemplates.map((jobTemplate, index) => {
@@ -183,58 +220,58 @@ const Page = () => {
 
     const ShowDetailModal = () => {
         const [isCopied, setIsCopied] = useState(false);
-    
+
         const copyToClipboard = () => {
             const input = document.getElementById('npm-install');
             input.select();
             document.execCommand('copy');
             setIsCopied(true);
-    
+
             // Reset the copied state after 3 seconds
             setTimeout(() => {
                 setIsCopied(false);
             }, 3000);
         };
-    
+
         return (
             <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
                 <div className="bg-white p-5 rounded-lg w-1/3  flex flex-col gap-6 relative">
-                <div className="flex flex-col gap-2">
-                    <h1 className="text-2xl font-bold">Detail</h1>
-                    <h2 className="text-sm text-secondary">To activate through third-party, you need to send a GET request with the following pattern:</h2>
-                    <div className="grid grid-cols-8 gap-2 w-full max-w-[23rem]">
-                        <label htmlFor="npm-install" className="sr-only">Label</label>
-                        <input
-                            id="npm-install"
-                            type="text"
-                            className="col-span-6 bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            value={detail.link}
-                            readOnly
-                        />
-                        <button
-                            onClick={copyToClipboard}
-                            className="col-span-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 items-center inline-flex justify-center"
-                        >
-                            <span>{isCopied ? 'Copied!' : 'Copy'}</span>
-                        </button>
-                    </div>
+                    <div className="flex flex-col gap-2">
+                        <h1 className="text-2xl font-bold">Detail</h1>
+                        <h2 className="text-sm text-secondary">To activate through third-party, you need to send a GET request with the following pattern:</h2>
+                        <div className="grid grid-cols-8 gap-2 w-full max-w-[23rem]">
+                            <label htmlFor="npm-install" className="sr-only">Label</label>
+                            <input
+                                id="npm-install"
+                                type="text"
+                                className="col-span-6 bg-gray-50 border border-gray-300 text-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                value={detail.link}
+                                readOnly
+                            />
+                            <button
+                                onClick={copyToClipboard}
+                                className="col-span-2 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 items-center inline-flex justify-center"
+                            >
+                                <span>{isCopied ? 'Copied!' : 'Copy'}</span>
+                            </button>
+                        </div>
                     </div>
                     <button
                         className="bg-red-700 text-white font-bold py-2 px-4 self-end absolute top-0 right-0 hover:bg-red-800 shadow-lg rounded-sm"
                         onClick={() => setIsShowDetail(false)}
                     >
-                        <CloseIcon className="size-18"/>
+                        <CloseIcon className="size-18" />
                     </button>
                     <div className="flex flex-col gap-3">
-                    <h1 className="text-2xl font-bold">How to retrieve the Data ?</h1>
-                    <p className="text-sm text-secondary">You can use the following URL pattern followed by the job ID that was sent to you after activation through the above URL.</p>
-                    <p className="text-sm text-black bg-gray-300 p-2 font-bold">Example: {`${config.host}/api/job/get-job-value?job_id=job_id`}</p>
+                        <h1 className="text-2xl font-bold">How to retrieve the Data ?</h1>
+                        <p className="text-sm text-secondary">You can use the following URL pattern followed by the job ID that was sent to you after activation through the above URL.</p>
+                        <p className="text-sm text-black bg-gray-300 p-2 font-bold">Example: {`${config.host}/api/job/get-job-value?job_id=job_id`}</p>
                     </div>
                 </div>
             </div>
         );
     };
-    
+
 
     const handleViewDetial = (data) => {
         const link = `${config.host}/api/job/activate-job-template-third-party?jobTemID=${data.jobTemplateID}&actID=${data.ACTIVATER_ID}&jobTemCreateID=${data.jobTemplateCreateID}`

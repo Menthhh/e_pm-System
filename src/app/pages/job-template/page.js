@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { config } from "../../../config/config.js";
 import { getSession } from "@/lib/utils/utils.js";
-
+import Swal from "sweetalert2";
 
 const enabledFunction = {
     "create-job-template": "6632f9e4eccb576a719dfa7a",
@@ -158,25 +158,37 @@ const Page = () => {
             WORKGROUP_ID,
             APPROVERS_ID,
         };
-        const res = await fetch(`${config.host}/api/job-template/create-job-template`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-        const response = await res.json();
-        if (response.status === 500) {
-            console.log(response.error);
+
+        try {
+            const res = await fetch(`${config.host}/api/job-template/create-job-template`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            const response = await res.json();
+            if (response.status === 500) {
+                console.error(response.error);
+            } else {
+                Swal.fire({
+                    title: "Good job!",
+                    text: "You have successfully created a job template!",
+                    icon: "success"
+                });
+                e.target.reset();
+                setApprovers([]);
+                setDueDate("");
+                setSelectedMachine(null);
+                setSelectedApprover(null);
+                setOptions([]);
+                setRefresh((prev) => !prev);
+            }
+        } catch (error) {
+            console.error("Error creating job template:", error);
         }
-        e.target.reset();
-        setApprovers([]);
-        setDueDate("");
-        setSelectedMachine(null);
-        setSelectedApprover(null);
-        setOptions([]);
-        setRefresh(!refresh);
     };
+
 
     const calculateDueDate = () => {
         const currentDate = new Date();

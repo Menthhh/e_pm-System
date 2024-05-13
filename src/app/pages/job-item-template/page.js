@@ -5,6 +5,7 @@ import { getSession } from "@/lib/utils/utils";
 import { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 import Link from "next/link";
+import Swal from "sweetalert2";
 
 const jobItemTemplateHeader = ["ID", "Job Template Name", "Machine", "Created At", "Action"];
 
@@ -59,22 +60,57 @@ const Page = () => {
     };
 
     const handleRemove = async (jobTemplate_id) => {
-        try {
-            const response = await fetch("/api/job-template/remove-job-template", {
+        const swalWithBootstrapButtons = Swal.mixin({
+          customClass: {
+            confirmButton: "btn btn-success",
+            cancelButton: "btn btn-danger"
+          },
+          buttonsStyling: true
+        });
+      
+        swalWithBootstrapButtons.fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "Yes, delete it!",
+          cancelButtonText: "No, cancel!",
+          reverseButtons: true
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            try {
+              const response = await fetch("/api/job-template/remove-job-template", {
                 method: "DELETE",
                 headers: {
-                    "Content-Type": "application/json",
+                  "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ jobTemplate_id }),
-            });
-            const data = await response.json();
-            if (data.status === 200) {
+              });
+              const data = await response.json();
+              if (data.status === 200) {
+                swalWithBootstrapButtons.fire({
+                  title: "Deleted!",
+                  text: "The job template has been deleted.",
+                  icon: "success"
+                });
                 setRefresh((prev) => !prev);
+              }
+            } catch (err) {
+              console.error("Error deleting job template:", err);
             }
-        } catch (err) {
-            console.log(err);
-        }
-    };
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
+            swalWithBootstrapButtons.fire({
+              title: "Cancelled",
+              text: "The deletion action was cancelled.",
+              icon: "error"
+            });
+          }
+        });
+      };
+      
 
     const jobItemTemplateBody = jobTemplates.map((jobTemplate, index) => {
         return {
