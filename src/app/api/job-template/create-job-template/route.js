@@ -14,7 +14,7 @@ export const POST = async (req, res) => {
         DOC_NUMBER,
         DUE_DATE,
         CHECKLIST_VERSION,
-        MACHINE_ID,
+        TIMEOUT,
         WORKGROUP_ID,
         APPROVERS_ID 
     } = body;
@@ -25,7 +25,7 @@ export const POST = async (req, res) => {
             DOC_NUMBER,
             DUE_DATE,
             CHECKLIST_VERSION,
-            MACHINE_ID,
+            TIMEOUT,
             WORKGROUP_ID,
             JobTemplateCreateID 
         });

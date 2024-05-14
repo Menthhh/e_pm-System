@@ -7,94 +7,34 @@ import NextPlanIcon from "@mui/icons-material/NextPlan";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { config } from "../../../config/config.js";
-import { getSession } from "@/lib/utils/utils.js";
 import Swal from "sweetalert2";
+import { useSearchParams } from "next/navigation.js";
+import useFetchUser from "@/lib/hooks/useFetchUser.js";
+import useFetchJobTemplate from "@/lib/hooks/useFetchJobTemplate.js";
+import useFetchUsers from "@/lib/hooks/useFetchUsers.js";
+import { set } from "mongoose";
 
-const enabledFunction = {
-    "create-job-template": "6632f9e4eccb576a719dfa7a",
-    "view-all-job-templates": "663845e3d81a314967236de6",
-}
+
 
 const approverHeader = ["ID", "Name", "Action"];
 
 const Page = () => {
-    const [approvers, setApprovers] = useState([]);
-    const [selectedMachine, setSelectedMachine] = useState(null);
+    const searchParams = useSearchParams();
+    const jobTemplate_id = searchParams.get("jobTemplate_id");
     const [selectedApprover, setSelectedApprover] = useState(null);
-    const [users, setUsers] = useState([]);
     const [options, setOptions] = useState([]);
     const [dueDate, setDueDate] = useState("");
-    const [user, setUser] = useState({});
-    const [machinesOptions, setMachinesOptions] = useState([]);
-    const [userEnableFunctions, setUserEnableFunctions] = useState([]);
     const [refresh, setRefresh] = useState(false);
+    const { user, isLoading: isUserLoading, error: userError } = useFetchUser(refresh);
+    const { jobTemplate, isLoading: isJobTemplateLoading, error: jobTemplateError } = useFetchJobTemplate(jobTemplate_id, refresh);
+    const { users, isLoading: isUsersLoading, error: usersError } = useFetchUsers(refresh);
+    const [approvers, setApprovers] = useState([]);
 
     useEffect(() => {
-        retreiveSession();
         calculateDueDate();
-        fetchUsers();
-        fetchMachines();
-    }, [refresh]);
-
-    const retreiveSession = async () => {
-        try {
-            const session = await getSession();
-            await fetchUser(session.user_id);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const fetchMachines = async () => {
-        try {
-            const response = await fetch(`${config.host}/api/machine/get-machines`);
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            const data = await response.json();
-            const machineOptions = data.machines.map((machine) => ({
-                value: machine._id,
-                label: machine.name,
-            }));
-            setMachinesOptions(machineOptions);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const fetchUser = async (userId) => {
-        try {
-            const response = await fetch(
-                `${config.host}/api/user/get-user/${userId}`
-            );
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            const data = await response.json();
-            setUser(() => data.user);
-            setUserEnableFunctions(() => data.user.actions);
-        } catch (err) {
-            console.log(err);
-        }
-    };
-
-    const fetchUsers = async () => {
-        try {
-            const response = await fetch(`${config.host}/api/user/get-users`);
-            if (!response.ok) {
-                throw new Error(response.statusText);
-            }
-            const data = await response.json();
-            setUsers(data.users);
-            const userOptions = data.users.map((user) => ({
-                value: user._id,
-                label: user.name,
-            }));
-            setOptions(userOptions);
-        } catch (err) {
-            console.log(err);
-        }
-    };
+        setOptions(users.map((user) => ({ value: user._id, label: user.name })));
+       
+    }, [refresh, users]);
 
     const handleAddApprover = () => {
         if (selectedApprover) {
@@ -105,6 +45,7 @@ const Page = () => {
             setApprovers((prevApprovers) => [...prevApprovers, newApprover]);
             setSelectedApprover(null);
         }
+        console.log(approvers)
         const newOptions = options.filter(
             (option) => option.value !== selectedApprover.value
         );
@@ -197,10 +138,9 @@ const Page = () => {
         setDueDate(formattedDate);
     };
 
-  
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
-            <h1 className="text-2xl font-bold">Job Template</h1>
+            <h1 className="text-2xl font-bold">Edit Job Template</h1>
             <form onSubmit={handleSubmit}>
                 <div className="grid gap-6 mb-6 md:grid-cols-3">
                     <div>
@@ -266,7 +206,7 @@ const Page = () => {
                             type="text"
                             id="job_template_name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="Template Name"
+                            defaultValue={jobTemplate.JOB_TEMPLATE_NAME}
                             name="job_template_name"
                             required
                         />
@@ -282,8 +222,8 @@ const Page = () => {
                             type="text"
                             id="doc_num"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="1234"
                             name="doc_num"
+                            defaultValue={jobTemplate.DOC_NUMBER}
                             required
                         />
                     </div>
@@ -298,8 +238,8 @@ const Page = () => {
                             type="text"
                             id="checklist_ver"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="1234"
                             name="checklist_ver"
+                            defaultValue={jobTemplate.CHECKLIST_VERSION}
                             required
                         />
                     </div>
@@ -311,23 +251,22 @@ const Page = () => {
                             Timeout
                         </label>
                         <Select
-                            options={
-                                [
-                                    { value: "12 hrs", label: "12 hrs" },
-                                    { value: "1 day", label: "1 days" },
-                                    { value: "7 day", label: "7 days" },
-                                    { value: "15 day", label: "15 days" },
-                                    { value: "30 day", label: "30 days" },
-                                    { value: "3 mounths", label: "3 mounths" },
-                                    { value: "6 months", label: "6 months" },
-                                    { value: "12 months", label: "12 months" },
-                                   
-                                ]
-                            }
+                            options={[
+                                { value: "12 hrs", label: "12 hrs" },
+                                { value: "1 day", label: "1 days" },
+                                { value: "7 day", label: "7 days" },
+                                { value: "15 day", label: "15 days" },
+                                { value: "30 day", label: "30 days" },
+                                { value: "3 mounths", label: "3 mounths" },
+                                { value: "6 months", label: "6 months" },
+                                { value: "12 months", label: "12 months" },
+                            ]}
                             isSearchable={true}
                             name="timeout"
-                        
+                            onChange={(selectedOption) => console.log('Selected:', selectedOption)}
                         />
+
+
                     </div>
                     <div className="flex gap-5 ">
                         <div className="flex flex-col w-full">
@@ -353,25 +292,16 @@ const Page = () => {
                         </button>
                     </div>
                 </div>
-                {
-                    // check if user has permission to create job template
-                    userEnableFunctions.some(action => action._id === enabledFunction["create-job-template"]) ? (
-                        <button
-                            type="submit"
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                        >
-                            Create Job Template
-                        </button>
-                    ) : (
-                        <button
-                            type="submit"
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-not-allowed"
-                            disabled
-                        >
-                            Create Job Template
-                        </button>
-                    )
-                }
+
+
+                <button
+                    type="submit"
+                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 "
+                >
+                    Save
+                </button>
+
+
             </form>
             <TableComponent
                 headers={approverHeader}
@@ -380,11 +310,7 @@ const Page = () => {
             />
             <Link
                 href="/pages/job-item-template"
-                className={`align-left text-white bg-yellow-700 hover:bg-yellow-800 w-60 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 
-                ${!userEnableFunctions.some(
-                    action => action._id === enabledFunction["view-all-job-templates"]
-                ) && "opacity-50 cursor-not-allowed"
-                    }`}
+                className={`align-left text-white bg-yellow-700 hover:bg-yellow-800 w-60 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 `}
             >
                 <div className="flex gap-3 items-center">
                     <p>View all Job Templates</p>

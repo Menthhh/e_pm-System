@@ -10,6 +10,8 @@ import AddCommentIcon from '@mui/icons-material/AddComment';
 import { config } from "@/config/config.js";
 import Swal from 'sweetalert2'
 import useFetchStatus from "@/lib/hooks/useFetchStatus";
+import useFetchMachines from "@/lib/hooks/useFetchMachines";
+import Select from 'react-select';
 
 
 
@@ -18,6 +20,7 @@ const Page = () => {
     const job_id = searchParams.get("job_id");
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
+    const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
     const [isShowJobInfo, setIsShowJobInfo] = useState(true);
     const [isShowJobItem, setIsShowJobItem] = useState(true);
     const [jobItemDetail, setJobItemDetail] = useState(null);
@@ -26,9 +29,8 @@ const Page = () => {
     const [commentDetail, setCommentDetail] = useState(null);
     const [inputValues, setInputValues] = useState([]);
     const { status } = useFetchStatus(refresh);
+    const [machineName, setMachineName] = useState(null);
 
-
-    console.log(status)
     const toggleJobInfo = () => {
         setIsShowJobInfo(!isShowJobInfo);
     }
@@ -113,7 +115,7 @@ const Page = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         const body = {
             jobData: {
                 JobID: jobData.JobID,
@@ -136,14 +138,14 @@ const Page = () => {
             if (!response.ok) {
                 console.log("Error:", response.statusText);
             }
-            
+
             Swal.fire({
                 title: "Good job!",
                 text: "You have submit the form!",
                 icon: "success"
             });
-            
-            
+
+
             e.target.reset();
             setRefresh((prev) => (!prev));
         } catch (err) {
@@ -319,6 +321,17 @@ const Page = () => {
         );
     }
 
+    const handleWdChange = (selectedOption) => {
+        const wd_tag = selectedOption.value; // Extract value from selected option
+        console.log(wd_tag);
+        machines.forEach((machine) => {
+            if (machine.wd_tag === wd_tag) {
+                setMachineName(machine.name);
+            }
+        });
+    };
+    
+
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
             <form className="flex flex-col gap-8"
@@ -346,14 +359,6 @@ const Page = () => {
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.ChecklistVer} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Machine Name</label>
-                        <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.MachineName} disabled />
-                    </div>
-                    <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">WD Tag</label>
-                        <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.WDtag} disabled />
-                    </div>
-                    <div className="flex flex-col">
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">Workgroup Name</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.WorkgroupName} disabled />
                     </div>
@@ -362,29 +367,38 @@ const Page = () => {
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.ActivatedBy} disabled />
                     </div>
                     <div className="flex flex-col">
+                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Timeout</label>
+                        <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.Timeout} disabled />
+                    </div>
+                    <div className="flex flex-col">
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">Activated At</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.ActivatedAt} disabled />
                     </div>
                     <div className="flex flex-col">
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">Status</label>
-                        {/* <input type="text" className="mb-5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder=""
-                            name="status"
-                        /> */}
+                        <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.Status} disabled />
+                    </div>
 
-                        <select className="mb-5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
-                            name="status"
-                        >
-                            {status.map((item, index) => (
-                                <option key={index} value={item._id}>{item.status_name}</option>
-                            ))}
-                        </select>
+                    <div className="flex flex-col">
+                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">WD Tag</label>
+
+                        <Select
+                            className="mb-5"
+                            options={machines.map((item) => ({
+                                value: item.wd_tag,
+                                label: item.wd_tag
+                            }))}
+                            onChange={(selectedOption) => handleWdChange(selectedOption)}
+                            name="wd_tag"
+                        />
+
+
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Timeout</label>
-                        <input type="text" className="mb-5 bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5" placeholder=""
-                            name="timeout"
-                        />
+                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Machine Name</label>
+                        <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={machineName} disabled />
                     </div>
+
                 </div>
                 <hr />
                 <div className="flex flex-col gap-8">

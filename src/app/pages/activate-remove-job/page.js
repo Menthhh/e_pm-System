@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
 
 
-const jobTemplatesHeader = ["ID", "Job Template Name", "Machine", "Created At", "Action"];
+const jobTemplatesHeader = ["ID", "Job Template Name", "Document no.", "Created At", "Action"];
 
 const jobsHeader = [
     "ID",
@@ -173,7 +173,7 @@ const Page = () => {
         return {
             "ID": index + 1,
             "Job Template Name": jobTemplate.JOB_TEMPLATE_NAME,
-            "Machine": jobTemplate.MACHINE_NAME,
+            "Document no.": jobTemplate.DOC_NUMBER,
             "Create At": jobTemplate.createdAt,
             "Action": (
                 <div className="flex gap-2 items-center justify-center">
@@ -201,7 +201,7 @@ const Page = () => {
             ID: index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": job.JOB_STATUS_ID ? "" : "pending",
+            "Status": job.STATUS_NAME,
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action": (

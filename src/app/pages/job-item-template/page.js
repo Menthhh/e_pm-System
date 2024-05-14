@@ -7,7 +7,7 @@ import { config } from "@/config/config.js";
 import Link from "next/link";
 import Swal from "sweetalert2";
 
-const jobItemTemplateHeader = ["ID", "Job Template Name", "Machine", "Created At", "Action"];
+const jobItemTemplateHeader = ["ID", "Job Template Name", "Document no.", "Created At", "Action"];
 
 const enabledFunction = {
     "edit-job-template": "663313bbeccb576a719dfa9c",
@@ -116,10 +116,20 @@ const Page = () => {
         return {
             ID: index + 1,
             "Job Template Name": jobTemplate.JOB_TEMPLATE_NAME,
-            Machine: jobTemplate.MACHINE_NAME,
+            "Document no.": jobTemplate.DOC_NUMBER,
             "Create At": jobTemplate.createdAt,
             Action: (
                 <div className="flex gap-2 items-center justify-center">
+
+                    <Link
+                        className="bg-slate-500 hover:bg-slate-700 text-white font-semibold py-2 px-4 rounded"
+                        href={{
+                          pathname: "/pages/edit-job-template",
+                          query: { jobTemplate_id: jobTemplate._id },
+                        }}
+                    >
+                        Edit
+                    </Link>
                     <button
                         className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded"
                         onClick={() => handleRemove(jobTemplate._id)}

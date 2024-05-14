@@ -5,6 +5,10 @@ const statusSchema = new mongoose.Schema({
     status_name : {
         type : String,
         required : true
+    },
+    color : {
+        type : String,
+        required : true
     }
 });
 

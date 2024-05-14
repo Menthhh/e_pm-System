@@ -7,6 +7,7 @@ import { Job } from "@/lib/models/Job.js";
 import { JobItem } from "@/lib/models/JobItem.js";
 import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { JobTemplate } from "@/lib/models/JobTemplate.js";
+import { Status } from "@/lib/models/Status";
 
 
 
@@ -31,17 +32,25 @@ export const POST = async (req, res) => {
         if (!approvers) {
             return NextResponse.json({ status: 404, file: __filename, error: "Approvers not found" });
         }
+
+        const newID = await Status.findOne({ status_name: "new" });
+        console.log("newID", newID)
+        if (!newID) {
+            return NextResponse.json({ status: 404, file: __filename, error: "Status not found" });
+        }
         //1.3 create job
         const job = new Job({
             JOB_NAME: jobTemplate.JOB_TEMPLATE_NAME,
+            JOB_STATUS_ID: newID._id,
             DOC_NUMBER: jobTemplate.DOC_NUMBER,
             CHECKLIST_VERSION: jobTemplate.CHECKLIST_VERSION,
-            MACHINE_ID: jobTemplate.MACHINE_ID,
             WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
             ACTIVATE_USER: ACTIVATER_ID,
             JOB_APPROVERS: approvers.map((approver) => approver.USER_ID),
+            TIMEOUT: jobTemplate.TIMEOUT,
         });
         await job.save();
+        console.log("Job", job)
 
         //2 update to jobtemplateactivate
         const jobTemplateActivate = new JobTemplateActivate({

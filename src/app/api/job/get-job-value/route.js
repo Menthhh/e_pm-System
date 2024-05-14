@@ -23,7 +23,8 @@ export const GET = async (req, res) => {
         const workgroupName = workgroup ? workgroup.WORKGROUP_NAME : null;
         const user = await User.findOne({ _id: job ? job.ACTIVATE_USER : null });
         const activatedBy = user ? user.EMP_NAME : null;
-        const status = Status.findOne({ _id: job.JOB_STATUS_ID });
+        const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
+        console.log("statusName",  job.JOB_STATUS_ID)
         const statusName = status ? status.status_name : null;
     
         const jobData = {
@@ -39,6 +40,7 @@ export const GET = async (req, res) => {
             "ActivatedBy": activatedBy,
             "ActivatedAt": job.createdAt.toLocaleString(),
             "LastestUpdate": job.updatedAt.toLocaleString(),
+            "Status": statusName,
         }
 
         const jobItemData = await Promise.all(jobItems.map(async (jobItem) => {
@@ -59,8 +61,6 @@ export const GET = async (req, res) => {
             };
         }));
         
-    
-
         return NextResponse.json({ status: 200, jobData: jobData, jobItemData: jobItemData });
     } catch (err) {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });
