@@ -30,9 +30,6 @@ const useFetchJobs = (refresh = null) => {
             fetchJobs(user.workgroup_id);
         }
 
-        if (userError) {
-            console.log(sessionError);
-        }
     }, [userLoading,refresh]);
 
     return { jobs, isLoading, error };

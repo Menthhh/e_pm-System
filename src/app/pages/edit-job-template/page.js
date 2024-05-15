@@ -6,17 +6,16 @@ import TableComponent from "@/components/TableComponent.js";
 import NextPlanIcon from "@mui/icons-material/NextPlan";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { config } from "../../../config/config.js";
-import Swal from "sweetalert2";
 import { useSearchParams } from "next/navigation.js";
 import useFetchUser from "@/lib/hooks/useFetchUser.js";
 import useFetchJobTemplate from "@/lib/hooks/useFetchJobTemplate.js";
 import useFetchUsers from "@/lib/hooks/useFetchUsers.js";
-import { set } from "mongoose";
+import Swal from 'sweetalert2';
+import { config } from "@/config/config.js";
 
 
 
-const approverHeader = ["ID", "Name", "Action"];
+const approverHeader = ["ID", "Name", "Action"]
 
 const Page = () => {
     const searchParams = useSearchParams();
@@ -33,22 +32,27 @@ const Page = () => {
     useEffect(() => {
         calculateDueDate();
         setOptions(users.map((user) => ({ value: user._id, label: user.name })));
-       
     }, [refresh, users]);
 
     const handleAddApprover = () => {
-        if (selectedApprover) {
-            const newApprover = {
-                user_id: selectedApprover.value,
-                name: selectedApprover.label,
-            };
-            setApprovers((prevApprovers) => [...prevApprovers, newApprover]);
-            setSelectedApprover(null);
+        if (!selectedApprover) {
+            Swal.fire(
+                'Oops...',
+                'Please select an approver!',
+                'error'
+            );
+            return;
         }
-        console.log(approvers)
-        const newOptions = options.filter(
-            (option) => option.value !== selectedApprover.value
-        );
+    
+        const newApprover = {
+            user_id: selectedApprover.value,
+            name: selectedApprover.label,
+        };
+    
+        setApprovers((prevApprovers) => [...prevApprovers, newApprover]);
+        setSelectedApprover(null);
+    
+        const newOptions = options.filter(option => option.value !== selectedApprover.value);
         setOptions(newOptions);
     };
 
@@ -81,28 +85,31 @@ const Page = () => {
         e.preventDefault();
 
         const formData = new FormData(e.target);
-        const AUTHOR_ID = user._id;
-        const JOB_TEMPLATE_NAME = formData.get("job_template_name");
-        const DOC_NUMBER = formData.get("doc_num");
-        const DUE_DATE = formData.get("due_date");
-        const CHECKLIST_VERSION = formData.get("checklist_ver");
-        const TIMEOUT = formData.get("timeout");
-        const WORKGROUP_ID = user.workgroup_id;
-        const APPROVERS_ID = approvers.map((approver) => approver.user_id);
+        const jobTemplateID = jobTemplate_id
+        const author = user._id;
+        const workgroup = user.workgroup_id;
+        const due_date = formData.get("due_date");
+        const job_template_name = formData.get("job_template_name");
+        const doc_num = formData.get("doc_num");
+        const checklist_ver = formData.get("checklist_ver");
+        const timeout = formData.get("timeout");
+        const approvers_id = approvers.map((approver) => approver.user_id);
+  
         const data = {
-            AUTHOR_ID,
-            JOB_TEMPLATE_NAME,
-            DOC_NUMBER,
-            DUE_DATE,
-            CHECKLIST_VERSION,
-            TIMEOUT,
-            WORKGROUP_ID,
-            APPROVERS_ID,
+            jobTemplateID,
+            author,
+            workgroup,
+            due_date,
+            job_template_name,
+            doc_num,
+            checklist_ver,
+            timeout,
+            approvers_id,
         };
 
         try {
-            const res = await fetch(`${config.host}/api/job-template/create-job-template`, {
-                method: "POST",
+            const res = await fetch(`${config.host}/api/job-template/edit-job-template`, {
+                method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
@@ -114,19 +121,20 @@ const Page = () => {
             } else {
                 Swal.fire({
                     title: "Good job!",
-                    text: "You have successfully created a job template!",
+                    text: "You have successfully edited a job template!",
                     icon: "success"
                 });
                 e.target.reset();
                 setApprovers([]);
-                setDueDate("");
-                setSelectedMachine(null);
-                setSelectedApprover(null);
-                setOptions([]);
                 setRefresh((prev) => !prev);
             }
-        } catch (error) {
-            console.error("Error creating job template:", error);
+        }catch (error) {
+            Swal.fire({
+                title: "Oops...",
+                text: error.message,
+                icon: "error"
+            });
+
         }
     };
 

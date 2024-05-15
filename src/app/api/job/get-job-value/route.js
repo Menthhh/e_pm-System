@@ -7,7 +7,7 @@ import { Workgroup } from "@/lib/models/Workgroup";
 import { User } from "@/lib/models/User.js";
 import { TestLocation } from "@/lib/models/TestLocation";
 import { Status } from "@/lib/models/Status";
-
+import { JobItemTemplateActivate } from "@/lib/models/AE/JobItemTemplateActivate"; // Import JobItemTemplateActivate model
 
 export const GET = async (req, res) => {
     await connectToDb();
@@ -24,7 +24,6 @@ export const GET = async (req, res) => {
         const user = await User.findOne({ _id: job ? job.ACTIVATE_USER : null });
         const activatedBy = user ? user.EMP_NAME : null;
         const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
-        console.log("statusName",  job.JOB_STATUS_ID)
         const statusName = status ? status.status_name : null;
     
         const jobData = {
@@ -45,6 +44,10 @@ export const GET = async (req, res) => {
 
         const jobItemData = await Promise.all(jobItems.map(async (jobItem) => {
             const location = await TestLocation.findById(jobItem.TEST_LOCATION_ID);
+
+           
+            
+          
             return {
                 "JobItemID": jobItem._id,
                 "JobItemTitle": jobItem.JOB_ITEM_TITLE,
@@ -66,4 +69,3 @@ export const GET = async (req, res) => {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });
     }
 };
-

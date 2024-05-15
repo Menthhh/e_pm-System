@@ -115,12 +115,12 @@ const Page = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const wdTag = e.target.wd_tag.value;
 
         const body = {
             jobData: {
                 JobID: jobData.JobID,
-                timeout: e.target.timeout.value,
-                status: e.target.status.value
+                wd_tag: wdTag,
             },
             jobItemsData: [...inputValues]
         };
@@ -446,34 +446,33 @@ const Page = () => {
                                         <td className="border px-4 py-2">{item.LowerSpec}</td>
                                         <td className="border px-4 py-2">{item.TestLocationName}</td>
                                         <td className="border px-4 py-2 relative">
-                                            <div>
-                                                <input
-                                                    type="text"
-                                                    id={`beforeValue_${item.JobItemID}`}
-                                                    value={inputValues.find(entry => entry.jobItemID === item.JobItemID)?.BeforeValue || ''}
-                                                    onChange={(e) => handleBeforeValue(e, item)}
-                                                    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
-                                                    placeholder="fill in value"
-                                                />
-                                            </div>
+                                           { item.BeforeValue ? 
+                                           <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
+                                             :
+                                            <input
+                                                type="text"
+                                                id={`before_value_${item.JobItemID}`}
+                                                onChange={(e) => handleBeforeValue(e, item)}
+                                                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
+                                                placeholder="fill in value"
+                                            />
+
+                                           }
 
                                         </td>
                                         <td className="border px-4 py-2 relative">
-                                            <div>
-                                                <input
-                                                    type="text"
-                                                    id={`value_${item.JobItemID}`}
-                                                    value={inputValues.find(entry => entry.jobItemID === item.JobItemID)?.value || ''}
-                                                    onChange={(e) => handleInputChange(e, item)}
-                                                    className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
-                                                    placeholder="fill in value"
-                                                />
-                                            </div>
-                                            <AddCommentIcon
-                                                className="absolute right-1 top-1 text-blue-600 size-5 cursor-pointer "
-                                                onClick={() => toggleAddComment(item)}
-
-                                            />
+                                            {
+                                                item.ActualValue ?
+                                                    <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
+                                                    :
+                                                    <input
+                                                        type="text"
+                                                        id={`actual_value_${item.JobItemID}`}
+                                                        onChange={(e) => handleInputChange(e, item)}
+                                                        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
+                                                        placeholder="fill in value"
+                                                    />
+                                            }
                                         </td>
 
                                     </tr>

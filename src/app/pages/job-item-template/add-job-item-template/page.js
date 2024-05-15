@@ -9,10 +9,10 @@ import useFetchJobTemplate from "@/lib/hooks/useFetchJobTemplate";
 import useFetchTestLocations from "@/lib/hooks/useFetchTestLocations";
 import Select from 'react-select';
 import { useState } from "react";
+import Link from "next/link";
 
 
-
-const jobItemTemplateHeader = ["ID", "Title", "Name", "Upper Spec", "Lower Spec", "Test Method", "Create At", "Action"];
+const jobItemTemplateHeader = ["ID", "Title",  "Upper Spec", "Lower Spec", "Test Method", "Create At", "Action"];
 const enabledFunction = {
     "add-job-item-template": "6638600dd81a314967236df5",
     "remove-job-item-template": "66386025d81a314967236df7",
@@ -32,15 +32,27 @@ const Page = () => {
         return {
             ID: index + 1,
             Title: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
-            Name: jobItemTemplate.JOB_ITEM_TEMPLATE_NAME,
+
             Upper_Spec: jobItemTemplate.UPPER_SPEC,
             Lower_Spec: jobItemTemplate.LOWER_SPEC,
             Test_Method: jobItemTemplate.TEST_METHOD,
             "Create At": jobItemTemplate.createdAt,
             Action: (
                 <div className="flex items-center justify-center gap-2">
+                    <Link
+                    className="text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center
+                    bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    href={{
+                        pathname: "/pages/edit-job-item-template",
+                        query: { jobItemTemplate_id: jobItemTemplate._id,
+                            jobTemplate_id: jobTemplate_id,
+                         },
+                    }}
+                    >
+                    Edit
+                    </Link>
                     <button
-                        className={`text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center 
+                        className={`text-white font-bold rounded-lg text-sm px-2 py-2.5 text-center 
                             ${user && user.actions && !user.actions.some(action => action._id === enabledFunction["remove-job-item-template"]) ?
                                 'bg-red-500 cursor-not-allowed' :
                                 'bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800'}`}

@@ -23,7 +23,7 @@ const useFetchJobItemTemplates = (jobTemplate_id, refresh = null) => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(`${config.host}/api/job-item-template/get-job-item-template/${jobTemplate_id}`);
+                const response = await fetch(`${config.host}/api/job-item-template/get-job-item-template-from-jobtemplate/${jobTemplate_id}`);
                 const data = await response.json();
                 if (data.status === 200) {
                     setJobItemTemplates(data.jobItemTemplates);

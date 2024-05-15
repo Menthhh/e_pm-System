@@ -62,7 +62,7 @@ export const POST = async (req, res) => {
 
         //3 create job item
         //3.1 find job item template where jobtemplateid = jobtemplateid and jobtemplatecreateid = jobtemplatecreateid
-        const jobItemTemplates = await JobItemTemplate.find({ JOB_TEMPLATE_ID: JobTemplateID, JobTemplateCreateID: JobTemplateCreateID });
+        const jobItemTemplates = await JobItemTemplate.find({ JOB_TEMPLATE_ID: JobTemplateID});
         if (!jobItemTemplates) {
             return NextResponse.json({ status: 404, file: __filename, error: "Job item templates not found" });
         }

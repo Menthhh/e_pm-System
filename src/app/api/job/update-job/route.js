@@ -1,22 +1,6 @@
-// {
-//     "jobData": {
-//         "JobID": "663dd8e1685240b57e970c52",
-//         "timeout": "qwdqwdq",
-//         "status": "dqw"
-//     },
-//     "jobItemsData": [
-//         {
-//             "jobItemID": "663dd8e1685240b57e970c57",
-//             "value": "wdqw",
-//             "comment": null
-//         },
-//         {
-//             "jobItemID": "663dd8e1685240b57e970c5b",
-//             "value": "dqwd",
-//             "comment": null
-//         }
-//     ]
-// }
+// jobData: {
+//     JobID: jobData.JobID,
+//     wd_tag: wdTag,
 
 import { Job } from "@/lib/models/Job";
 import { JobItem } from "@/lib/models/JobItem";
@@ -31,7 +15,6 @@ export const PUT = async (req, res) => {
     const { jobData, jobItemsData } = body;
     try {
 
-        console.log(jobItemsData);
         await Promise.all(jobItemsData.map(async (jobItemData) => {
            
             const jobItem = await JobItem.findOne({ _id: jobItemData.jobItemID });
@@ -42,8 +25,8 @@ export const PUT = async (req, res) => {
         }));
 
         const job = await Job.findOne({ _id: jobData.JobID });
-        job.JOB_STATUS_ID = jobData.status;
-        job.TIMEOUT = jobData.timeout;
+        job.WD_TAG = jobData.wd_tag;
+       
 
         await job.save();
 

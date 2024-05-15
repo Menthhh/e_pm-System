@@ -1,7 +1,8 @@
 
 import mongoose from 'mongoose';
 
-const jobItemTemplateSchema = new mongoose.Schema({
+const jobItemTemplateEditSchema = new mongoose.Schema({
+    JOB_ITEM_TEMPLATE_ID: { type: String, required: true },
     AUTHOR_ID: { type: String, required: true },
     JOB_ITEM_TEMPLATE_TITLE: { type: String, required: true },
     JOB_ITEM_TEMPLATE_NAME: { type: String, required: true },
@@ -17,7 +18,7 @@ const jobItemTemplateSchema = new mongoose.Schema({
 
 }, { timestamps: true });
 
-export const JobItemTemplate = mongoose.models?.JobItemTemplate || mongoose.model('JobItemTemplate', jobItemTemplateSchema);
+export const JobItemTemplateEdit = mongoose.models?.JobItemTemplateEdit || mongoose.model('JobItemTemplateEdit', jobItemTemplateEditSchema);
 
 
 
