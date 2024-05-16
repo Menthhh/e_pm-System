@@ -32,19 +32,36 @@ const Page = () => {
             "ID": index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": job.STATUS_NAME ? job.STATUS_NAME : "pending",
+            "Status": <div className={`bg-${job.STATUS_COLOR}-500 px-1 py-1 rounded-full text-white`}>{job.STATUS_NAME ? job.STATUS_NAME : "pending"}</div>,
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action":
-                <Link
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
-                    href={{
-                        pathname: "/pages/view-jobs",
-                        query: { job_id: job._id },
-                    }}
-                >
-                    Views
-                </Link>
+                <div className="flex gap-2 items-center justify-center">
+                    <Link
+                        className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                        href={{
+                            pathname: "/pages/view-jobs",
+                            query: {
+                                job_id: job._id,
+                                views: "false"
+                            },
+                        }}
+                    >
+                        Edit
+                    </Link>
+                    <Link
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                        href={{
+                            pathname: "/pages/view-jobs",
+                            query: {
+                                job_id: job._id,
+                                view: "true"
+                            },
+                        }}
+                    >
+                        View
+                    </Link>
+                </div>
         }
     });
 
