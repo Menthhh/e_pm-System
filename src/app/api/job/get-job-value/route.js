@@ -18,14 +18,13 @@ export const GET = async (req, res) => {
         const jobItems = await JobItem.find({ JOB_ID: JobID });
         const machine = await Machine.findOne({ _id: job.MACHINE_ID });
         const machineName = machine ? machine.MACHINE_NAME : null;
-        const wd_tag = machine ? machine.WD_TAG : null;
         const workgroup = await Workgroup.findOne({ _id: job.WORKGROUP_ID });
         const workgroupName = workgroup ? workgroup.WORKGROUP_NAME : null;
         const user = await User.findOne({ _id: job ? job.ACTIVATE_USER : null });
         const activatedBy = user ? user.EMP_NAME : null;
         const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
         const statusName = status ? status.status_name : null;
-    
+
         const jobData = {
             "JobID": JobID,
             "Status": statusName,
@@ -34,7 +33,7 @@ export const GET = async (req, res) => {
             "DocumentNo": job.DOC_NUMBER,
             "ChecklistVer": job.CHECKLIST_VERSION,
             "MachineName": machineName,
-            "WDtag": wd_tag,
+            "WDtag": job.WD_TAG,
             "WorkgroupName": workgroupName,
             "ActivatedBy": activatedBy,
             "ActivatedAt": job.createdAt.toLocaleString(),
@@ -46,8 +45,6 @@ export const GET = async (req, res) => {
             const location = await TestLocation.findById(jobItem.TEST_LOCATION_ID);
 
            
-            
-          
             return {
                 "JobItemID": jobItem._id,
                 "JobItemTitle": jobItem.JOB_ITEM_TITLE,
@@ -63,7 +60,7 @@ export const GET = async (req, res) => {
                 "LastestUpdate": jobItem.updatedAt.toLocaleString(),
             };
         }));
-        
+
         return NextResponse.json({ status: 200, jobData: jobData, jobItemData: jobItemData });
     } catch (err) {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });

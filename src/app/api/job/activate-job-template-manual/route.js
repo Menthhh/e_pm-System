@@ -67,8 +67,9 @@ export const POST = async (req, res) => {
             return NextResponse.json({ status: 404, file: __filename, error: "Job item templates not found" });
         }
 
+
         //3.2 create job item
-        for (const jobItemTemplate of jobItemTemplates) {
+        await Promise.all(jobItemTemplates.map(async (jobItemTemplate) => {
             const jobItem = new JobItem({
                 JOB_ID: job._id,
                 JOB_ITEM_TITLE: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
@@ -77,8 +78,37 @@ export const POST = async (req, res) => {
                 LOWER_SPEC: jobItemTemplate.LOWER_SPEC,
                 TEST_METHOD: jobItemTemplate.TEST_METHOD,
                 TEST_LOCATION_ID: jobItemTemplate.TEST_LOCATION_ID,
+                JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
             });
             await jobItem.save();
+
+
+            const currentJobItems = await JobItem.find({ JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id });
+            console.log("currentJobItems", currentJobItems); 
+
+            // if there is no job item yet
+            if (currentJobItems.length === 1) {
+                jobItem.BEFORE_VALUE = "None";
+            }else {
+               
+                // Initialize BEFORE_VALUE with a default value
+                let BEFORE_VALUE = "None";
+            
+                // Iterate to find the last job item with an actual value
+                for (let i = currentJobItems.length - 2; i >= 0; i--) {
+                    if (currentJobItems[i].ACTUAL_VALUE) {
+                        BEFORE_VALUE = currentJobItems[i].ACTUAL_VALUE;
+                        break;
+                    }
+                }
+            
+                // Set BEFORE_VALUE based on the found actual value or default value
+                jobItem.BEFORE_VALUE = BEFORE_VALUE;
+
+            }
+        
+            await jobItem.save();
+
             //4 update approves jobitemtemplateactivate
             const jobItemTemplateActivate = new JobItemTemplateActivate({
                 JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
@@ -86,7 +116,7 @@ export const POST = async (req, res) => {
                 JOB_ITEM_ID: jobItem._id,
             });
             await jobItemTemplateActivate.save();
-        }
+        }));
 
         return NextResponse.json({ status: 200, data: job });
     } catch (err) {

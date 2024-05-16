@@ -82,7 +82,6 @@ const Page = () => {
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         const comment = e.target.comment.value;
-        console.log(comment);
         setInputValues(prev => {
             const existingIndex = prev.findIndex(entry => entry.jobItemID === commentDetail.JobItemID);
             if (existingIndex !== -1) {
@@ -116,7 +115,8 @@ const Page = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const wdTag = e.target.wd_tag.value;
-
+        console.log(wdTag);
+        
         const body = {
             jobData: {
                 JobID: jobData.JobID,
@@ -124,6 +124,17 @@ const Page = () => {
             },
             jobItemsData: [...inputValues]
         };
+       // if inputValues is empty or its length is less than jobItems length or wdTag is empty
+        if (inputValues.length === 0 || inputValues.length < jobItems.length || !wdTag || inputValues.some(item => !item.value)) {
+            Swal.fire({
+                title: "Error!",
+                text: "Please fill all the fields!",
+                icon: "error"
+            });
+            return;
+        }
+        
+
 
 
         try {
@@ -382,6 +393,19 @@ const Page = () => {
                     <div className="flex flex-col">
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">WD Tag</label>
 
+                       { jobData.WDtag ?
+                        <Select
+                            className="mb-5"
+                            options={machines.map((item) => ({
+                                value: item.wd_tag,
+                                label: item.wd_tag
+                            }))}
+                            onChange={(selectedOption) => handleWdChange(selectedOption)}
+                            name="wd_tag"
+                            value={{ value: jobData.WDtag, label: jobData.WDtag }}
+                            disabled
+                        />
+                        :
                         <Select
                             className="mb-5"
                             options={machines.map((item) => ({
@@ -391,6 +415,7 @@ const Page = () => {
                             onChange={(selectedOption) => handleWdChange(selectedOption)}
                             name="wd_tag"
                         />
+                       }
 
 
                     </div>
@@ -479,10 +504,23 @@ const Page = () => {
                                 ))}
                             </tbody>
                         </table>
-                        <div>
-                            <button type="submit" className="bg-primary text-white font-bold py-2 px-4 rounded-lg hover:bg-secondary w-1/3">Submit</button>
-                        </div>
                     </div>
+                        <div>
+                            {
+                                //if actua; value , wd tag, before value is exist than disable the submit button because we can't submit the form
+                                jobItems.every(item => item.ActualValue && item.BeforeValue && item.BeforeValue !== "None") ?
+                                    <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm cursor-not-allowed"
+                                        disabled
+                                    >
+                                        Submit
+                                    </button>
+                                    :
+                                    <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                    >
+                                        Submit
+                                    </button>
+                            }
+                        </div>
                 </div>
 
             </form>

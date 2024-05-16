@@ -17,7 +17,10 @@ const JobItemSchema = new mongoose.Schema({
     LOWER_SPEC: { type: String, required: true },
     TEST_METHOD: { type: String, required: true },
     TEST_LOCATION_ID: { type: mongoose.Schema.Types.ObjectId, ref: "TestLocation", required: true },
+    JOB_ITEM_TEMPLATE_ID: { type: mongoose.Schema.Types.ObjectId, ref: "JobItemTemplate", required: true },
 
 }, { timestamps: true });
 
 export const JobItem = mongoose.models?.JobItem || mongoose.model("JobItem", JobItemSchema);
+
+
