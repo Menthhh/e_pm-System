@@ -17,10 +17,12 @@ export const GET = async (req, { params }) => {
             const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
             const activaterName = user?.EMP_NAME || 'Unknown';
             const statusName = status?.status_name || 'Unknown';
+            const statusColor = status?.color || 'Unknown';
             return {
                 ...job.toObject(),
                 ACTIVATER_NAME: activaterName,
-                STATUS_NAME: statusName
+                STATUS_NAME: statusName,
+                STATUS_COLOR: statusColor
             };
         });
 

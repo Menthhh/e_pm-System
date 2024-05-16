@@ -18,6 +18,7 @@ import Select from 'react-select';
 const Page = () => {
     const searchParams = useSearchParams();
     const job_id = searchParams.get("job_id");
+    const view = searchParams.get("view");
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
     const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
@@ -36,7 +37,33 @@ const Page = () => {
     }
 
     useEffect(() => {
-        console.log(inputValues);
+        // set job status to plan using put method
+        const body = {
+            STATUS_ID : "66430a7733d7f39b2f405178",
+            JOB_ID : job_id
+        }
+
+        const updateJobStatus = async () => {
+            try {
+                const response = await fetch(`${config.host}/api/job/update-job-status/`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (!response.ok) {
+                    console.log("Error:", response.statusText);
+                }
+            } catch (err) {
+                console.error("Error:", err);
+            }
+        }
+
+        updateJobStatus();
+
+
     }, [inputValues]);
 
     const handleBeforeValue = (e, item) => {
@@ -470,7 +497,7 @@ const Page = () => {
                                         <td className="border px-4 py-2">{item.UpperSpec}</td>
                                         <td className="border px-4 py-2">{item.LowerSpec}</td>
                                         <td className="border px-4 py-2">{item.TestLocationName}</td>
-                                        <td className="border px-4 py-2 relative">
+                                        <td className="border px-2 py-2 relative">
                                            { item.BeforeValue ? 
                                            <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
                                              :
@@ -506,7 +533,7 @@ const Page = () => {
                         </table>
                     </div>
                         <div>
-                            {
+                            {view ? null :(
                                 //if actua; value , wd tag, before value is exist than disable the submit button because we can't submit the form
                                 jobItems.every(item => item.ActualValue && item.BeforeValue && item.BeforeValue !== "None") ?
                                     <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm cursor-not-allowed"
@@ -519,6 +546,7 @@ const Page = () => {
                                     >
                                         Submit
                                     </button>
+                            )
                             }
                         </div>
                 </div>

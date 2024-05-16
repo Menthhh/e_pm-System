@@ -63,6 +63,7 @@ const Page = () => {
             const response = await fetch(`${config.host}/api/job/get-jobs-from-workgroup/${workgroup_id}`);
             const data = await response.json();
             if (data.status === 200) {
+                console.log(data.jobs)
 
                 setJobs(data.jobs);
             }
@@ -76,19 +77,34 @@ const Page = () => {
             "ID": index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": job.STATUS_NAME ? job.STATUS_NAME : "pending",
+            "Status": <div className={`bg-${job.STATUS_COLOR}-500 px-1 py-1 rounded-full text-white`}>{job.STATUS_NAME ? job.STATUS_NAME : "pending"}</div>,
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action":
+            <div className="flex gap-2 items-center justify-center">
+                <Link
+                    className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                    href={{
+                        pathname: "/pages/view-jobs",
+                        query: { job_id: job._id,
+                                views: "false"
+                        },
+                    }}
+                >
+                    Edit
+                </Link>
                 <Link
                     className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
                     href={{
                         pathname: "/pages/view-jobs",
-                        query: { job_id: job._id },
+                        query: { job_id: job._id,
+                                view: "true"
+                         },
                     }}
                 >
-                    Views
+                    View
                 </Link>
+            </div>
         }
     });
 
@@ -98,7 +114,7 @@ const Page = () => {
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-12">
             <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
             <h1 className="text-2xl font-semibold">All Active Jobs</h1>
-            <Link className="w-full shadow-xl h-12 flex flex-row gap-4 items-center font-sans font-bold text-lg pl-5 ring-1 ring-secondary hover:drop-shadow-2xl hover:shadow-2xl"
+            <Link className=" shadow-xl h-12 flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 ring-1 ring-secondary hover:drop-shadow-2xl hover:shadow-2xl"
                 href="/pages/activate-remove-job">
                 <KeyboardTabIcon /> Activate, or Remove Job.
             </Link>
