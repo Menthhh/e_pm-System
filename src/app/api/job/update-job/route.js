@@ -34,21 +34,20 @@ export const PUT = async (req, res) => {
                 console.log("jobItemUpdate", jobItemUpdate._id);
                 if (!jobItemUpdate.ACTUAL_VALUE && !jobItemUpdate.BEFORE_VALUE) {
                     jobItemUpdate.BEFORE_VALUE = jobItemData.value;
-                    console.log(" jobItemUpdate.BeforeValue",  jobItemUpdate.BeforeValue);
                     
                 }
                 //or has a before value but it IS NOT equa; to latest actual value
                 if (jobItemUpdate.BEFORE_VALUE && jobItemUpdate.BEFORE_VALUE !== jobItemData.value && jobItemUpdate.ACTUAL_VALUE) {
                     jobItemUpdate.BEFORE_VALUE = jobItemData.value;
-                    console.log(" jobItemUpdate.BeforeValue",  jobItemUpdate.BeforeValue);
                 }
                
                 await jobItemUpdate.save();
             }
         }) )
-        console.log("jobData", jobData.wd_tag)
+
         const job = await Job.findOne({ _id: jobData.JobID });
         job.WD_TAG = jobData.wd_tag;
+        job.JOB_STATUS_ID = "6646bc394c04936a08a5a0e7"
         await job.save();
 
         return NextResponse.json({ status: 200 });

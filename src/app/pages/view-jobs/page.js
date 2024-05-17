@@ -38,12 +38,33 @@ const Page = () => {
 
     useEffect(() => {
         // set job status to plan using put method
-        const body = {
-            STATUS_ID : "66430a7733d7f39b2f405178",
-            JOB_ID : job_id
-        }
+        
+        const updateJobStatusToPlan = async () => {
+            const body = {
+                STATUS_ID : "66430a7733d7f39b2f405178",
+                JOB_ID : job_id
+            }
+            try {
+                const response = await fetch(`${config.host}/api/job/update-job-status/`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(body)
+                });
 
-        const updateJobStatus = async () => {
+                if (!response.ok) {
+                    console.log("Error:", response.statusText);
+                }
+            } catch (err) {
+                console.error("Error:", err);
+            }
+        }
+        const updateJobStatusToOngoing = async () => {
+            const body = {
+                STATUS_ID : "66430a5f33d7f39b2f405174",
+                JOB_ID : job_id
+            }
             try {
                 const response = await fetch(`${config.host}/api/job/update-job-status/`, {
                     method: "PUT",
@@ -61,7 +82,12 @@ const Page = () => {
             }
         }
 
-        updateJobStatus();
+        if(!view){
+            updateJobStatusToOngoing();
+        }
+        else{
+            updateJobStatusToPlan();
+        }
 
 
     }, [inputValues]);

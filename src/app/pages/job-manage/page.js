@@ -77,34 +77,42 @@ const Page = () => {
             "ID": index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": <div className={`bg-${job.STATUS_COLOR}-500 px-1 py-1 rounded-full text-white`}>{job.STATUS_NAME ? job.STATUS_NAME : "pending"}</div>,
+            "Status": <div
+                style={{ backgroundColor: job.STATUS_COLOR }}
+                className="px-1 py-1 rounded-full text-black font-semibold shadow-xl"
+            >
+                {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
+            </div>
+            ,
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action":
-            <div className="flex gap-2 items-center justify-center">
-                <Link
-                    className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
-                    href={{
-                        pathname: "/pages/view-jobs",
-                        query: { job_id: job._id,
+                <div className="flex gap-2 items-center justify-center">
+                    <Link
+                        className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                        href={{
+                            pathname: "/pages/view-jobs",
+                            query: {
+                                job_id: job._id,
                                 views: "false"
-                        },
-                    }}
-                >
-                    Edit
-                </Link>
-                <Link
-                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
-                    href={{
-                        pathname: "/pages/view-jobs",
-                        query: { job_id: job._id,
+                            },
+                        }}
+                    >
+                        Edit
+                    </Link>
+                    <Link
+                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                        href={{
+                            pathname: "/pages/view-jobs",
+                            query: {
+                                job_id: job._id,
                                 view: "true"
-                         },
-                    }}
-                >
-                    View
-                </Link>
-            </div>
+                            },
+                        }}
+                    >
+                        View
+                    </Link>
+                </div>
         }
     });
 
@@ -114,14 +122,13 @@ const Page = () => {
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-12">
             <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
             <h1 className="text-2xl font-semibold">All Active Jobs</h1>
-            <Link className=" shadow-xl h-12 flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 ring-1 ring-secondary hover:drop-shadow-2xl hover:shadow-2xl"
+            <div className="flex flex-col gap-5 w-full text-sm font-thin">
+                <TableComponent headers={jobsActiveHeader} datas={jobsActiveBody} TableName="Active Jobs" PageSize={5} />
+            </div>
+            <Link className="absolute rounded-full bg-[#F7DC6F] self-end shadow-xl h-12 w-96 flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 ring-1 ring-secondary hover:drop-shadow-2xl hover:shadow-2xl"
                 href="/pages/activate-remove-job">
                 <KeyboardTabIcon /> Activate, or Remove Job.
             </Link>
-            <div className="flex flex-col gap-5 w-full text-sm font-thin">
-                <TableComponent headers={jobsActiveHeader} datas={jobsActiveBody} TableName="Active Jobs" PageSize={5} />
-
-            </div>
         </Layout>
     );
 };

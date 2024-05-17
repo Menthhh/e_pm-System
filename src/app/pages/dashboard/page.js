@@ -32,7 +32,13 @@ const Page = () => {
             "ID": index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": <div className={`bg-${job.STATUS_COLOR}-500 px-1 py-1 rounded-full text-white`}>{job.STATUS_NAME ? job.STATUS_NAME : "pending"}</div>,
+            "Status": <div
+                style={{ backgroundColor: job.STATUS_COLOR }}
+                className="px-1 py-1 rounded-full text-black font-semibold shadow-xl"
+            >
+                {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
+            </div>
+            ,
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action":
