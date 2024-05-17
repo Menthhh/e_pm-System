@@ -31,13 +31,12 @@ export const PUT = async (req, res) => {
             const jobItemTemplatesAcivateFiltered = jobItemTemplatesAcivate.filter((item) => !item.JOB_ITEM_ID.equals(jobItemData.jobItemID));
             for (const item of jobItemTemplatesAcivateFiltered) {
                 const jobItemUpdate = await JobItem.findOne({ _id: item.JOB_ITEM_ID });
-                console.log("jobItemUpdate", jobItemUpdate._id);
                 if (!jobItemUpdate.ACTUAL_VALUE && !jobItemUpdate.BEFORE_VALUE) {
                     jobItemUpdate.BEFORE_VALUE = jobItemData.value;
                     
                 }
                 //or has a before value but it IS NOT equa; to latest actual value
-                if (jobItemUpdate.BEFORE_VALUE && jobItemUpdate.BEFORE_VALUE !== jobItemData.value && jobItemUpdate.ACTUAL_VALUE) {
+                if (jobItemUpdate.BEFORE_VALUE && jobItemUpdate.BEFORE_VALUE !== jobItemData.value && !jobItemUpdate.ACTUAL_VALUE) {
                     jobItemUpdate.BEFORE_VALUE = jobItemData.value;
                 }
                

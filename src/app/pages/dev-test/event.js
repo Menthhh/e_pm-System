@@ -1,13 +1,4 @@
-"use client";
-import Layout from "@/components/Layout";
-import React, { useState } from "react";
-import { Calendar, momentLocalizer, Views } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-
-moment.locale("en-GB");
-const localizer = momentLocalizer(moment);
-const events = [
+export default [
     {
       'title': 'All Day Event very long title',
       'allDay': true,
@@ -98,33 +89,3 @@ const events = [
     }
   ]
   
-const Page = () => {
-    const [view, setView] = useState('month'); // State to manage current view
-
-    return (
-        <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
-            <div className="flex space-x-2 mb-4">
-                <button onClick={() => setView('month')} className="btn">Month View</button>
-                <button onClick={() => setView('week')} className="btn">Week View</button>
-                <button onClick={() => setView('day')} className="btn">Day View</button>
-                <button onClick={() => setView('agenda')} className="btn">Agenda View</button>
-            </div>
-            <div style={{ height: 700 }}>
-                <Calendar
-                    localizer={localizer}
-                    events={events}
-                    step={60}
-                    views={['month', 'week', 'day', 'agenda']}
-                    view={view}
-                    onView={() => {}} 
-                    defaultDate={new Date()}
-                    onShowMore={(events, date) => console.log(events, date)}
-                />
-            </div>
-        </Layout>
-    );
-}
-
-export default Page;
-
-

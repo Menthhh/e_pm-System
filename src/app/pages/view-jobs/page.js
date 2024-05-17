@@ -37,33 +37,12 @@ const Page = () => {
     }
 
     useEffect(() => {
-        // set job status to plan using put method
-        
-        const updateJobStatusToPlan = async () => {
-            const body = {
-                STATUS_ID : "66430a7733d7f39b2f405178",
-                JOB_ID : job_id
-            }
-            try {
-                const response = await fetch(`${config.host}/api/job/update-job-status/`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(body)
-                });
 
-                if (!response.ok) {
-                    console.log("Error:", response.statusText);
-                }
-            } catch (err) {
-                console.error("Error:", err);
-            }
-        }
+
         const updateJobStatusToOngoing = async () => {
             const body = {
-                STATUS_ID : "66430a5f33d7f39b2f405174",
-                JOB_ID : job_id
+                STATUS_ID: "66430a5f33d7f39b2f405174",
+                JOB_ID: job_id
             }
             try {
                 const response = await fetch(`${config.host}/api/job/update-job-status/`, {
@@ -82,12 +61,7 @@ const Page = () => {
             }
         }
 
-        if(!view){
-            updateJobStatusToOngoing();
-        }
-        else{
-            updateJobStatusToPlan();
-        }
+        if (!view) updateJobStatusToOngoing();
 
 
     }, [inputValues]);
@@ -169,7 +143,7 @@ const Page = () => {
         e.preventDefault();
         const wdTag = e.target.wd_tag.value;
         console.log(wdTag);
-        
+
         const body = {
             jobData: {
                 JobID: jobData.JobID,
@@ -177,7 +151,7 @@ const Page = () => {
             },
             jobItemsData: [...inputValues]
         };
-       // if inputValues is empty or its length is less than jobItems length or wdTag is empty
+        // if inputValues is empty or its length is less than jobItems length or wdTag is empty
         if (inputValues.length === 0 || inputValues.length < jobItems.length || !wdTag || inputValues.some(item => !item.value)) {
             Swal.fire({
                 title: "Error!",
@@ -186,7 +160,7 @@ const Page = () => {
             });
             return;
         }
-        
+
 
 
 
@@ -394,7 +368,7 @@ const Page = () => {
             }
         });
     };
-    
+
 
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
@@ -446,29 +420,35 @@ const Page = () => {
                     <div className="flex flex-col">
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">WD Tag</label>
 
-                       { jobData.WDtag ?
-                        <Select
-                            className="mb-5"
-                            options={machines.map((item) => ({
-                                value: item.wd_tag,
-                                label: item.wd_tag
-                            }))}
-                            onChange={(selectedOption) => handleWdChange(selectedOption)}
-                            name="wd_tag"
-                            value={{ value: jobData.WDtag, label: jobData.WDtag }}
-                            disabled
-                        />
-                        :
-                        <Select
-                            className="mb-5"
-                            options={machines.map((item) => ({
-                                value: item.wd_tag,
-                                label: item.wd_tag
-                            }))}
-                            onChange={(selectedOption) => handleWdChange(selectedOption)}
-                            name="wd_tag"
-                        />
-                       }
+                        { //if view is true then disable the select tag
+                            view ?
+                                <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" 
+                                    value={jobData.wd_tag} 
+                                disabled />
+                                :
+                                (jobData.WDtag ?
+                                    <Select
+                                        className="mb-5"
+                                        options={machines.map((item) => ({
+                                            value: item.wd_tag,
+                                            label: item.wd_tag
+                                        }))}
+                                        onChange={(selectedOption) => handleWdChange(selectedOption)}
+                                        name="wd_tag"
+                                        value={{ value: jobData.WDtag, label: jobData.WDtag }}
+                                        disabled
+                                    />
+                                    :
+                                    <Select
+                                        className="mb-5"
+                                        options={machines.map((item) => ({
+                                            value: item.wd_tag,
+                                            label: item.wd_tag
+                                        }))}
+                                        onChange={(selectedOption) => handleWdChange(selectedOption)}
+                                        name="wd_tag"
+                                    />)
+                        }
 
 
                     </div>
@@ -524,32 +504,40 @@ const Page = () => {
                                         <td className="border px-4 py-2">{item.LowerSpec}</td>
                                         <td className="border px-4 py-2">{item.TestLocationName}</td>
                                         <td className="border px-2 py-2 relative">
-                                           { item.BeforeValue ? 
-                                           <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
-                                             :
-                                            <input
-                                                type="text"
-                                                id={`before_value_${item.JobItemID}`}
-                                                onChange={(e) => handleBeforeValue(e, item)}
-                                                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
-                                                placeholder="fill in value"
-                                            />
-
-                                           }
+                                            { //if view is true then disable the input field
+                                                view ?
+                                                    <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
+                                                    :
+                                                    (item.BeforeValue ?
+                                                        <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
+                                                        :
+                                                        <input
+                                                            type="text"
+                                                            id={`before_value_${item.JobItemID}`}
+                                                            onChange={(e) => handleBeforeValue(e, item)}
+                                                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
+                                                            placeholder="fill in value"
+                                                        />
+                                                    )
+                                            }
 
                                         </td>
                                         <td className="border px-4 py-2 relative">
-                                            {
-                                                item.ActualValue ?
-                                                    <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
-                                                    :
-                                                    <input
-                                                        type="text"
-                                                        id={`actual_value_${item.JobItemID}`}
-                                                        onChange={(e) => handleInputChange(e, item)}
-                                                        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
-                                                        placeholder="fill in value"
-                                                    />
+                                            { //if view is true then disable the input field
+                                                view ? <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
+                                                    : (
+                                                        item.ActualValue ?
+                                                            <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
+                                                            :
+                                                            <input
+                                                                type="text"
+                                                                id={`actual_value_${item.JobItemID}`}
+                                                                onChange={(e) => handleInputChange(e, item)}
+                                                                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
+                                                                placeholder="fill in value"
+                                                            />
+                                                    )
+
                                             }
                                         </td>
 
@@ -558,23 +546,23 @@ const Page = () => {
                             </tbody>
                         </table>
                     </div>
-                        <div>
-                            {view ? null :(
-                                //if actua; value , wd tag, before value is exist than disable the submit button because we can't submit the form
-                                jobItems.every(item => item.ActualValue && item.BeforeValue && item.BeforeValue !== "None") ?
-                                    <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm cursor-not-allowed"
-                                        disabled
-                                    >
-                                        Submit
-                                    </button>
-                                    :
-                                    <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                    >
-                                        Submit
-                                    </button>
-                            )
-                            }
-                        </div>
+                    <div>
+                        {view ? null : (
+                            //if actua; value , wd tag, before value is exist than disable the submit button because we can't submit the form
+                            jobItems.every(item => item.ActualValue && item.BeforeValue && item.BeforeValue !== "None") ?
+                                <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm cursor-not-allowed"
+                                    disabled
+                                >
+                                    Submit
+                                </button>
+                                :
+                                <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                                >
+                                    Submit
+                                </button>
+                        )
+                        }
+                    </div>
                 </div>
 
             </form>
