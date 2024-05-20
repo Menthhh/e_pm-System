@@ -12,6 +12,7 @@ import { Workgroup } from "@/lib/models/Workgroup";
 import { Machine } from "@/lib/models/Machine";
 import { User } from "@/lib/models/User";
 import { config } from "@/config/config.js";
+import { Status } from "@/lib/models/Status";
 
 export const GET = async (req, res) => {
     await connectToDb();
@@ -19,7 +20,6 @@ export const GET = async (req, res) => {
     const JobTemplateID = searchParams.get("jobTemID");
     const JobTemplateCreateID = searchParams.get("jobTemCreateID");
     const ACTIVATER_ID = searchParams.get("actID");
-
 
     try {
         //1 create job
@@ -29,24 +29,31 @@ export const GET = async (req, res) => {
             return NextResponse.json({ status: 404, file: __filename, error: "Job template not found" });
         }
         //1.2 find approvers where jobtemplateid = jobtemplateid and jobtemplatecreateid = jobtemplatecreateid  1 job template can have multiple approvers
-        const approvers = await Approves.find({ JobTemplateID: JobTemplateID, JobTemplateCreateID: JobTemplateCreateID });
+        const approvers = await Approves.find({ JOB_TEMPLATE_ID: JobTemplateID, JobTemplateCreateID: JobTemplateCreateID });
         if (!approvers) {
             return NextResponse.json({ status: 404, file: __filename, error: "Approvers not found" });
+        }
+
+        const newID = await Status.findOne({ status_name: "new" });
+        console.log("newID", newID)
+        if (!newID) {
+            return NextResponse.json({ status: 404, file: __filename, error: "Status not found" });
         }
         //1.3 create job
         const job = new Job({
             JOB_NAME: jobTemplate.JOB_TEMPLATE_NAME,
+            JOB_STATUS_ID: newID._id,
             DOC_NUMBER: jobTemplate.DOC_NUMBER,
             CHECKLIST_VERSION: jobTemplate.CHECKLIST_VERSION,
-            MACHINE_ID: jobTemplate.MACHINE_ID,
             WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
             ACTIVATE_USER: ACTIVATER_ID,
             JOB_APPROVERS: approvers.map((approver) => approver.USER_ID),
+            TIMEOUT: jobTemplate.TIMEOUT,
         });
         await job.save();
+        console.log("Job", job)
 
         //2 update to jobtemplateactivate
-
         const jobTemplateActivate = new JobTemplateActivate({
             JobTemplateID: jobTemplate._id,
             JobTemplateCreateID: JobTemplateCreateID,
@@ -56,13 +63,14 @@ export const GET = async (req, res) => {
 
         //3 create job item
         //3.1 find job item template where jobtemplateid = jobtemplateid and jobtemplatecreateid = jobtemplatecreateid
-        const jobItemTemplates = await JobItemTemplate.find({ JOB_TEMPLATE_ID: JobTemplateID, JobTemplateCreateID: JobTemplateCreateID });
+        const jobItemTemplates = await JobItemTemplate.find({ JOB_TEMPLATE_ID: JobTemplateID });
         if (!jobItemTemplates) {
             return NextResponse.json({ status: 404, file: __filename, error: "Job item templates not found" });
         }
 
+
         //3.2 create job item
-        for (const jobItemTemplate of jobItemTemplates) {
+        await Promise.all(jobItemTemplates.map(async (jobItemTemplate) => {
             const jobItem = new JobItem({
                 JOB_ID: job._id,
                 JOB_ITEM_TITLE: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
@@ -70,8 +78,38 @@ export const GET = async (req, res) => {
                 UPPER_SPEC: jobItemTemplate.UPPER_SPEC,
                 LOWER_SPEC: jobItemTemplate.LOWER_SPEC,
                 TEST_METHOD: jobItemTemplate.TEST_METHOD,
+                TEST_LOCATION_ID: jobItemTemplate.TEST_LOCATION_ID,
+                JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
             });
             await jobItem.save();
+
+
+            const currentJobItems = await JobItem.find({ JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id });
+            console.log("currentJobItems", currentJobItems);
+
+            // if there is no job item yet
+            if (currentJobItems.length === 1) {
+                jobItem.BEFORE_VALUE = "None";
+            } else {
+
+                // Initialize BEFORE_VALUE with a default value
+                let BEFORE_VALUE = "None";
+
+                // Iterate to find the last job item with an actual value
+                for (let i = currentJobItems.length - 2; i >= 0; i--) {
+                    if (currentJobItems[i].ACTUAL_VALUE) {
+                        BEFORE_VALUE = currentJobItems[i].ACTUAL_VALUE;
+                        break;
+                    }
+                }
+
+                // Set BEFORE_VALUE based on the found actual value or default value
+                jobItem.BEFORE_VALUE = BEFORE_VALUE;
+
+            }
+
+            await jobItem.save();
+
             //4 update approves jobitemtemplateactivate
             const jobItemTemplateActivate = new JobItemTemplateActivate({
                 JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
@@ -79,9 +117,9 @@ export const GET = async (req, res) => {
                 JOB_ITEM_ID: jobItem._id,
             });
             await jobItemTemplateActivate.save();
-        }
-        const link = `${config.host}/api/job/get-job-value?job_id=${job._id}`;
-        return NextResponse.json({ status: 200, JobID: job._id, ToSeeData: link});
+        }));
+
+        return NextResponse.json({ status: 200, data: job });
     } catch (err) {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });
     }
