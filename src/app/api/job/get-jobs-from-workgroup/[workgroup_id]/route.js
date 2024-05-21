@@ -27,9 +27,12 @@ export const GET = async (req, { params }) => {
         });
 
         // Await all activater name promises
-        const jobsWithActivater = await Promise.all(activaterPromises);
+        let jobsWithActivater = await Promise.all(activaterPromises);
 
-
+        // Sort the jobs by updatedAt in descending order
+        jobsWithActivater.sort((a, b) => {
+            return new Date(b.updatedAt) - new Date(a.updatedAt);
+        });
 
         // Return JSON response with jobs including activater names
         return NextResponse.json({ status: 200, jobs: jobsWithActivater });

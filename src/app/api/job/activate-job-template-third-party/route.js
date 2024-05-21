@@ -35,7 +35,6 @@ export const GET = async (req, res) => {
         }
 
         const newID = await Status.findOne({ status_name: "new" });
-        console.log("newID", newID)
         if (!newID) {
             return NextResponse.json({ status: 404, file: __filename, error: "Status not found" });
         }
@@ -119,7 +118,8 @@ export const GET = async (req, res) => {
             await jobItemTemplateActivate.save();
         }));
 
-        return NextResponse.json({ status: 200, data: job });
+        const link = `${config.host}/api/job/get-job-value?job_id=${job._id}`;
+        return NextResponse.json({ status: 200, JobID: job._id, ToSeeData: link});
     } catch (err) {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });
     }

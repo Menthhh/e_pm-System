@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 import CloseIcon from '@mui/icons-material/Close';
 import Swal from 'sweetalert2';
+import JobPlan from "@/components/JobPlan";
 
 
 const jobTemplatesHeader = ["ID", "Job Template Name", "Document no.", "Created At", "Action"];
@@ -34,6 +35,9 @@ const Page = () => {
     const [jobs, setJobs] = useState([]);
     const [isShowDetail, setIsShowDetail] = useState(false);
     const [detail, setDetail] = useState({});
+
+    const [isShowPlan, setIsShowPlan] = useState(false);
+    const [planData, setPlanData] = useState({});
 
     useEffect(() => {
 
@@ -90,11 +94,22 @@ const Page = () => {
             const responseData = await response.json();
             if (responseData.status === 200) {
                 setRefresh(!refresh);
+                Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: "Job template activated successfully"
+                });
             }
         } catch (error) {
             console.error(error);
         }
     };
+
+    const handlePlan = (data) => {
+        setPlanData(data);
+        setIsShowPlan(prev => !prev);
+        console.log(data);
+    }
 
 
     const fetchJobs = async (workgroup_id) => {
@@ -178,6 +193,13 @@ const Page = () => {
             "Action": (
                 <div className="flex gap-2 items-center justify-center">
                     <button
+                        className="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded"
+                        onClick={() => handlePlan(data)}
+                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"]) ? "not-allowed" : "pointer" }}
+                    >
+                        plan
+                    </button>
+                    <button
                         className="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
                         onClick={() => handleActivate(data)}
                         disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"])}
@@ -201,7 +223,12 @@ const Page = () => {
             ID: index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": job.STATUS_NAME,
+            "Status": <div
+                style={{ backgroundColor: job.STATUS_COLOR }}
+                className="px-1 py-1 rounded-full text-black font-semibold shadow-xl"
+            >
+                {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
+            </div>,
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action": (
@@ -218,7 +245,7 @@ const Page = () => {
         };
     });
 
-    const ShowDetailModal = () => {
+    const ShowDetailModal = ({ onClose }) => {
         const [isCopied, setIsCopied] = useState(false);
 
         const copyToClipboard = () => {
@@ -232,6 +259,14 @@ const Page = () => {
                 setIsCopied(false);
             }, 3000);
         };
+
+        // Disable background scrolling when modal is open
+        useEffect(() => {
+            document.body.style.overflow = 'hidden';
+            return () => {
+                document.body.style.overflow = 'auto';
+            };
+        }, []);
 
         return (
             <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -258,7 +293,7 @@ const Page = () => {
                     </div>
                     <button
                         className="bg-red-700 text-white font-bold py-2 px-4 self-end absolute top-0 right-0 hover:bg-red-800 shadow-lg rounded-sm"
-                        onClick={() => setIsShowDetail(false)}
+                        onClick={ () => setIsShowDetail(false) } // Close modal on button click
                     >
                         <CloseIcon className="size-18" />
                     </button>
@@ -302,6 +337,13 @@ const Page = () => {
                 PageSize={8}
             />
             {isShowDetail && (<ShowDetailModal />)}
+            {isShowPlan && (
+                <JobPlan
+                    data={planData}
+                    onClose={() => setIsShowPlan(false)} // Close modal handler
+                />
+            )}
+
         </Layout>
     );
 };

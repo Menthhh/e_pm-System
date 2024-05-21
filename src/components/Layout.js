@@ -35,11 +35,11 @@ const Layout = ({ children, className = "" }) => {
   }, [cards]);
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen ">
       <Navbar menu={menus} />
-      <div className={`flex-1 ${className} pt-24 pb-24`}>
-        {children}
-      </div>
+        <div className={`flex-1 ${className} pt-24 pb-24 `}>
+          {children}
+        </div>
       <Footer />
     </div>
   );

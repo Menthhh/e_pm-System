@@ -47,13 +47,13 @@ const Navbar = ({ menu }) => {
 
 
     return (
-        <nav className="w-full h-16 p-4 bg-white flex justify-between items-center text-white font-bold  font-sans z-[100] shadow-md rounded-b-lg fixed">
+        <nav className="w-full h-16 p-4 bg-blue-700 flex justify-between items-center text-white font-bold  font-sans z-[100]   fixed">
             <div className="flex flex-col gap-2 cursor-pointer " onClick={toggleMenu}>
-                <div className={`bg-black w-7 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div>
-                <div className={`bg-black w-7 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
-                <div className={`bg-black w-7 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div>
+                <div className={`bg-white w-7 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div>
+                <div className={`bg-white w-7 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
+                <div className={`bg-white w-7 h-0.5 ${showMenu ? '-rotate-45' : ''}`}></div>
             </div>
-            <div className={`bg-slate-800 h-screen  left-0 top-0 absolute lg:w-1/4 w-1/2 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'} `}>
+            <div className={`bg-blue-800 h-screen  left-0 top-0 absolute lg:w-1/4 w-1/2 shadow-lg transition-transform duration-300 ${showMenu ? 'translate-x-0' : '-translate-x-full'} `}>
                 <button className="absolute top-4 right-4 z-[300]" onClick={closeMenu} >
         
                     <span className="sr-only">Close</span>
@@ -75,7 +75,7 @@ const Navbar = ({ menu }) => {
                     ))}
                 </ul>
             </div>
-            <div className="flex gap-3 items-center text-secondary">
+            <div className="flex gap-3 items-center text-white">
                 <div>
                     <p className="text-md font-bold">{user.name}</p> 
                     <p className="text-sm text-right" >{user.role} </p>

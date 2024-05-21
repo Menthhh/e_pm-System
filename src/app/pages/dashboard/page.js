@@ -95,7 +95,7 @@ const Page = () => {
                     }
                     )}
                 </div>
-                <div className="flex flex-col gap-5 w-full text-sm font-thin">
+                <div className="flex flex-col gap-5 w-full text-sm font-thin ">
                     <TableComponent headers={jobsActiveHeader} datas={jobsActiveBody} TableName="Active Jobs" PageSize={5} />
 
                 </div>

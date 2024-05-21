@@ -5,6 +5,8 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { RRule } from 'rrule';
+import useFetchUser from "@/lib/hooks/useFetchUser";
+import useFetchJobEvents from "@/lib/hooks/useFetchJobEvents";
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
@@ -24,103 +26,48 @@ const generateRecurringEvents = () => {
     start: date,
     end: new Date(date.getTime() + 60 * 60 * 1000), // 1 hour duration
     allDay: false,
+    color: '#FF5733' // Add a color property to the event
   }));
 };
 
 // Generate the recurring events
 const recurringEvents = generateRecurringEvents();
 
-const events = [
-  {
-    'title': 'All Day Event very long title',
-    'allDay': true,
-    'start': new Date(2024, 3, 1),
-    'end': new Date(2024, 3, 1)
-  },
-  {
-    'title': 'Long Event',
-    'start': new Date(2024, 3, 7),
-    'end': new Date(2024, 3, 10)
-  },
-  {
-    'title': 'DTS STARTS',
-    'start': new Date(2016, 2, 13, 0, 0, 0),
-    'end': new Date(2016, 2, 20, 0, 0, 0)
-  },
-  {
-    'title': 'DTS ENDS',
-    'start': new Date(2016, 10, 6, 0, 0, 0),
-    'end': new Date(2016, 10, 13, 0, 0, 0)
-  },
-  {
-    'title': 'Some Event',
-    'start': new Date(2024, 3, 9, 0, 0, 0),
-    'end': new Date(2024, 3, 9, 0, 0, 0)
-  },
-  {
-    'title': 'Conference',
-    'start': new Date(2024, 3, 11),
-    'end': new Date(2024, 3, 13),
-    desc: 'Big conference for important people'
-  },
-  {
-    'title': 'Meeting',
-    'start': new Date(2024, 3, 12, 10, 30, 0, 0),
-    'end': new Date(2024, 3, 12, 12, 30, 0, 0),
-    desc: 'Pre-meeting meeting, to prepare for the meeting '
-  },
-  {
-    'title': 'Lunch',
-    'start': new Date(2024, 3, 12, 12, 0, 0, 0),
-    'end': new Date(2024, 3, 12, 13, 0, 0, 0),
-    desc: 'Power lunch'
-  },
-  {
-    'title': 'Meeting',
-    'start': new Date(2024, 3, 12, 14, 0, 0, 0),
-    'end': new Date(2024, 3, 12, 15, 0, 0, 0)
-  },
-  {
-    'title': 'Happy Hour',
-    'start': new Date(2024, 3, 12, 17, 0, 0, 0),
-    'end': new Date(2024, 3, 12, 17, 30, 0, 0),
-    desc: 'Most important meal of the day'
-  },
-  {
-    'title': 'Dinner',
-    'start': new Date(2024, 3, 12, 20, 0, 0, 0),
-    'end': new Date(2024, 3, 12, 21, 0, 0, 0)
-  },
-  {
-    'title': 'Birthday Party',
-    'start': new Date(2024, 3, 13, 7, 0, 0),
-    'end': new Date(2024, 3, 13, 10, 30, 0)
-  },
-  {
-    'title': 'Birthday Party 2',
-    'start': new Date(2024, 3, 13, 7, 0, 0),
-    'end': new Date(2024, 3, 13, 10, 30, 0)
-  },
-  {
-    'title': 'Birthday Party 3',
-    'start': new Date(2024, 3, 13, 7, 0, 0),
-    'end': new Date(2024, 3, 13, 10, 30, 0)
-  },
-  {
-    'title': 'Late Night Event',
-    'start': new Date(2024, 3, 17, 19, 30, 0),
-    'end': new Date(2024, 3, 18, 2, 0, 0)
-  },
-  {
-    'title': 'Multi-day Event',
-    'start': new Date(2024, 3, 20, 19, 30, 0),
-    'end': new Date(2024, 3, 22, 2, 0, 0)
-  }
-];
+// const events = [
+//   {
+//     title: 'All Day Event very long title',
+//     allDay: true,
+//     start: new Date(2024, 3, 1),
+//     end: new Date(2024, 3, 1),
+//     color: '#FFD700'
+//   },
+//   {
+//     title: 'Long Event',
+//     start: new Date(2024, 3, 7),
+//     end: new Date(2024, 3, 10),
+//     color: '#DAF7A6'
+//   },
+//   {
+//     title: 'Some Event',
+//     start: new Date(2024, 3, 9),
+//     end: new Date(2024, 3, 9),
+//     color: '#FFC300'
+//   },
+//   {
+//     title: 'Conference',
+//     start: new Date(2024, 3, 11),
+//     end: new Date(2024, 3, 13),
+//     desc: 'Big conference for important people',
+//     color: '#C70039'
+//   },
+//   // Add other events similarly with color property
+// ];
 
 const Page = () => {
   const [view, setView] = useState('month');
   const [date, setDate] = useState(new Date());
+  const { user, isLoading: userLoading, error: userError } = useFetchUser();
+  const { events, loading, error } = useFetchJobEvents(user.workgroup_id);
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -147,6 +94,12 @@ const Page = () => {
     setDate(newDate);
   };
 
+  // Define the eventPropGetter function
+  const eventPropGetter = (event) => {
+    const backgroundColor = event.color || '#3174ad'; // default color if no color specified
+    return { style: { backgroundColor } };
+  };
+
   return (
     <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
       <div className="flex justify-between mb-4">
@@ -166,12 +119,13 @@ const Page = () => {
           localizer={localizer}
           events={[...events, ...recurringEvents]}
           step={60}
-          views={['month', 'week', 'day', 'agenda']}
+          views={['month']}
           view={view}
           onView={handleViewChange}
           date={date}
           onNavigate={handleNavigate}
           onShowMore={(events, date) => console.log(events, date)}
+          eventPropGetter={eventPropGetter} // Pass the eventPropGetter function
         />
       </div>
     </Layout>
