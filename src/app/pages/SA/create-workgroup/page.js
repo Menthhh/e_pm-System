@@ -6,6 +6,7 @@ import Link from "next/link";
 import SALayout from "@/components/SALayout";
 import MessageBox from "@/components/MessageBox";
 import {config} from "../../../../config/config.js";
+import Swal from "sweetalert2";
 
 const headers = ["ID", "WorkGroup", "Action"];
 
@@ -88,18 +89,52 @@ const Page = () => {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await fetch(
-        `${config.host}/api/workgroup/delete-workgroup/${id}`,
-        {
-          method: "DELETE",
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
+      },
+      buttonsStyling: true
+    });
+  
+    swalWithBootstrapButtons.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await fetch(
+            `${config.host}/api/workgroup/delete-workgroup/${id}`,
+            {
+              method: "DELETE",
+            }
+          );
+          swalWithBootstrapButtons.fire({
+            title: "Deleted!",
+            text: "Your file has been deleted.",
+            icon: "success"
+          });
+          setRefresh(!refresh);
+        } catch (error) {
+          console.error("Error deleting workgroup:", error);
         }
-      );
-      setRefresh(!refresh);
-    } catch (error) {
-      console.error("Error deleting workgroup:", error);
-    }
+      } else if (
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelled",
+          text: "Your imaginary file is safe :)",
+          icon: "error"
+        });
+      }
+    });
   };
+  
 
   const newWorkgroupFormInput = (
     <form onSubmit={createWorkgroup} className="flex gap-4 fixed">

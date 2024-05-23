@@ -1,11 +1,12 @@
-import { connectToDb } from "../../../../lib/utils/utils.js";
-import { JobTemplate } from "../../../../lib/models/JobTemplate.js";
+import { connectToDb } from "@/lib/utils/utils.js";
+import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { NextResponse } from 'next/server.js';
-import { Approves } from "../../../../lib/models/Approves.js";
-
+import { Approves } from "@/lib/models/Approves.js";
+import { generateUniqueKey } from "@/lib/utils/utils.js";
 
 export const POST = async (req, res) => {
     await connectToDb();
+    const JobTemplateCreateID = await generateUniqueKey();
     const body = await req.json();
     const {
         AUTHOR_ID,
@@ -13,7 +14,7 @@ export const POST = async (req, res) => {
         DOC_NUMBER,
         DUE_DATE,
         CHECKLIST_VERSION,
-        MACHINE_ID,
+        TIMEOUT,
         WORKGROUP_ID,
         APPROVERS_ID 
     } = body;
@@ -24,15 +25,18 @@ export const POST = async (req, res) => {
             DOC_NUMBER,
             DUE_DATE,
             CHECKLIST_VERSION,
-            MACHINE_ID,
-            WORKGROUP_ID
+            TIMEOUT,
+            WORKGROUP_ID,
+            JobTemplateCreateID 
         });
+        
         await jobTemplate.save();
 
         const approvers = APPROVERS_ID.map(approver => {
             return new Approves({
                 JOB_TEMPLATE_ID: jobTemplate._id,
-                USER_ID: approver
+                JobTemplateCreateID,
+                USER_ID: approver,
             });
         });
         await Approves.insertMany(approvers);

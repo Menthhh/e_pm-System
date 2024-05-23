@@ -40,8 +40,8 @@ const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) =
                 />
             </div>
 
-            <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start shadow-inner drop-shadow-md">
-            <h1 className="p-2 text-slate-700 text-lg">{TableName || "Table Name"}</h1>
+            <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start overflow-x-auto shadow-md">
+            <h1 className="p-2 text-sm text-secondary font-bold">{TableName || "Table Name"}</h1>
             <table className="table-auto w-full">
                 <thead className=" bg-[#F6F6F6] text-[#878787]">
                     <tr>

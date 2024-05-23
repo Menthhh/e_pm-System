@@ -11,7 +11,7 @@ const publicRoutes = [
 ];
 
 const developingRoutes = [
-    "/pages/job-template"
+    "/pages/job-calendar",
 ]
 
 const SA = {

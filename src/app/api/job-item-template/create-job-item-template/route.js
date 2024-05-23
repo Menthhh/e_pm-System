@@ -1,8 +1,8 @@
-import { connectToDb } from "../../../../lib/utils/utils.js";
-import { JobItemTemplate } from "../../../../lib/models/JobItemTemplate.js";
+import { connectToDb, generateUniqueKey } from "@/lib/utils/utils.js";
+import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { NextResponse } from 'next/server.js';
 
-
+// import { m } from 'framer-motion';
 // import mongoose from 'mongoose';
 
 // const jobItemTemplateSchema = new mongoose.Schema({
@@ -12,34 +12,42 @@ import { NextResponse } from 'next/server.js';
 //     UPPER_SPEC_LIMIT: { type: String, required: true },
 //     LOWER_SPEC_LIMIT: { type: String, required: true },
 //     TEST_METHOD: { type: String, required: true },
+//     JOB_TEMPLATE_ID: { type: mongoose.Schema.Types.ObjectId, ref: "JobTemplate", required: true },
+//     JobTemplateCreateID: { type: String, required: true },
+//     JobItemTemplateCreateID: { type: String, required: true },
 // }, { timestamps: true });
 
 // export const JobItemTemplate = mongoose.models?.JobItemTemplate || mongoose.model('JobItemTemplate', jobItemTemplateSchema);
 
 
 
-
 export const POST = async (req, res) => {
     await connectToDb();
+    const JobItemTemplateCreateID = await generateUniqueKey();
     const body = await req.json();
     const {
         AUTHOR_ID,
         JOB_ITEM_TEMPLATE_TITLE,
         JOB_ITEM_TEMPLATE_NAME,
-        UPPER_SPEC_LIMIT,
-        LOWER_SPEC_LIMIT,
+        UPPER_SPEC,
+        LOWER_SPEC,
         TEST_METHOD,
-        JOB_TEMPLATE_ID
+        TEST_LOCATION_ID,
+        JobTemplateCreateID,
+        JOB_TEMPLATE_ID,
     } = body;
     try {
         const jobItemTemplate = new JobItemTemplate({
             AUTHOR_ID,
             JOB_ITEM_TEMPLATE_TITLE,
             JOB_ITEM_TEMPLATE_NAME,
-            UPPER_SPEC_LIMIT,
-            LOWER_SPEC_LIMIT,
+            UPPER_SPEC,
+            LOWER_SPEC,
             TEST_METHOD,
-            JOB_TEMPLATE_ID
+            JOB_TEMPLATE_ID,
+            TEST_LOCATION_ID,
+            JobTemplateCreateID,
+            JobItemTemplateCreateID
         });
         await jobItemTemplate.save();
 
