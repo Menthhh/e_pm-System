@@ -24,7 +24,6 @@ export const connectToDb = async () => {
     console.log("New connection");
   } catch (error) {
     console.log(error);
-    throw new Error(error);
   }
 };
 
