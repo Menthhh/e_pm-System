@@ -193,14 +193,14 @@ const Page = () => {
             "Action": (
                 <div className="flex gap-2 items-center justify-center">
                     <button
-                        className="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-4 rounded"
+                        className="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-2 rounded"
                         onClick={() => handlePlan(data)}
                         style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"]) ? "not-allowed" : "pointer" }}
                     >
                         plan
                     </button>
                     <button
-                        className="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded"
+                        className="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-2 px-2 rounded"
                         onClick={() => handleActivate(data)}
                         disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"])}
                         style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"]) ? "not-allowed" : "pointer" }}
@@ -208,7 +208,7 @@ const Page = () => {
                         Activate
                     </button>
                     <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-2 rounded"
                         onClick={() => handleViewDetial(data)}
                     >
                         view details
@@ -341,6 +341,7 @@ const Page = () => {
                 <JobPlan
                     data={planData}
                     onClose={() => setIsShowPlan(false)} // Close modal handler
+                    setRefresh={setRefresh}
                 />
             )}
 

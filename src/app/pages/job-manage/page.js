@@ -79,7 +79,7 @@ const Page = () => {
             "Document no.": job.DOC_NUMBER,
             "Status": <div
                 style={{ backgroundColor: job.STATUS_COLOR }}
-                className="px-1 py-1 rounded-full text-black font-semibold shadow-xl"
+                className="px-1 py-1 rounded-full text-gray-800 font-semibold shadow-xl "
             >
                 {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
             </div>
@@ -87,32 +87,54 @@ const Page = () => {
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action":
-                <div className="flex gap-2 items-center justify-center">
-                    <Link
-                        className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
-                        href={{
-                            pathname: "/pages/view-jobs",
-                            query: {
-                                job_id: job._id,
-                                views: "false"
-                            },
-                        }}
-                    >
-                        Edit
-                    </Link>
-                    <Link
-                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
-                        href={{
-                            pathname: "/pages/view-jobs",
-                            query: {
-                                job_id: job._id,
-                                view: "true"
-                            },
-                        }}
-                    >
-                        View
-                    </Link>
-                </div>
+                (
+                    //if job activate date not equal to today or less than today then allow to all action otherwise disable all action
+                    job.STATUS_NAME !== "plan" ?
+                        // if job status is not overdue then allow to edit and view job otherwise disable all action
+                        (job.STATUS_NAME !== "overdue" ?
+                            <div className="flex gap-2 items-center justify-center">
+                                <Link
+                                    className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                                    href={{
+                                        pathname: "/pages/view-jobs",
+                                        query: {
+                                            job_id: job._id,
+                                            views: "false"
+                                        },
+                                    }}
+                                >
+                                    Edit
+                                </Link>
+                                <Link
+                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                                    href={{
+                                        pathname: "/pages/view-jobs",
+                                        query: {
+                                            job_id: job._id,
+                                            view: "true"
+                                        },
+                                    }}
+                                >
+                                    View
+                                </Link>
+                            </div> :
+                            <button
+                                className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center
+                                cursor-not-allowed " disabled>
+                                overdue
+                            </button>
+
+                        )
+                        :
+                        <button
+                            className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center 
+                            cursor-not-allowed
+                            "
+                            disabled
+                        >
+                            unable right now
+                        </button>
+                )
         }
     });
 
@@ -121,11 +143,11 @@ const Page = () => {
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-12">
             <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
-            <h1 className="text-2xl font-semibold">All Active Jobs</h1>
+
             <div className="flex flex-col gap-5 w-full text-sm font-thin">
                 <TableComponent headers={jobsActiveHeader} datas={jobsActiveBody} TableName="Active Jobs" PageSize={5} />
             </div>
-            <Link className="absolute rounded-full bg-[#F7DC6F] self-end shadow-xl h-12 w-96 flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 ring-1 ring-secondary hover:drop-shadow-2xl hover:shadow-2xl"
+            <Link className="absolute rounded-full bg-blue-600 text-white self-end shadow-xl h-12 w-96 flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 hover:drop-shadow-2xl hover:shadow-2xl"
                 href="/pages/activate-remove-job">
                 <KeyboardTabIcon /> Activate, or Remove Job.
             </Link>

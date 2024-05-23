@@ -261,10 +261,10 @@ const Page = () => {
                         <Select
                             options={[
                                 { value: "12 hrs", label: "12 hrs" },
-                                { value: "1 day", label: "1 days" },
-                                { value: "7 day", label: "7 days" },
-                                { value: "15 day", label: "15 days" },
-                                { value: "30 day", label: "30 days" },
+                                { value: "1 days", label: "1 days" },
+                                { value: "7 days", label: "7 days" },
+                                { value: "15 days", label: "15 days" },
+                                { value: "30 days", label: "30 days" },
                                 { value: "3 mounths", label: "3 mounths" },
                                 { value: "6 months", label: "6 months" },
                                 { value: "12 months", label: "12 months" },
