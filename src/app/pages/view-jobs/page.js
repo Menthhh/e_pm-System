@@ -18,11 +18,11 @@ import Select from 'react-select';
 const Page = () => {
     const searchParams = useSearchParams();
     const job_id = searchParams.get("job_id");
-    const view = searchParams.get("views");
+    const view = searchParams.get("view");
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
     const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
-    const [isShowJobInfo, setIsShowJobInfo] = useState(true);
+    const [isShowJobInfo, setIsShowJobInfo] = useState(false);
     const [isShowJobItem, setIsShowJobItem] = useState(true);
     const [jobItemDetail, setJobItemDetail] = useState(null);
     const [testMethodDescription, setTestMethodDescription] = useState(null);
@@ -59,13 +59,13 @@ const Page = () => {
                 console.error("Error:", err);
             }
         }
-        
+
 
         if (view === "false") {
             updateJobStatusToOngoing();
-            console.log("views" + view);
         }
-
+        
+        console.log("views" + view);
 
     }, [inputValues]);
 
@@ -303,47 +303,47 @@ const Page = () => {
                                         Title: {jobItemDetail.JobItemTitle}
                                     </h3>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Name: {jobItemDetail.JobItemName}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Upper Spec: {jobItemDetail.UpperSpec}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Lower Spec: {jobItemDetail.LowerSpec}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Test Method: {jobItemDetail.TestMethod}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Test Location: {jobItemDetail.TestLocationName || "N/A"}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Before Value: {jobItemDetail.BeforeValue || "N/A"}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Actual Value: {jobItemDetail.ActualValue || "N/A"}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Comment: {jobItemDetail.Comment || "N/A"}
                                         </p>
                                     </div>
                                     <div className="mt-2">
-                                        <p className="text-sm text-gray-500">
+                                        <p className="text-[12px] ipadmini:text-sm text-gray-500">
                                             Lastest Update: {jobItemDetail.LastestUpdate || "N/A"}
                                         </p>
                                     </div>
@@ -382,52 +382,52 @@ const Page = () => {
                     Job Information
                     {isShowJobInfo ? <ArrowDropUpIcon className="size-14" /> : <ArrowDropDownIcon className="size-14" />}
                 </h1>
-                <div className={`grid grid-cols-3 ipadmini:grid-cols-4 gap-x-12 w-full gap-y-2 ${isShowJobInfo ? "" : "hidden"}`}>
+                <div className={`grid grid-cols-4 ipadmini:grid-cols-4 gap-x-6 w-full gap-y-2 ${isShowJobInfo ? "" : "hidden"}`}>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Job Id</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Job Id</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.JobID} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Job Name</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Job Name</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.Name} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Document No.</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Document No.</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.DocumentNo} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Checklist Version</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Checklist Version</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.ChecklistVer} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Workgroup Name</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Workgroup Name</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.WorkgroupName} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Activated By</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Activated By</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.ActivatedBy} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Timeout</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Timeout</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.Timeout} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Activated At</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Activated At</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.ActivatedAt} disabled />
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Status</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Status</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.Status} disabled />
                     </div>
 
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">WD Tag</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">WD Tag</label>
 
                         { //if view is true then disable the select tag
                             view === "true" ?
-                                <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" 
-                                    value={jobData.wd_tag} 
-                                disabled />
+                                <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"
+                                    value={jobData.wd_tag}
+                                    disabled />
                                 :
                                 (jobData.WDtag ?
                                     <Select
@@ -438,6 +438,7 @@ const Page = () => {
                                         }))}
                                         onChange={(selectedOption) => handleWdChange(selectedOption)}
                                         name="wd_tag"
+
                                         value={{ value: jobData.WDtag, label: jobData.WDtag }}
                                         disabled
                                     />
@@ -456,7 +457,7 @@ const Page = () => {
 
                     </div>
                     <div className="flex flex-col">
-                        <label htmlFor="text-input" className="text-md font-bold text-gray-600">Machine Name</label>
+                        <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Machine Name</label>
                         <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={machineName} disabled />
                     </div>
 
@@ -471,15 +472,15 @@ const Page = () => {
                         <table className="table-auto border-collapse w-full text-sm">
                             <thead className="text-center">
                                 <tr className="bg-gray-200">
-                                    <th className="px-4 py-2">Item Title </th>
-                                    <th className="px-4 py-2">
+                                    <th className="w-[50px]">Item Title </th>
+                                    <th className="w-[50px] px-4 py-2">
                                         Test Method
                                     </th>
-                                    <th className="px-4 py-2">Upper Spec</th>
-                                    <th className="px-4 py-2">Lower Spec</th>
+                                    <th className="w-[50px] px-4 py-2">Upper Spec</th>
+                                    <th className="w-[50px] px-4 py-2">Lower Spec</th>
                                     {/* <th className="px-4 py-2">Test Location</th> */}
-                                    <th className="px-4 py-2">Before Value</th>
-                                    <th className="px-4 py-2">Actual Value</th>
+                                    <th className="w-[150px] py-2">Before Value</th>
+                                    <th className="w-[150px] px-4 py-2">Actual Value</th>
                                 </tr>
                             </thead>
                             <tbody className="text-center">
@@ -489,7 +490,7 @@ const Page = () => {
                                             <div>{item.JobItemTitle} </div>
 
                                             <InfoIcon
-                                                className="absolute right-1 top-1 text-blue-600 size-5 cursor-pointer "
+                                                className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                                 onClick={() => handleShowJobItemDescription(item)}
 
                                             />
@@ -498,7 +499,7 @@ const Page = () => {
                                             <div>{item.TestMethod} </div>
 
                                             <InfoIcon
-                                                className="absolute right-1 top-1 text-blue-600 size-5 cursor-pointer "
+                                                className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                                 onClick={() => handleShowTestMethodDescription(item)}
 
                                             />
@@ -506,7 +507,7 @@ const Page = () => {
                                         <td className="border px-4 py-2">{item.UpperSpec}</td>
                                         <td className="border px-4 py-2">{item.LowerSpec}</td>
                                         {/* <td className="border px-4 py-2">{item.TestLocationName}</td> */}
-                                        <td className="border px-2 py-2 relative">
+                                        <td className="border  py-2 relative">
                                             { //if view is true then disable the input field
                                                 view === "true" ?
                                                     <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
@@ -542,6 +543,11 @@ const Page = () => {
                                                     )
 
                                             }
+                                            <InfoIcon
+                                                className="absolute right-[2px] top-1 text-blue-600 size-4 cursor-pointer "
+                                                onClick={() => toggleAddComment(item)}
+
+                                            />
                                         </td>
 
                                     </tr>
@@ -550,19 +556,13 @@ const Page = () => {
                         </table>
                     </div>
                     <div>
-                        {view === "true" ? null : (
-                            jobData.Status === "complete" ?
-                                <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm cursor-not-allowed"
-                                    disabled
-                                >
-                                    Submit
-                                </button>
-                                :
-                                <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                                >
-                                    Submit
-                                </button>
-                        )
+                        {view === "true" || jobData.Status === "complete" ?
+                            null
+                            :
+                            <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                            >
+                                Submit
+                            </button>
                         }
                     </div>
                 </div>

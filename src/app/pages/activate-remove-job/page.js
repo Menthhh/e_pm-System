@@ -211,7 +211,7 @@ const Page = () => {
                         className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded"
                         onClick={() => handleViewDetial(data)}
                     >
-                        view details
+                        details
                     </button>
                 </div>
             ),
@@ -225,7 +225,7 @@ const Page = () => {
             "Document no.": job.DOC_NUMBER,
             "Status": <div
                 style={{ backgroundColor: job.STATUS_COLOR }}
-                className="px-4 text-[12px] py-1 rounded-full text-black font-semibold shadow-xl"
+                className="px-4 text-[12px] py-1 rounded-full text-black font-semibold shadow-xl ipadmini:text-sm"
             >
                 {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
             </div>,
@@ -234,7 +234,7 @@ const Page = () => {
             "Action": (
                 //remove job
                 <button
-                    className="text-white text-[12px] bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                    className="text-white text-[12px] bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none font-bold rounded-lg px-4 py-2 text-center ipadmini:text-sm"
                     href="#" onClick={() => handleRemove(job._id)}
                 >
 
@@ -269,8 +269,8 @@ const Page = () => {
         }, []);
 
         return (
-            <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-                <div className="bg-white p-5 rounded-lg w-1/3  flex flex-col gap-6 relative">
+            <div className="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 flex justify-center items-center z-50 ">
+                <div className="bg-white p-5 rounded-lg w-2/3  flex flex-col gap-6 relative">
                     <div className="flex flex-col gap-2">
                         <h1 className="text-2xl font-bold">Detail</h1>
                         <h2 className="text-sm text-secondary">To activate through third-party, you need to send a GET request with the following pattern:</h2>

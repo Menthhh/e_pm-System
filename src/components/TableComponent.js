@@ -42,7 +42,7 @@ const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) =
 
             <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start overflow-x-auto shadow-md">
             <h1 className="p-2 text-sm text-secondary font-bold">{TableName || "Table Name"}</h1>
-            <table className="table-auto w-full text-[12px]">
+            <table className="table-auto w-full text-[12px] ipadmini:text-sm">
                 <thead className=" bg-[#F6F6F6] text-[#878787] text-sm">
                     <tr>
                         {headers.map((header) => (

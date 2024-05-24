@@ -69,7 +69,7 @@ const Page = () => {
           icon: 'warning',
           confirmButtonText: 'OK'
         });
-      } else if (event.status_name === 'completed') {
+      } else if (event.status_name === 'complete') {
         router.push(`/pages/view-jobs?job_id=${event.job_id}&views=true`);
       } else if (event.status_name === 'overdue') {
         Swal.fire({
@@ -79,7 +79,7 @@ const Page = () => {
           confirmButtonText: 'OK'
         });
       } else {
-        router.push(`/pages/view-jobs?job_id=${event.job_id}&views=false`);
+        router.push(`/pages/view-jobs?job_id=${event.job_id}&views=true`);
       }
     }
   };
@@ -99,7 +99,7 @@ const Page = () => {
           </label>
         </div>
       </div>
-      <div style={{ height: 700 }}>
+      <div style={{ height: 800 }}>
         <Calendar
           localizer={localizer}
           events={[...events]}

@@ -48,6 +48,7 @@ export const PUT = async (req, res) => {
         const job = await Job.findOne({ _id: jobData.JobID });
         job.WD_TAG = jobData.wd_tag;
         const complete_status = await Status.findOne({ status_name: 'complete' });
+        console.log(complete_status._id)
         job.JOB_STATUS_ID = complete_status._id
         await job.save();
 

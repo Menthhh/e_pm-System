@@ -1,142 +1,16 @@
 "use client"
 import Layout from "@/components/Layout.js";
-import TableComponent from "@/components/TableComponent.js";
-import { getSession } from "@/lib/utils/utils";
-import { useEffect, useState } from "react";
-import { config } from "@/config/config.js";
-import Link from "next/link";
+import { useState } from "react";
+import Link from "next/link.js";
 import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
-import { AnimatedComponent, Typewriter } from "react-style-text";
+import JobsTable from "@/components/JobsTable";
+import useFetchUser from "@/lib/hooks/useFetchUser";
 
-const jobItemTemplateHeader = ["ID", "Job Template Name", "Machine", "Create At", "Action"];
 
-
-const jobsActiveHeader = [
-    "ID",
-    "Job Name",
-    "Document no.",
-    "Status",
-    "Active",
-    "Action"
-]
 
 const Page = () => {
     const [refresh, setRefresh] = useState(false);
-    const [session, setSession] = useState({});
-    const [user, setUser] = useState({});
-    const [userEnableFunctions, setUserEnableFunctions] = useState([]);
-    const [jobs, setJobs] = useState([]);
-
-    useEffect(() => {
-        retrieveSession();
-    }, [refresh]);
-
-    const retrieveSession = async () => {
-        const session = await getSession();
-        setSession(session);
-
-        await fetchUser(session.user_id);
-
-
-    }
-
-    const fetchUser = async (user_id) => {
-        try {
-            const response = await fetch(`${config.host}/api/user/get-user/${user_id}`);
-            if (!response.ok) {
-                throw new Error("Failed to fetch user data");
-            }
-            const data = await response.json();
-            setUser(data.user);
-            setUserEnableFunctions(data.user.actions);
-            await fetchJobs(data.user.workgroup_id);
-
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const fetchJobs = async (workgroup_id) => {
-        try {
-
-            const response = await fetch(`${config.host}/api/job/get-jobs-from-workgroup/${workgroup_id}`);
-            const data = await response.json();
-            if (data.status === 200) {
-                console.log(data.jobs)
-
-                setJobs(data.jobs);
-            }
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const jobsActiveBody = jobs.map((job, index) => {
-        return {
-            "ID": index + 1,
-            "Job Name": job.JOB_NAME,
-            "Document no.": job.DOC_NUMBER,
-            "Status": <div
-                style={{ backgroundColor: job.STATUS_COLOR }}
-                className="px-4 py-1 rounded-full text-white text-gray-800 font-semibold shadow-xl text-[12px]"
-            >
-                {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
-            </div>
-            ,
-            "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
-           
-            "Action":
-                (
-                    //if job activate date not equal to today or less than today then allow to all action otherwise disable all action
-                    job.STATUS_NAME !== "plan" ?
-                        // if job status is not overdue then allow to edit and view job otherwise disable all action
-                        (job.STATUS_NAME !== "overdue" ?
-                            <div className="flex gap-2 items-center justify-center">
-                                <Link
-                                    className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-[12px] px-5 py-2 text-center "
-                                    href={{
-                                        pathname: "/pages/view-jobs",
-                                        query: {
-                                            job_id: job._id,
-                                            views: "false"
-                                        },
-                                    }}
-                                >
-                                    Edit
-                                </Link>
-                                <Link
-                                    className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
-                                    href={{
-                                        pathname: "/pages/view-jobs",
-                                        query: {
-                                            job_id: job._id,
-                                            view: "true"
-                                        },
-                                    }}
-                                >
-                                    View
-                                </Link>
-                            </div> :
-                            <button
-                                className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center
-                                cursor-not-allowed " disabled>
-                                overdue
-                            </button>
-
-                        )
-                        :
-                        <button
-                            className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center 
-                            cursor-not-allowed
-                            "
-                            disabled
-                        >
-                            unable right now
-                        </button>
-                )
-        }
-    });
-
+    const { user, isLoading: usersloading } = useFetchUser()
 
 
     return (
@@ -148,7 +22,7 @@ const Page = () => {
             </Link>
 
             <div className="flex flex-col gap-5 w-full text-sm font-thin">
-                <TableComponent headers={jobsActiveHeader} datas={jobsActiveBody} TableName="Active Jobs" PageSize={5} />
+                <JobsTable refresh={refresh} />
             </div>
         </Layout>
     );

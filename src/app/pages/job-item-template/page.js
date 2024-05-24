@@ -131,7 +131,7 @@ const Page = () => {
                         Edit
                     </Link>
                     <button
-                        className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded"
+                        className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-2 rounded"
                         onClick={() => handleRemove(jobTemplate._id)}
                         disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["remove-job-template"])}
                         style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["remove-job-template"]) ? "not-allowed" : "pointer" }}
@@ -139,7 +139,7 @@ const Page = () => {
                         Remove
                     </button>
                     <Link
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-1 rounded"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-2 rounded"
                         href={{
                             pathname: "/pages/job-item-template/add-job-item-template",
                             query: { jobTemplate_id: jobTemplate._id },
