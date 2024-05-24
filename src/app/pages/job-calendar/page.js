@@ -7,32 +7,34 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import { RRule } from 'rrule';
 import useFetchUser from "@/lib/hooks/useFetchUser";
 import useFetchJobEvents from "@/lib/hooks/useFetchJobEvents";
+import { useRouter } from 'next/navigation';
+import Swal from "sweetalert2";
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
 
 // Define a function to generate recurring events
-const generateRecurringEvents = () => {
-  const rule = new RRule({
-    freq: RRule.WEEKLY,
-    interval: 1,
-    byweekday: [RRule.MO, RRule.FR],
-    dtstart: new Date(2024, 3, 1),
-    until: new Date(2024, 5, 30),
-  });
+// const generateRecurringEvents = () => {
+//   const rule = new RRule({
+//     freq: RRule.WEEKLY,
+//     interval: 1,
+//     byweekday: [RRule.MO, RRule.FR],
+//     dtstart: new Date(2024, 3, 1),
+//     until: new Date(2024, 5, 30),
+//   });
 
-  return rule.all().map(date => ({
-    title: 'Recurring Event',
-    start: date,
-    end: new Date(date.getTime() + 60 * 60 * 1000), // 1 hour duration
-    allDay: false,
-    color: '#FF5733' // Add a color property to the event
-  }));
-};
-
-
+//   return rule.all().map(date => ({
+//     title: 'Recurring Event',
+//     start: date,
+//     end: new Date(date.getTime() + 60 * 60 * 1000), // 1 hour duration
+//     allDay: false,
+//     color: '#FF5733', // Add a color property to the event
+//     url: '/job/' + date.getTime() // Example URL, you might need to adjust this
+//   }));
+// };
 
 const Page = () => {
+  const router = useRouter()
   const [view, setView] = useState('month');
   const [date, setDate] = useState(new Date());
   const { user, isLoading: userLoading, error: userError } = useFetchUser();
@@ -46,18 +48,6 @@ const Page = () => {
     setDate(newDate);
   };
 
-  const handleMonthChange = (e) => {
-    const newMonth = parseInt(e.target.value);
-    const newDate = new Date(date.getFullYear(), newMonth, 1);
-    setDate(newDate);
-  };
-
-  const handleYearChange = (e) => {
-    const newYear = parseInt(e.target.value);
-    const newDate = new Date(newYear, date.getMonth(), 1);
-    setDate(newDate);
-  };
-
   const handleDateChange = (e) => {
     const newDate = new Date(e.target.value);
     setDate(newDate);
@@ -68,6 +58,32 @@ const Page = () => {
     const backgroundColor = event.color || '#3174ad'; // default color if no color specified
     return { style: { backgroundColor } };
   };
+
+  // Define the onSelectEvent function
+  const handleSelectEvent = (event) => {
+    if (router) {
+      if (event.status_name === 'plan') {
+        Swal.fire({
+          title: 'Job is in plan status',
+          text: 'You can not view the job in plan status',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        });
+      } else if (event.status_name === 'completed') {
+        router.push(`/pages/view-jobs?job_id=${event.job_id}&views=true`);
+      } else if (event.status_name === 'overdue') {
+        Swal.fire({
+          title: 'Job is overdue',
+          text: 'You can not view the job in overdue status',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        });
+      } else {
+        router.push(`/pages/view-jobs?job_id=${event.job_id}&views=false`);
+      }
+    }
+  };
+
 
   return (
     <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
@@ -95,6 +111,7 @@ const Page = () => {
           onNavigate={handleNavigate}
           onShowMore={(events, date) => console.log(events, date)}
           eventPropGetter={eventPropGetter} // Pass the eventPropGetter function
+          onSelectEvent={handleSelectEvent} // Pass the onSelectEvent function
         />
       </div>
     </Layout>

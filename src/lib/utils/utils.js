@@ -61,8 +61,7 @@ export async function login(prevState, formData) {
   if (data.status === 200) {
     cookies().set("token", data.token, {
       httpOnly: true,
-      sameSite: "strict",
-      secure: true,
+      
     });
     if (!data.user.Role) {
       return { message: "User is not assigned role." };

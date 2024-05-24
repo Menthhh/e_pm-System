@@ -48,11 +48,6 @@ export const GET = async (req, { params }) => {
             const jobCreationTime = new Date(job.createdAt);
             const jobExpiryTime = await convertTimeout(job.TIMEOUT, job.createdAt);
 
-            console.log("today", now.toLocaleString());
-            console.log("Timeout", job.TIMEOUT);
-            console.log("jobExpiryTime", jobExpiryTime.toLocaleString());
-            console.log("JobCreationTime", jobCreationTime.toLocaleString());
-
             if (now > jobExpiryTime && statusName !== 'overdue') {
                 job.JOB_STATUS_ID = overdueStatus._id;
                 await job.save();

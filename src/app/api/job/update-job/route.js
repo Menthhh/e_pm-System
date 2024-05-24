@@ -5,6 +5,7 @@
 import { JobItemTemplateActivate } from "@/lib/models/AE/JobItemTemplateActivate";
 import { Job } from "@/lib/models/Job";
 import { JobItem } from "@/lib/models/JobItem";
+import { Status } from "@/lib/models/Status";
 import { connectToDb } from "@/lib/utils/utils";
 import { NextResponse } from 'next/server';
 
@@ -46,7 +47,8 @@ export const PUT = async (req, res) => {
 
         const job = await Job.findOne({ _id: jobData.JobID });
         job.WD_TAG = jobData.wd_tag;
-        job.JOB_STATUS_ID = "6646bc394c04936a08a5a0e7"
+        const complete_status = await Status.findOne({ status_name: 'complete' });
+        job.JOB_STATUS_ID = complete_status._id
         await job.save();
 
         return NextResponse.json({ status: 200 });

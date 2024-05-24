@@ -62,8 +62,11 @@ export const GET = async (req, res) => {
             const jobName = job ? job.JOB_NAME : null;
             const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
             const statusColor = status ? status.color : null;
+            const statusName = status ? status.status_name : null;
             return {
                 title: jobName,
+                job_id: job._id,
+                status_name: statusName,
                 start: new Date(createdAtDate.getFullYear(), createdAtDate.getMonth(), createdAtDate.getDate()),
                 end: new Date(createdAtDate.getFullYear(), createdAtDate.getMonth(), createdAtDate.getDate()),
                 color: statusColor,

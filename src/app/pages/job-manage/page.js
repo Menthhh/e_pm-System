@@ -17,7 +17,6 @@ const jobsActiveHeader = [
     "Document no.",
     "Status",
     "Active",
-    "Activator",
     "Action"
 ]
 
@@ -79,13 +78,13 @@ const Page = () => {
             "Document no.": job.DOC_NUMBER,
             "Status": <div
                 style={{ backgroundColor: job.STATUS_COLOR }}
-                className="px-1 py-1 rounded-full text-gray-800 font-semibold shadow-xl "
+                className="px-4 py-1 rounded-full text-white text-gray-800 font-semibold shadow-xl text-[12px]"
             >
                 {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
             </div>
             ,
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
-            "Activator": job.ACTIVATER_NAME,
+           
             "Action":
                 (
                     //if job activate date not equal to today or less than today then allow to all action otherwise disable all action
@@ -94,7 +93,7 @@ const Page = () => {
                         (job.STATUS_NAME !== "overdue" ?
                             <div className="flex gap-2 items-center justify-center">
                                 <Link
-                                    className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                                    className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-[12px] px-5 py-2 text-center "
                                     href={{
                                         pathname: "/pages/view-jobs",
                                         query: {
@@ -143,14 +142,14 @@ const Page = () => {
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-12">
             <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
+            <Link className=" rounded-full bg-blue-600 text-white shadow-xl h-12 w-96 flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 hover:drop-shadow-2xl hover:shadow-2xl"
+                href="/pages/activate-remove-job">
+                <KeyboardTabIcon /> Activate, or Remove Job.
+            </Link>
 
             <div className="flex flex-col gap-5 w-full text-sm font-thin">
                 <TableComponent headers={jobsActiveHeader} datas={jobsActiveBody} TableName="Active Jobs" PageSize={5} />
             </div>
-            <Link className="absolute rounded-full bg-blue-600 text-white self-end shadow-xl h-12 w-96 flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 hover:drop-shadow-2xl hover:shadow-2xl"
-                href="/pages/activate-remove-job">
-                <KeyboardTabIcon /> Activate, or Remove Job.
-            </Link>
         </Layout>
     );
 };

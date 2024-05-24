@@ -193,14 +193,14 @@ const Page = () => {
             "Action": (
                 <div className="flex gap-2 items-center justify-center">
                     <button
-                        className="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-2 px-2 rounded"
+                        className="bg-gray-500 hover:bg-gray-700 text-white font-semibold py-1 px-3 rounded"
                         onClick={() => handlePlan(data)}
                         style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"]) ? "not-allowed" : "pointer" }}
                     >
                         plan
                     </button>
                     <button
-                        className="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-2 px-2 rounded"
+                        className="bg-orange-500 hover:bg-orange-700 text-white font-semibold py-1 px-2 rounded"
                         onClick={() => handleActivate(data)}
                         disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"])}
                         style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["activate-job-template"]) ? "not-allowed" : "pointer" }}
@@ -208,7 +208,7 @@ const Page = () => {
                         Activate
                     </button>
                     <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-2 px-2 rounded"
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-semibold py-1 px-2 rounded"
                         onClick={() => handleViewDetial(data)}
                     >
                         view details
@@ -225,7 +225,7 @@ const Page = () => {
             "Document no.": job.DOC_NUMBER,
             "Status": <div
                 style={{ backgroundColor: job.STATUS_COLOR }}
-                className="px-1 py-1 rounded-full text-black font-semibold shadow-xl"
+                className="px-4 text-[12px] py-1 rounded-full text-black font-semibold shadow-xl"
             >
                 {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
             </div>,
@@ -234,7 +234,7 @@ const Page = () => {
             "Action": (
                 //remove job
                 <button
-                    className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
+                    className="text-white text-[12px] bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center "
                     href="#" onClick={() => handleRemove(job._id)}
                 >
 

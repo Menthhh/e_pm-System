@@ -250,7 +250,7 @@ const Page = () => {
         Name: user.name,
         Role: <RoleSelect user_id={user._id} />,
         action: [
-          <span className="pl-4" key={index}>
+          <span className="pl-4 flex justify-center items-center" key={index}>
             <button
               onClick={() => {
                 const role_id = selectedRoles[user._id];

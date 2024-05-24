@@ -18,7 +18,7 @@ import Select from 'react-select';
 const Page = () => {
     const searchParams = useSearchParams();
     const job_id = searchParams.get("job_id");
-    const view = searchParams.get("view");
+    const view = searchParams.get("views");
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
     const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
@@ -41,7 +41,6 @@ const Page = () => {
 
         const updateJobStatusToOngoing = async () => {
             const body = {
-                STATUS_ID: "66430a5f33d7f39b2f405174",
                 JOB_ID: job_id
             }
             try {
@@ -60,8 +59,12 @@ const Page = () => {
                 console.error("Error:", err);
             }
         }
+        
 
-        if (!view) updateJobStatusToOngoing();
+        if (view === "false") {
+            updateJobStatusToOngoing();
+            console.log("views" + view);
+        }
 
 
     }, [inputValues]);
@@ -421,7 +424,7 @@ const Page = () => {
                         <label htmlFor="text-input" className="text-md font-bold text-gray-600">WD Tag</label>
 
                         { //if view is true then disable the select tag
-                            view ?
+                            view === "true" ?
                                 <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" 
                                     value={jobData.wd_tag} 
                                 disabled />
@@ -474,7 +477,7 @@ const Page = () => {
                                     </th>
                                     <th className="px-4 py-2">Upper Spec</th>
                                     <th className="px-4 py-2">Lower Spec</th>
-                                    <th className="px-4 py-2">Test Location</th>
+                                    {/* <th className="px-4 py-2">Test Location</th> */}
                                     <th className="px-4 py-2">Before Value</th>
                                     <th className="px-4 py-2">Actual Value</th>
                                 </tr>
@@ -502,10 +505,10 @@ const Page = () => {
                                         </td>
                                         <td className="border px-4 py-2">{item.UpperSpec}</td>
                                         <td className="border px-4 py-2">{item.LowerSpec}</td>
-                                        <td className="border px-4 py-2">{item.TestLocationName}</td>
+                                        {/* <td className="border px-4 py-2">{item.TestLocationName}</td> */}
                                         <td className="border px-2 py-2 relative">
                                             { //if view is true then disable the input field
-                                                view ?
+                                                view === "true" ?
                                                     <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
                                                     :
                                                     (item.BeforeValue ?
@@ -515,7 +518,7 @@ const Page = () => {
                                                             type="text"
                                                             id={`before_value_${item.JobItemID}`}
                                                             onChange={(e) => handleBeforeValue(e, item)}
-                                                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
+                                                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-full p-1.5"
                                                             placeholder="fill in value"
                                                         />
                                                     )
@@ -524,7 +527,7 @@ const Page = () => {
                                         </td>
                                         <td className="border px-4 py-2 relative">
                                             { //if view is true then disable the input field
-                                                view ? <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
+                                                view === "true" ? <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
                                                     : (
                                                         item.ActualValue ?
                                                             <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
@@ -533,7 +536,7 @@ const Page = () => {
                                                                 type="text"
                                                                 id={`actual_value_${item.JobItemID}`}
                                                                 onChange={(e) => handleInputChange(e, item)}
-                                                                className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-3/4 p-1.5"
+                                                                className="bg-white border border-gray-300 text-gray-900 text-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 rounded-lg"
                                                                 placeholder="fill in value"
                                                             />
                                                     )
@@ -547,9 +550,8 @@ const Page = () => {
                         </table>
                     </div>
                     <div>
-                        {view ? null : (
-                            //if actua; value , wd tag, before value is exist than disable the submit button because we can't submit the form
-                            jobItems.every(item => item.ActualValue && item.BeforeValue && item.BeforeValue !== "None") ?
+                        {view === "true" ? null : (
+                            jobData.Status === "complete" ?
                                 <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm cursor-not-allowed"
                                     disabled
                                 >

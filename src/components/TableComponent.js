@@ -42,15 +42,15 @@ const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) =
 
             <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start overflow-x-auto shadow-md">
             <h1 className="p-2 text-sm text-secondary font-bold">{TableName || "Table Name"}</h1>
-            <table className="table-auto w-full">
-                <thead className=" bg-[#F6F6F6] text-[#878787]">
+            <table className="table-auto w-full text-[12px]">
+                <thead className=" bg-[#F6F6F6] text-[#878787] text-sm">
                     <tr>
                         {headers.map((header) => (
-                            <th key={header} className="px-4 py-1">{header}</th>
+                            <th key={header} className="px-2 py-1 ">{header}</th>
                         ))}
                     </tr>
                 </thead>
-                <tbody className="text-center">
+                <tbody className="text-center ">
                     {currentPageData.map((item) => (
                         <tr key={item.id} className="hover:shadow-lg  bg-white h-16 border-b boder-solid border-[#C6C6C6] hover:bg-gray-100 font-bold">
                             {Object.keys(item).map((key) => (
