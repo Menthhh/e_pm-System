@@ -1,5 +1,4 @@
 "use server";
-import mongoose from "mongoose";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -8,25 +7,7 @@ import { config } from "../../config/config.js";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
-const db_url = process.env.MONGODB_URI;
 
-const connection = {};
-
-export const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
-  }
-};
 
 export async function encrypt(payload) {
   return await new SignJWT(payload)
