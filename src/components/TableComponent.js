@@ -40,13 +40,13 @@ const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) =
                 />
             </div>
 
-            <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start overflow-x-auto shadow-md">
+            <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start overflow-x-auto shadow-md ">
             <h1 className="p-2 text-sm text-secondary font-bold">{TableName || "Table Name"}</h1>
-            <table className="table-auto w-full text-[12px] ipadmini:text-sm">
-                <thead className=" bg-[#F6F6F6] text-[#878787] text-sm">
+            <table className="table-auto w-full text-[12px] ipadmini:text-sm ">
+                <thead className=" bg-[#347EC2]  text-white text-sm">
                     <tr>
                         {headers.map((header) => (
-                            <th key={header} className="px-2 py-1 ">{header}</th>
+                            <th key={header} className="px-2 py-2 ">{header}</th>
                         ))}
                     </tr>
                 </thead>

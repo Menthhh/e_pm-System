@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
 import { config } from "../../config/config.js";
 
 const secretKey = process.env.SECRET_KEY;

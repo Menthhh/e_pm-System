@@ -47,17 +47,6 @@ export default async function middleware(req) {
     
     if (developingRoutes.includes(endpoint)) return NextResponse.next(); 
     
-    // if (endpoint !== '/api/checker') {
-    //     try {
-    //         const response = await fetch(`${config.host}/api/checker`);
-    //         const data = await response.json();
-    //         if (data.status === 200) {
-    //             console.log("Run Checking API Successfully!");
-    //         }
-    //     } catch (err) {
-    //         console.error("Error:", err);
-    //     }
-    // }
     const token = await getSession();
     const userRoleId = token.Role;
 

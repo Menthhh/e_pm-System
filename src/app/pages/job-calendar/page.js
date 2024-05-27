@@ -4,34 +4,19 @@ import React, { useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { RRule } from 'rrule';
+
 import useFetchUser from "@/lib/hooks/useFetchUser";
 import useFetchJobEvents from "@/lib/hooks/useFetchJobEvents";
 import { useRouter } from 'next/navigation';
 import Swal from "sweetalert2";
 
+import Box from '@mui/material/Box';
+import Modal from '@mui/material/Modal';
+import ShowmoreData from "@/components/ShowmoreData";
+
+
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
-
-// Define a function to generate recurring events
-// const generateRecurringEvents = () => {
-//   const rule = new RRule({
-//     freq: RRule.WEEKLY,
-//     interval: 1,
-//     byweekday: [RRule.MO, RRule.FR],
-//     dtstart: new Date(2024, 3, 1),
-//     until: new Date(2024, 5, 30),
-//   });
-
-//   return rule.all().map(date => ({
-//     title: 'Recurring Event',
-//     start: date,
-//     end: new Date(date.getTime() + 60 * 60 * 1000), // 1 hour duration
-//     allDay: false,
-//     color: '#FF5733', // Add a color property to the event
-//     url: '/job/' + date.getTime() // Example URL, you might need to adjust this
-//   }));
-// };
 
 const Page = () => {
   const router = useRouter()
@@ -39,6 +24,8 @@ const Page = () => {
   const [date, setDate] = useState(new Date());
   const { user, isLoading: userLoading, error: userError } = useFetchUser();
   const { events, loading, error } = useFetchJobEvents(user.workgroup_id);
+  const [open, setOpen] = useState(false)
+  const [eventData, setEventData] = useState({})
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -65,7 +52,7 @@ const Page = () => {
       if (event.status_name === 'plan') {
         Swal.fire({
           title: 'Job is in plan status',
-          text: 'You can not view the job in plan status',
+          text: 'You cannot view the job in plan status',
           icon: 'warning',
           confirmButtonText: 'OK'
         });
@@ -74,15 +61,32 @@ const Page = () => {
       } else if (event.status_name === 'overdue') {
         Swal.fire({
           title: 'Job is overdue',
-          text: 'You can not view the job in overdue status',
+          text: 'You cannot view the job in overdue status',
           icon: 'warning',
           confirmButtonText: 'OK'
         });
-      } else {
+      }
+      else if (event.status_name === 'new') {
+        router.push(`/pages/view-jobs?job_id=${event.job_id}&views=false`);
+      } 
+      else if (event.status_name === 'ongoing') {
+        router.push(`/pages/view-jobs?job_id=${event.job_id}&views=false`);
+      } 
+      else {
         router.push(`/pages/view-jobs?job_id=${event.job_id}&views=true`);
       }
     }
   };
+
+  const handleShowmore = (events, date) => {
+    setEventData({ events, date: date.toString() });
+    console.log(events, date);
+    setOpen(true)
+  }
+
+  const close = () => {
+    setOpen(false)
+  }
 
 
   return (
@@ -109,11 +113,22 @@ const Page = () => {
           onView={handleViewChange}
           date={date}
           onNavigate={handleNavigate}
-          onShowMore={(events, date) => console.log(events, date)}
+          onShowMore={(events, date) => handleShowmore(events, date)}
           eventPropGetter={eventPropGetter} // Pass the eventPropGetter function
           onSelectEvent={handleSelectEvent} // Pass the onSelectEvent function
         />
       </div>
+      <Modal
+        open={open}
+        onClose={close}
+      >
+        <Box className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-11/12 max-w-3xl max-h-90vh ipadmini:w-1/2 overflow-y-auto p-4 rounded-lg shadow-lg" >
+          <ShowmoreData
+            data={eventData}
+            close={close}
+          />
+        </Box>
+      </Modal>
     </Layout>
   );
 };
