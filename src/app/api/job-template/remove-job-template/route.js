@@ -1,8 +1,12 @@
 
 import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { NextResponse } from 'next/server';
+<<<<<<< HEAD
 import mongoose from "mongoose";
 const db_url = process.env.MONGODB_URI;
+=======
+import { JobItemTemplate } from "@/lib/models/JobItemTemplate";
+>>>>>>> f5ea0f575448add9527f14785db6cea26b78817a
 
 const connection = {};
 
@@ -28,6 +32,9 @@ export const DELETE = async (req, res) => {
     const {jobTemplate_id} = body;
 
     try {
+        //remove job item template where jobtemplateid = jobtemplateid 
+        const approvers = await JobItemTemplate.deleteMany({ JOB_TEMPLATE_ID: jobTemplate_id });
+        const jobItemTemplate = await JobItemTemplate.deleteMany({ JOB_TEMPLATE_ID: jobTemplate_id });
         const jobTemplate = await JobTemplate.findByIdAndDelete(jobTemplate_id);
         return NextResponse.json({ status: 200, jobTemplate });
     } catch (err) {

@@ -2,12 +2,30 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
 import { config } from "../../config/config.js";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
+<<<<<<< HEAD
+=======
+const connection = {};
+
+export const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+  }
+};
+>>>>>>> f5ea0f575448add9527f14785db6cea26b78817a
 
 export async function encrypt(payload) {
   return await new SignJWT(payload)
@@ -43,8 +61,7 @@ export async function login(prevState, formData) {
   if (data.status === 200) {
     cookies().set("token", data.token, {
       httpOnly: true,
-      sameSite: "strict",
-      secure: true,
+      
     });
     if (!data.user.Role) {
       return { message: "User is not assigned role." };
@@ -110,3 +127,17 @@ export async function getSession() {
 
 
 
+export const generateUniqueKey = async () => {
+  const timestamp = Date.now().toString(16); 
+  const randomSuffix = Math.random().toString(16).substring(2); 
+  return `${timestamp}-${randomSuffix}`;
+}
+
+
+export const convertKeyToDate = async (uniqueKey) => {
+  const [timestampHex, randomSuffix] = uniqueKey.split('-');
+  const timestamp = parseInt(timestampHex, 16);
+  const date = new Date(timestamp);
+  
+  return date;
+}

@@ -36,8 +36,8 @@ export const GET = async (req, res) => {
                 AUTHOR_NAME: user ? user.EMP_NAME : "",
                 JOB_ITEM_TEMPLATE_TITLE: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
                 JOB_ITEM_TEMPLATE_NAME: jobItemTemplate.JOB_ITEM_TEMPLATE_NAME,
-                UPPER_SPEC_LIMIT: jobItemTemplate.UPPER_SPEC_LIMIT,
-                LOWER_SPEC_LIMIT: jobItemTemplate.LOWER_SPEC_LIMIT,
+                UPPER_SPEC: jobItemTemplate.UPPER_SPEC,
+                LOWER_SPEC: jobItemTemplate.LOWER_SPEC,
                 TEST_METHOD: jobItemTemplate.TEST_METHOD,
                 JOB_TEMPLATE_ID: jobItemTemplate.JOB_TEMPLATE_ID,
                 createdAt: createdAt

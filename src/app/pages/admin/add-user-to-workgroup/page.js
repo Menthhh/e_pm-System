@@ -3,7 +3,8 @@ import Layout from "@/components/Layout";
 import TableComponent from "@/components/TableComponent";
 import { getSession } from "@/lib/utils/utils";
 import { useEffect, useState } from "react";
-import {config} from "../../../../config/config.js";
+import { config } from "../../../../config/config.js";
+import Swal from "sweetalert2";
 
 const workgroupHeader = ["id", "EMP_number", "Email", "Name", "Role", "Action"];
 const userHeader = ["id", "EMP_number", "Email", "Name", "Role", "Action"];
@@ -181,20 +182,60 @@ const Page = () => {
   const handleRemove = async (user_id) => {
     const workgroup_id = user.workgroup_id;
 
-    // Remove user from workgroup
-    await fetch(`${config.host}/api/workgroup/remove-user-from-workgroup`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
+    const swalWithBootstrapButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "btn btn-success",
+        cancelButton: "btn btn-danger"
       },
-      body: JSON.stringify({
-        user_id: user_id,
-        workgroup_id: workgroup_id,
-      }),
+      buttonsStyling: true
     });
 
-    setRefresh(!refresh);
-  }
+    swalWithBootstrapButtons.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, remove!",
+      cancelButtonText: "No, cancel!",
+      reverseButtons: true
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        // Remove user from workgroup
+        try {
+          await fetch(`${config.host}/api/workgroup/remove-user-from-workgroup`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              user_id: user_id,
+              workgroup_id: workgroup_id,
+            }),
+          });
+          swalWithBootstrapButtons.fire({
+            title: "Removed!",
+            text: "The user has been removed from the workgroup.",
+            icon: "success"
+          });
+          setRefresh(!refresh);
+        } catch (error) {
+          console.error("Error removing user from workgroup:", error);
+        }
+      } else if (
+        /* Read more about handling dismissals below */
+        result.dismiss === Swal.DismissReason.cancel
+      ) {
+        swalWithBootstrapButtons.fire({
+          title: "Cancelled",
+          text: "The removal action was cancelled.",
+          icon: "error"
+        });
+      }
+    });
+  };
+
+
+
 
 
   const dataUsers = users
@@ -209,7 +250,7 @@ const Page = () => {
         Name: user.name,
         Role: <RoleSelect user_id={user._id} />,
         action: [
-          <span className="pl-4" key={index}>
+          <span className="pl-4 flex justify-center items-center" key={index}>
             <button
               onClick={() => {
                 const role_id = selectedRoles[user._id];
@@ -260,11 +301,11 @@ const Page = () => {
         <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {user.workgroup} </h1>
         <h1 className="text-1xl font-semibold">Add User to Workgroup</h1>
         <div className="mt-4">
-          <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} TableName={"Members"}/>
+          <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} TableName={"Members"} />
         </div>
         <hr className="w-full" />
         <div className="mt-4">
-          <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} TableName={"All users"}/>
+          <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} TableName={"All users"} />
         </div>
       </div>
     </Layout>

@@ -18,18 +18,18 @@ export default function LoginForm() {
         <h2 className="text-4xl font-bold pb-4">Login</h2>
         <form className="flex flex-col items-center gap-5 " action={formAction}>
           <div className="flex justify-center items-center">
-          <PersonIcon style={{ fontSize: '2.6rem' }} className="bg-blue-600 text-white p-2"/>
+          <PersonIcon style={{ fontSize: '2.7rem' }} className="bg-blue-600 text-white p-2 translate-x-1"/>
           <input
-            className="ring-1 ring-[#808080] px-2 py-2 w-72"
+            className="border-2 border-b-gray-200 px-2 py-2 w-72"
             type="text"
             name="username"
             placeholder="Username"
           />
           </div>
           <div className="flex justify-center items-center">
-          <KeyIcon style={{ fontSize: '2.6rem' }} className="bg-blue-600 text-white p-2"/>
+          <KeyIcon style={{ fontSize: '2.7rem' }} className="bg-blue-600 text-white p-2 translate-x-1"/>
           <input
-            className="ring-1 ring-[#808080] px-2 py-2 w-72"
+            className="border-2 border-b-gray-200 px-2 py-2 w-72"
             type="text"
             name="password"
             placeholder="Password"

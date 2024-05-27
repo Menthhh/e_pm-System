@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { config } from "../../../config/config.js";
 import { getSession } from "@/lib/utils/utils.js";
-
+import Swal from "sweetalert2";
 
 const enabledFunction = {
     "create-job-template": "6632f9e4eccb576a719dfa7a",
@@ -145,7 +145,7 @@ const Page = () => {
         const DOC_NUMBER = formData.get("doc_num");
         const DUE_DATE = formData.get("due_date");
         const CHECKLIST_VERSION = formData.get("checklist_ver");
-        const MACHINE_ID = selectedMachine.value;
+        const TIMEOUT = formData.get("timeout");
         const WORKGROUP_ID = user.workgroup_id;
         const APPROVERS_ID = approvers.map((approver) => approver.user_id);
         const data = {
@@ -154,29 +154,41 @@ const Page = () => {
             DOC_NUMBER,
             DUE_DATE,
             CHECKLIST_VERSION,
-            MACHINE_ID,
+            TIMEOUT,
             WORKGROUP_ID,
             APPROVERS_ID,
         };
-        const res = await fetch(`${config.host}/api/job-template/create-job-template`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-        const response = await res.json();
-        if (response.status === 500) {
-            console.log(response.error);
+
+        try {
+            const res = await fetch(`${config.host}/api/job-template/create-job-template`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+            const response = await res.json();
+            if (response.status === 500) {
+                console.error(response.error);
+            } else {
+                Swal.fire({
+                    title: "Good job!",
+                    text: "You have successfully created a job template!",
+                    icon: "success"
+                });
+                e.target.reset();
+                setApprovers([]);
+                setDueDate("");
+                setSelectedMachine(null);
+                setSelectedApprover(null);
+                setOptions([]);
+                setRefresh((prev) => !prev);
+            }
+        } catch (error) {
+            console.error("Error creating job template:", error);
         }
-        e.target.reset();
-        setApprovers([]);
-        setDueDate("");
-        setSelectedMachine(null);
-        setSelectedApprover(null);
-        setOptions([]);
-        setRefresh(!refresh);
     };
+
 
     const calculateDueDate = () => {
         const currentDate = new Date();
@@ -185,10 +197,23 @@ const Page = () => {
         setDueDate(formattedDate);
     };
 
-    console.log(userEnableFunctions)
+  
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
             <h1 className="text-2xl font-bold">Job Template</h1>
+            <Link
+                href="/pages/job-item-template"
+                className={`align-left text-white bg-blue-600 hover:bg-blue-800 w-60 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center
+                ${!userEnableFunctions.some(
+                    action => action._id === enabledFunction["view-all-job-templates"]
+                ) && "opacity-50 cursor-not-allowed"
+                    }`}
+            >
+                <div className="flex gap-3 items-center">
+                    <p>View all Job Templates</p>
+                    <NextPlanIcon />
+                </div>
+            </Link>
             <form onSubmit={handleSubmit}>
                 <div className="grid gap-6 mb-6 md:grid-cols-3">
                     <div>
@@ -238,7 +263,7 @@ const Page = () => {
                             id="due_date"
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             name="due_date"
                             required
                         />
@@ -253,7 +278,7 @@ const Page = () => {
                         <input
                             type="text"
                             id="job_template_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Template Name"
                             name="job_template_name"
                             required
@@ -269,7 +294,7 @@ const Page = () => {
                         <input
                             type="text"
                             id="doc_num"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="1234"
                             name="doc_num"
                             required
@@ -285,7 +310,7 @@ const Page = () => {
                         <input
                             type="text"
                             id="checklist_ver"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="1234"
                             name="checklist_ver"
                             required
@@ -293,16 +318,28 @@ const Page = () => {
                     </div>
                     <div className="z-50">
                         <label
-                            for="visitors"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white "
+                            for="timeout"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Test on Machine Name
+                            Timeout
                         </label>
                         <Select
-                            options={machinesOptions}
-                            value={selectedMachine}
-                            onChange={setSelectedMachine}
+                            options={
+                                [
+                                    { value: "12 hrs", label: "12 hrs" },
+                                    { value: "1 days", label: "1 days" },
+                                    { value: "7 days", label: "7 days" },
+                                    { value: "15 days", label: "15 days" },
+                                    { value: "30 days", label: "30 days" },
+                                    { value: "3 mounths", label: "3 mounths" },
+                                    { value: "6 months", label: "6 months" },
+                                    { value: "12 months", label: "12 months" },
+                                   
+                                ]
+                            }
                             isSearchable={true}
+                            name="timeout"
+                        
                         />
                     </div>
                     <div className="flex gap-5 ">
@@ -318,6 +355,7 @@ const Page = () => {
                                 value={selectedApprover}
                                 onChange={setSelectedApprover}
                                 isSearchable={true}
+                                className="z-50"
                             />
                         </div>
                         <button
@@ -354,19 +392,7 @@ const Page = () => {
                 datas={dataApprover}
                 TableName="Approver List"
             />
-            <Link
-                href="/pages/job-item-template"
-                className={`align-left text-white bg-yellow-700 hover:bg-yellow-800 w-60 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 
-                ${!userEnableFunctions.some(
-                    action => action._id === enabledFunction["view-all-job-templates"]
-                ) && "opacity-50 cursor-not-allowed"
-                    }`}
-            >
-                <div className="flex gap-3 items-center">
-                    <p>View all Job Templates</p>
-                    <NextPlanIcon />
-                </div>
-            </Link>
+           
 
         </Layout>
     );
