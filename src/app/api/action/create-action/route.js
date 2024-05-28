@@ -2,9 +2,9 @@
 import { Action } from "@/lib/models/Action.js";
 import { NextResponse } from 'next/server';
 import mongoose from "mongoose";
-const db_url = process.env.MONGODB_URI;
 
 const connection = {};
+const db_url = process.env.MONGODB_URI;
 
 const connectToDb = async () => {
   console.log("Connecting to DB");

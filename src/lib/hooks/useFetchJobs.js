@@ -27,10 +27,11 @@ const useFetchJobs = (refresh = null) => {
         };
 
         if (user) {
+           
             fetchJobs(user.workgroup_id);
         }
 
-    }, [userLoading,refresh]);
+    }, [user,refresh]);
 
     return { jobs, isLoading, error };
 }

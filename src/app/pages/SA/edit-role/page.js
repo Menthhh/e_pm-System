@@ -1,14 +1,13 @@
 "use client";
 import SALayout from "@/components/SALayout";
-import { useSearchParams } from "next/navigation";
+
 import Link from "next/link";
 import Listbox from "@/components/Listbox.js"
 import { useState, useEffect } from "react";
 import { config } from "@/config/config.js";
 
-const Page = () => {
-  const searchParams = useSearchParams();
-  const role_id = searchParams.get("role_id");
+const Page = ({searchParams}) => {
+  const role_id = searchParams.role_id
 
   const [dataRole, setDataRole] = useState([]);
   const [roleActions, setRoleActions] = useState([]);

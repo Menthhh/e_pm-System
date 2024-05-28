@@ -7,7 +7,7 @@ import { User } from "@/lib/models/User.js";
 import { TestLocation } from "@/lib/models/TestLocation";
 
 const connection = {};
-
+const db_url = process.env.MONGODB_URI;
 const connectToDb = async () => {
   console.log("Connecting to DB");
   try {

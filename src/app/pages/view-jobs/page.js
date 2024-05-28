@@ -1,7 +1,6 @@
 "use client";
 import Layout from "@/components/Layout.js";
 import useFetchJobValue from "@/lib/hooks/useFetchJobValue";
-import { useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 import Swal from 'sweetalert2'
@@ -14,10 +13,9 @@ import JobForm from "@/components/JobForm";
 
 
 
-const Page = () => {
-    const searchParams = useSearchParams();
-    const job_id = searchParams.get("job_id");
-    const view = searchParams.get("views");
+const Page = ({searchParams}) => {
+    const job_id = searchParams.job_id
+    const view = searchParams.views
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
     const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();

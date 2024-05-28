@@ -6,7 +6,7 @@ import mongoose from 'mongoose';
 import { RoleHasAction } from "@/lib/models/RoleHasAction";
 
 
-const db_url = process.env.MONGODB_URI;
+const db_url = "mongodb://localhost:27017/e_pm";
 
 const connection = {};
 

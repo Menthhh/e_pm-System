@@ -1,6 +1,5 @@
 "use client";
 import SALayout from "@/components/SALayout";
-import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import TableComponent from "@/components/TableComponent";
 import { config } from "@/config/config.js";
@@ -9,9 +8,8 @@ const workgroupHeader = ["id","EMP_number", "Email" ,"Name", "Role", "Action"];
 const userHeader = ["id","EMP_number", "Email", "Name", "Role", "Action"];
 
 
-const Page = () => {
-  const searchParams = useSearchParams();
-  const workgroup_id = searchParams.get("workgroup_id");
+const Page = ({searchParams}) => {
+  const workgroup_id = searchParams.workgroup_id
   const [refresh, setRefresh] = useState(false);
 
   const [workgroup, setWorkgroup] = useState({});

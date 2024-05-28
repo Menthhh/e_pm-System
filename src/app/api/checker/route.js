@@ -6,6 +6,9 @@ import { Status } from "@/lib/models/Status";
 import { addHours, addDays, addMonths } from 'date-fns';
 
 import mongoose from "mongoose";
+
+
+const db_url = process.env.MONGODB_URI;
 const connection = {};
 
 const connectToDb = async () => {

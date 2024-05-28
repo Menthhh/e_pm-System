@@ -18,9 +18,8 @@ const enabledFunction = {
     "remove-job-item-template": "66386025d81a314967236df7",
 };
 
-const Page = () => {
-    const searchParams = useSearchParams();
-    const jobTemplate_id = searchParams.get("jobTemplate_id");
+const Page = ({searchParams}) => {
+    const jobTemplate_id = searchParams.jobTemplate_id
     const [refresh, setRefresh] = useState(false);
     const { jobItemTemplates, isLoading: jobItemTemplatesLoading } = useFetchJobItemTemplates(jobTemplate_id, refresh);
     const { user, isLoading: userLoading } = useFetchUser(refresh);

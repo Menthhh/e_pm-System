@@ -7,6 +7,7 @@ const useFetchUser = (refresh = null) => {
     const [user, setUser] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
+    console.log("fetchUser", session)
     
 
     useEffect(() => {
@@ -21,6 +22,7 @@ const useFetchUser = (refresh = null) => {
                     throw new Error("Failed to fetch user");
                 }
                 const data = await response.json();
+                console.log("user", data)
                 setUser(data.user);
             } catch (error) {
                 setError(error);
@@ -36,7 +38,7 @@ const useFetchUser = (refresh = null) => {
         if (sessionError) {
             console.log(sessionError);
         }
-    }, [sessionLoading, refresh]);
+    }, [sessionLoading, refresh, session]);
 
     return { user, isLoading, error };
 }

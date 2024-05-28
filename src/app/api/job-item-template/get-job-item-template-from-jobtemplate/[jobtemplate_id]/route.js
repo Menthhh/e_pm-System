@@ -5,7 +5,7 @@ import { TestLocation } from "@/lib/models/TestLocation";
 
 import mongoose from "mongoose";
 const connection = {};
-
+const db_url = process.env.MONGODB_URI;
 const connectToDb = async () => {
   console.log("Connecting to DB");
   try {

@@ -8,9 +8,9 @@ import { Card } from "@/lib/models/Card";
 import mongoose from "mongoose";
 const db_url = process.env.MONGODB_URI;
 
-const connection = {};
-
 const connectToDb = async () => {
+
+    const connection = {};
     console.log("Connecting to DB");
     try {
         if (connection.isConnected) {
@@ -29,6 +29,7 @@ export const GET = async (req, { params }) => {
     await connectToDb();
     const { user_id } = params;
     try {
+        console.log(user_id)
         // Fetch user's actions
         const user = await User.findById(user_id);
         const user_roleID = new mongoose.Types.ObjectId(user.ROLE);
