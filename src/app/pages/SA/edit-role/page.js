@@ -2,9 +2,9 @@
 import SALayout from "@/components/SALayout";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import Listbox from "@/components/listboxComponent";
+import Listbox from "@/components/Listbox.js"
 import { useState, useEffect } from "react";
-import { config } from "../../../../config/config.js";
+import { config } from "@/config/config.js";
 
 const Page = () => {
   const searchParams = useSearchParams();
