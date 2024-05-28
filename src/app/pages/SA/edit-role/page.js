@@ -121,12 +121,7 @@ const Page = ({searchParams}) => {
       console.error(error);
     }
   }
-<<<<<<< HEAD
-
-  console.log("roleId", role_id)  
-=======
  
->>>>>>> production
   return (
     <SALayout className="flex flex-col items-center gap-9 p-12 ">
         <h1 className="text-2xl font-bold">Role {dataRole.name}</h1>
