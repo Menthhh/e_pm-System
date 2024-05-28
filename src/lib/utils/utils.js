@@ -7,25 +7,7 @@ import { config } from "../../config/config.js";
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
-<<<<<<< HEAD
-=======
-const connection = {};
 
-export const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-  }
-};
->>>>>>> f5ea0f575448add9527f14785db6cea26b78817a
 
 export async function encrypt(payload) {
   return await new SignJWT(payload)
@@ -43,9 +25,9 @@ export async function decrypt(input) {
 }
 
 export async function login(prevState, formData) {
-  await connectToDb();
   const username = formData.get("username");
   const password = formData.get("password");
+ 
 
   const res = await fetch(`${config.host}/api/auth/login`, {
     method: "POST",
@@ -58,10 +40,10 @@ export async function login(prevState, formData) {
     }),
   });
   const data = await res.json();
+  console.log(data)
   if (data.status === 200) {
     cookies().set("token", data.token, {
       httpOnly: true,
-      
     });
     if (!data.user.Role) {
       return { message: "User is not assigned role." };

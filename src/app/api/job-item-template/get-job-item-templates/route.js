@@ -1,6 +1,6 @@
 
 
-import { JobItemTemplate } from "../../../../lib/models/JobItemTemplate.js";
+import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { NextResponse } from 'next/server.js';
 import { User } from "@/lib/models/User.js";
 import mongoose from "mongoose";

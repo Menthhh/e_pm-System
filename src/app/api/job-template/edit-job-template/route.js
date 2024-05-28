@@ -1,8 +1,29 @@
-import { connectToDb, generateUniqueKey } from "@/lib/utils/utils";
+import { generateUniqueKey } from "@/lib/utils/utils";
 import { JobTemplate } from "@/lib/models/JobTemplate";
 import { JobTemplateEdit } from "@/lib/models/AE/JobTemplateEdit";
 import { Approves } from "@/lib/models/Approves";
 import { NextResponse } from "next/server";
+import mongoose from "mongoose";
+const db_url = process.env.MONGODB_URI;
+
+const connection = {};
+
+const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
+
 
 export const PUT = async (req, res) => {
     await connectToDb();

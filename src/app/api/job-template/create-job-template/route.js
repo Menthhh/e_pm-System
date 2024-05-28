@@ -1,8 +1,8 @@
-<<<<<<< HEAD
 
-import { JobTemplate } from "../../../../lib/models/JobTemplate.js";
+import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { NextResponse } from 'next/server.js';
-import { Approves } from "../../../../lib/models/Approves.js";
+import { Approves } from "@/lib/models/Approves.js";
+import { generateUniqueKey } from "@/lib/utils/utils.js";
 import mongoose from "mongoose";
 const db_url = process.env.MONGODB_URI;
 
@@ -23,13 +23,6 @@ const connectToDb = async () => {
     throw new Error(error);
   }
 };
-=======
-import { connectToDb } from "@/lib/utils/utils.js";
-import { JobTemplate } from "@/lib/models/JobTemplate.js";
-import { NextResponse } from 'next/server.js';
-import { Approves } from "@/lib/models/Approves.js";
-import { generateUniqueKey } from "@/lib/utils/utils.js";
->>>>>>> f5ea0f575448add9527f14785db6cea26b78817a
 
 export const POST = async (req, res) => {
     await connectToDb();

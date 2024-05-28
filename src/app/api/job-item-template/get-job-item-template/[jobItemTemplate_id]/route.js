@@ -4,12 +4,7 @@
 import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { NextResponse } from 'next/server.js';
 import { User } from "@/lib/models/User.js";
-<<<<<<< HEAD
-import mongoose from "mongoose";
-const db_url = process.env.MONGODB_URI;
-=======
 import { TestLocation } from "@/lib/models/TestLocation";
->>>>>>> f5ea0f575448add9527f14785db6cea26b78817a
 
 const connection = {};
 
