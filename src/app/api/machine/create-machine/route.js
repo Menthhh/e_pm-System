@@ -1,8 +1,27 @@
-import { connectToDb } from "../../../../lib/utils/utils.js";
+
 import { Machine } from "../../../../lib/models/Machine.js";
 import { NextResponse } from 'next/server.js';
 
+import mongoose from "mongoose";
+const db_url = process.env.MONGODB_URI;
 
+const connection = {};
+
+const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
 /**
  * @swagger
  * /api/machine/create-machine:

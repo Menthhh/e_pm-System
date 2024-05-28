@@ -1,12 +1,12 @@
 "use client";
 import SALayout from "@/components/SALayout";
+
 import Link from "next/link";
-import Listbox from "@/components/listboxComponent";
+import Listbox from "@/components/Listbox.js"
 import { useState, useEffect } from "react";
-import { config } from "../../../../config/config.js";
+import { config } from "@/config/config.js";
 
-const Page = ({ searchParams}) => {
-
+const Page = ({searchParams}) => {
   const role_id = searchParams.role_id
 
   const [dataRole, setDataRole] = useState([]);
@@ -45,7 +45,6 @@ const Page = ({ searchParams}) => {
         throw new Error("Failed to fetch roles");
       }
       const res = await response.json();
-      console.log(res);
      
       setActionList(res.actions);
     } catch (error) {
@@ -122,8 +121,12 @@ const Page = ({ searchParams}) => {
       console.error(error);
     }
   }
+<<<<<<< HEAD
 
   console.log("roleId", role_id)  
+=======
+ 
+>>>>>>> production
   return (
     <SALayout className="flex flex-col items-center gap-9 p-12 ">
         <h1 className="text-2xl font-bold">Role {dataRole.name}</h1>

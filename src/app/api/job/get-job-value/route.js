@@ -1,4 +1,3 @@
-import { connectToDb } from "@/lib/utils/utils.js";
 import { NextResponse } from 'next/server.js';
 import { Job } from "@/lib/models/Job.js";
 import { JobItem } from "@/lib/models/JobItem.js";
@@ -7,7 +6,24 @@ import { Workgroup } from "@/lib/models/Workgroup";
 import { User } from "@/lib/models/User.js";
 import { TestLocation } from "@/lib/models/TestLocation";
 import { Status } from "@/lib/models/Status";
-import { JobItemTemplateActivate } from "@/lib/models/AE/JobItemTemplateActivate"; // Import JobItemTemplateActivate model
+
+import mongoose from "mongoose";
+const connection = {};
+const db_url = process.env.MONGODB_URI;
+const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const GET = async (req, res) => {
     await connectToDb();

@@ -1,11 +1,28 @@
 
 
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { NextResponse } from 'next/server.js';
 import { User } from "@/lib/models/User.js";
 import { TestLocation } from "@/lib/models/TestLocation";
 
+const connection = {};
+const db_url = process.env.MONGODB_URI;
+const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
 export const GET = async (req, { params }) => {
     await connectToDb();
     const { jobItemTemplate_id } = params;

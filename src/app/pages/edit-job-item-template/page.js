@@ -1,8 +1,6 @@
 'use client'
 import Layout from "@/components/Layout.js";
-import { useSearchParams } from "next/navigation";
 import { config } from "@/config/config.js";
-import useFetchJobItemTemplates from "@/lib/hooks/useFetchJobItemTemplates";
 import useFetchUser from "@/lib/hooks/useFetchUser";
 import useFetchTestLocations from "@/lib/hooks/useFetchTestLocations";
 import Select from 'react-select';
@@ -14,10 +12,9 @@ import Swal from "sweetalert2";
 
 
 
-const Page = () => {
-    const searchParams = useSearchParams();
-    const jobTemplate_id = searchParams.get("jobTemplate_id");
-    const jobItemTemplate_id = searchParams.get("jobItemTemplate_id");
+const Page = ({searchParams}) => {
+    const jobTemplate_id = searchParams.jobTemplate_id
+    const jobItemTemplate_id = searchParams.jobItemTemplate_id
     const [refresh, setRefresh] = useState(false);
     const { jobItemTemplate, isLoading: jobItemTemplateLoading } = useFetchJobItemTemplate(jobItemTemplate_id, refresh);
     const { user, isLoading: userLoading } = useFetchUser(refresh);

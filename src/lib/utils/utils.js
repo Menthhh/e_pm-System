@@ -3,28 +3,12 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { config } from "../../config/config.js";
-import mongoose from "mongoose";
+import Swal from "sweetalert2";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
-const db_url = process.env.MONGODB_URI;
 
-const connection = {};
 
-export const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 export async function encrypt(payload) {
   return await new SignJWT(payload)
@@ -42,9 +26,9 @@ export async function decrypt(input) {
 }
 
 export async function login(prevState, formData) {
-  await connectToDb();
   const username = formData.get("username");
   const password = formData.get("password");
+ 
 
   const res = await fetch(`${config.host}/api/auth/login`, {
     method: "POST",
@@ -57,10 +41,10 @@ export async function login(prevState, formData) {
     }),
   });
   const data = await res.json();
+  console.log(data)
   if (data.status === 200) {
     cookies().set("token", data.token, {
       httpOnly: true,
-      
     });
     if (!data.user.Role) {
       return { message: "User is not assigned role." };
@@ -83,7 +67,6 @@ const routing = (role_id) => {
 }
 
 export async function register(prevState, formData) {
-  await connectToDb();
   const empNumber = formData.get("employeeNumber");
   const empName = formData.get("employeeName");
   const email = formData.get("email");
@@ -109,8 +92,8 @@ export async function register(prevState, formData) {
   if (data.status === 500) {
     return { message: data.error };
   }
+  redirect("/pages/login")
 
-  return { message: "User registered successfully" };
 }
 
 export async function logout() {

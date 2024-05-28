@@ -6,7 +6,6 @@ import TableComponent from "@/components/TableComponent.js";
 import NextPlanIcon from "@mui/icons-material/NextPlan";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation.js";
 import useFetchUser from "@/lib/hooks/useFetchUser.js";
 import useFetchJobTemplate from "@/lib/hooks/useFetchJobTemplate.js";
 import useFetchUsers from "@/lib/hooks/useFetchUsers.js";
@@ -17,9 +16,8 @@ import { config } from "@/config/config.js";
 
 const approverHeader = ["ID", "Name", "Action"]
 
-const Page = () => {
-    const searchParams = useSearchParams();
-    const jobTemplate_id = searchParams.get("jobTemplate_id");
+const Page = ({searchParams}) => {
+    const jobTemplate_id = searchParams.jobTemplate_id
     const [selectedApprover, setSelectedApprover] = useState(null);
     const [options, setOptions] = useState([]);
     const [dueDate, setDueDate] = useState("");

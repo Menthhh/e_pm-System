@@ -22,7 +22,7 @@ const useFetchCards = (refresh = null) => {
                     throw new Error("Failed to fetch roles");
                 }
                 const data = await response.json();
-                console.log(data.cards)
+                console.log(data)
                 setCards(data.cards);
             } catch (error) {
                 setError(error);
@@ -38,7 +38,7 @@ const useFetchCards = (refresh = null) => {
         if (sessionError) {
             console.log(sessionError);
         }
-    }, [sessionLoading, refresh]);
+    }, [session, refresh]);
 
     return { cards, isLoading, error };
 }

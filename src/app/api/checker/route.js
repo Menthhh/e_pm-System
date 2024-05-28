@@ -1,9 +1,30 @@
-import { connectToDb } from "@/lib/utils/utils";
+
 import { Job } from "@/lib/models/Job";
 import { NextResponse } from 'next/server';
-import { User } from "@/lib/models/User";
+
 import { Status } from "@/lib/models/Status";
 import { addHours, addDays, addMonths } from 'date-fns';
+
+import mongoose from "mongoose";
+
+
+const db_url = process.env.MONGODB_URI;
+const connection = {};
+
+const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const convertTimeout = async (timeout, createdAt) => {
     const startDate = new Date(createdAt);

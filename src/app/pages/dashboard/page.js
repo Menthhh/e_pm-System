@@ -10,14 +10,15 @@ import useFetchJobs from "@/lib/hooks/useFetchJobs.js";
 import JobsTable from "@/components/JobsTable";
 
 
-
-
 const Page = () => {
     const [refresh, setRefresh] = useState(false);
     const { user, isLoading: usersloading } = useFetchUsers(refresh);
     const { cards, isLoading: cardsLoading } = useFetchCards(refresh);
+    const { jobs, isLoading: jobsLoading } = useFetchJobs(refresh);
 
 
+   
+    console.log(cards)
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 ">
 
