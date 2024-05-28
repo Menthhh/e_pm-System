@@ -1,10 +1,28 @@
 
 
-import { connectToDb } from "../../../../lib/utils/utils.js";
-import { JobItemTemplate } from "../../../../lib/models/JobItemTemplate.js";
+import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { NextResponse } from 'next/server.js';
 import { User } from "@/lib/models/User.js";
+import mongoose from "mongoose";
+const db_url = process.env.MONGODB_URI;
 
+const connection = {};
+
+const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
 export const GET = async (req, res) => {
     await connectToDb();
     try {
@@ -18,8 +36,8 @@ export const GET = async (req, res) => {
                 AUTHOR_NAME: user ? user.EMP_NAME : "",
                 JOB_ITEM_TEMPLATE_TITLE: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
                 JOB_ITEM_TEMPLATE_NAME: jobItemTemplate.JOB_ITEM_TEMPLATE_NAME,
-                UPPER_SPEC_LIMIT: jobItemTemplate.UPPER_SPEC_LIMIT,
-                LOWER_SPEC_LIMIT: jobItemTemplate.LOWER_SPEC_LIMIT,
+                UPPER_SPEC: jobItemTemplate.UPPER_SPEC,
+                LOWER_SPEC: jobItemTemplate.LOWER_SPEC,
                 TEST_METHOD: jobItemTemplate.TEST_METHOD,
                 JOB_TEMPLATE_ID: jobItemTemplate.JOB_TEMPLATE_ID,
                 createdAt: createdAt

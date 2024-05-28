@@ -1,8 +1,27 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { NextResponse } from 'next/server';
 import { JobTemplate } from "@/lib/models/JobTemplate";
 import { Machine } from "@/lib/models/Machine";
+import mongoose from "mongoose";
+const db_url = process.env.MONGODB_URI;
 
+const connection = {};
+
+const connectToDb = async () => {
+  console.log("Connecting to DB");
+  try {
+    if (connection.isConnected) {
+      console.log("Using existing connection");
+      return;
+    }
+    const db = await mongoose.connect(db_url);
+    connection.isConnected = db.connections[0].readyState;
+    console.log("New connection");
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
+};
 export const GET = async (req, {params}) => {
     await connectToDb();
     const { workgroup_id } = params;
@@ -22,6 +41,7 @@ export const GET = async (req, {params}) => {
                 DUE_DATE: jobTemplate.DUE_DATE,
                 CHECKLIST_VERSION: jobTemplate.CHECKLIST_VERSION,
                 MACHINE_ID: jobTemplate.MACHINE_ID,
+                JobTemplateCreateID: jobTemplate.JobTemplateCreateID,
                 MACHINE_NAME: machineName,
                 WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
                 createdAt: createdAt,

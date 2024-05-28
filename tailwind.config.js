@@ -16,8 +16,8 @@ module.exports = {
       colors: {
         'primary': '#0c487f',
         'end': '#4398e7',
-        'secondary':'#878787',
-        'extra':'#083148'
+        'secondary': '#878787',
+        'extra': '#083148'
 
       },
       backgroundImage: {
@@ -25,6 +25,15 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      container: {
+        screens: {
+          'sm': '100%',
+          'md': '100%',
+          'lg': '1024px',
+          'xl': '1280px',
+          '2xl': '1400px',
+        }
+      }
     },
   },
   plugins: [],

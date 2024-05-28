@@ -11,7 +11,7 @@ const publicRoutes = [
 ];
 
 const developingRoutes = [
-    "/pages/job-template"
+    "/pages/job-calendar",
 ]
 
 const SA = {
@@ -44,7 +44,7 @@ export default async function middleware(req) {
     const endpoint = req.nextUrl.pathname;
     
     if (publicRoutes.includes(endpoint)) return NextResponse.next();
-
+    
     if (developingRoutes.includes(endpoint)) return NextResponse.next(); 
     
     const token = await getSession();
@@ -63,5 +63,5 @@ export default async function middleware(req) {
 }
 
 export const config = {
-    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$).*)'],
+    matcher: ['/((?!api|_next/static|_next/image|.*\\.png$|api/checker).*)'],
 }
