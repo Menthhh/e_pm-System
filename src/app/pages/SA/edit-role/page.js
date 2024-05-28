@@ -46,7 +46,6 @@ const Page = () => {
         throw new Error("Failed to fetch roles");
       }
       const res = await response.json();
-      console.log(res);
      
       setActionList(res.actions);
     } catch (error) {
@@ -123,7 +122,7 @@ const Page = () => {
       console.error(error);
     }
   }
-
+ 
   return (
     <SALayout className="flex flex-col items-center gap-9 p-12 ">
         <h1 className="text-2xl font-bold">Role {dataRole.name}</h1>

@@ -1,37 +1,29 @@
-import dotenv from 'dotenv';
-dotenv.config();
 
 import { NextResponse } from 'next/server';
-import { MongoClient, ObjectId } from 'mongodb';
 import { User } from "@/lib/models/User.js";
 import { RoleHasAction } from "@/lib/models/RoleHasAction";
+
 import { Card } from "@/lib/models/Card";
 
-
+import mongoose from "mongoose";
 const db_url = process.env.MONGODB_URI;
 
-let cachedClient = null;
-let cachedDb = null;
+const connection = {};
 
 const connectToDb = async () => {
-    if (cachedDb) {
-        return { client: cachedClient, db: cachedDb };
+    console.log("Connecting to DB");
+    try {
+        if (connection.isConnected) {
+            console.log("Using existing connection");
+            return;
+        }
+        const db = await mongoose.connect(db_url);
+        connection.isConnected = db.connections[0].readyState;
+        console.log("New connection");
+    } catch (error) {
+        console.log(error);
     }
-
-    const client = await MongoClient.connect("mongodb://localhost:27017/e_pm", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    });
-
-    const db = client.db();
-
-    cachedClient = client;
-    cachedDb = db;
-
-    return { client, db };
 };
-
-
 
 export const GET = async (req, { params }) => {
     await connectToDb();
@@ -63,6 +55,7 @@ export const GET = async (req, { params }) => {
                 }
             }
         ]);
+
 
         const cards = await Card.find();
 

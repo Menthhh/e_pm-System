@@ -2,7 +2,7 @@
 import Layout from "@/components/Layout.js";
 import useFetchJobValue from "@/lib/hooks/useFetchJobValue";
 import { useSearchParams } from "next/navigation";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 import Swal from 'sweetalert2'
 import useFetchStatus from "@/lib/hooks/useFetchStatus";

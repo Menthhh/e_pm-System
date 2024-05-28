@@ -1,4 +1,4 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { TestLocation } from "@/lib/models/TestLocation.js";
 import { NextResponse } from 'next/server.js';
 import mongoose from "mongoose";

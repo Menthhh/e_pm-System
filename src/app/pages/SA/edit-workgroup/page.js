@@ -3,7 +3,7 @@ import SALayout from "@/components/SALayout";
 import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import TableComponent from "@/components/TableComponent";
-import { config } from "../../../../config/config.js";
+import { config } from "@/config/config.js";
 
 const workgroupHeader = ["id","EMP_number", "Email" ,"Name", "Role", "Action"];
 const userHeader = ["id","EMP_number", "Email", "Name", "Role", "Action"];
