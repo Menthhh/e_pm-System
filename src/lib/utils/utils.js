@@ -1,9 +1,9 @@
 "use server";
-import mongoose from "mongoose";
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { config } from "../../config/config.js";
+import mongoose from "mongoose";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);

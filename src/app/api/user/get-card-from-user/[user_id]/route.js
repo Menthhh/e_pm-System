@@ -44,8 +44,7 @@ export const GET = async (req, { params }) => {
             return card.ACTION_LIST.some(actionId => {
                 return userActions.some(userAction => userAction._id.toString() === actionId.toString());
             });
-        });
-        
+        });  
         return NextResponse.json({ status: 200, cards: matchedCards});
     } catch (err) {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });

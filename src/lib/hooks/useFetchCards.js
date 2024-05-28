@@ -22,6 +22,7 @@ const useFetchCards = (refresh = null) => {
                     throw new Error("Failed to fetch roles");
                 }
                 const data = await response.json();
+                console.log(data.cards)
                 setCards(data.cards);
             } catch (error) {
                 setError(error);

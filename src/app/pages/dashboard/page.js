@@ -10,103 +10,12 @@ import useFetchJobs from "@/lib/hooks/useFetchJobs.js";
 import JobsTable from "@/components/JobsTable";
 
 
-const jobsActiveHeader = [
-    "ID",
-    "Job Name",
-    "Document no.",
-    "Status",
-    "Active",
-    "Action"
-]
 
 
 const Page = () => {
     const [refresh, setRefresh] = useState(false);
     const { user, isLoading: usersloading } = useFetchUsers(refresh);
     const { cards, isLoading: cardsLoading } = useFetchCards(refresh);
-    const { jobs, isLoading: jobsLoading } = useFetchJobs(refresh);
-
-
-    const jobsActiveBody = jobs && jobs.map((job, index) => {
-        return {
-            "ID": index + 1,
-            "Job Name": job.JOB_NAME,
-            "Document no.": job.DOC_NUMBER,
-            "Status": (
-                <div
-                    style={{ backgroundColor: job.STATUS_COLOR }}
-                    className="px-4 py-1 rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm"
-                >
-                    {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
-                </div>
-            ),
-            "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
-            "Action": (
-                <div>
-                    {job.STATUS_NAME === "complete" ? (
-                        <Link
-                            className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-[12px] ipadmini:text-sm px-5 py-2 text-center"
-                            href={{
-                                pathname: "/pages/view-jobs",
-                                query: {
-                                    job_id: job._id,
-                                    view: "true"
-                                },
-                            }}
-                        >
-                            View
-                        </Link>
-                    ) : job.STATUS_NAME !== "overdue" ? (
-                        <>
-                            {(job.STATUS_NAME === "ongoing" || job.STATUS_NAME === "new") ? (
-                                <div className="flex gap-2 items-center justify-center">
-                                    <Link
-                                        className="text-white bg-orange-700 hover:bg-orange-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-[12px] px-5 py-2 text-center"
-                                        href={{
-                                            pathname: "/pages/view-jobs",
-                                            query: {
-                                                job_id: job._id,
-                                                views: "false"
-                                            },
-                                        }}
-                                    >
-                                        Edit
-                                    </Link>
-                                    <Link
-                                        className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center"
-                                        href={{
-                                            pathname: "/pages/view-jobs",
-                                            query: {
-                                                job_id: job._id,
-                                                view: "true"
-                                            },
-                                        }}
-                                    >
-                                        View
-                                    </Link>
-                                </div>
-                            ) : (
-                                <button
-                                    className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center cursor-not-allowed"
-                                    disabled
-                                >
-                                    unable right now
-                                </button>
-                            )}
-                        </>
-                    ) : (
-                        <button
-                            className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2 text-center cursor-not-allowed"
-                            disabled
-                        >
-                            overdue
-                        </button>
-                    )}
-                </div>
-            )
-        }
-    });
-    
 
 
     return (
