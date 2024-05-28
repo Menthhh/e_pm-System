@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { config } from "../../config/config.js";
+import Swal from "sweetalert2";
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
@@ -66,7 +67,6 @@ const routing = (role_id) => {
 }
 
 export async function register(prevState, formData) {
-  await connectToDb();
   const empNumber = formData.get("employeeNumber");
   const empName = formData.get("employeeName");
   const email = formData.get("email");
@@ -92,8 +92,8 @@ export async function register(prevState, formData) {
   if (data.status === 500) {
     return { message: data.error };
   }
+  redirect("/pages/login")
 
-  return { message: "User registered successfully" };
 }
 
 export async function logout() {
