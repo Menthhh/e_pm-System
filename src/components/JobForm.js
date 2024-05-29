@@ -239,7 +239,7 @@ const JobForm = (
                 open={showWebcam}
                 onClose={handleCloseWebcam}
             >
-                <Box className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75 z-50">
+                <Box className="fixed inset-0 flex items-center justify-center z-50 w-screen h-screen">
                     <WebcamEditted handleCloseWebcam={handleCloseWebcam} />
                 </Box>
 

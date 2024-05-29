@@ -8,8 +8,6 @@ import { config } from "../../config/config.js";
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
-
-
 export async function encrypt(payload) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
@@ -41,7 +39,6 @@ export async function login(prevState, formData) {
     }),
   });
   const data = await res.json();
-  console.log(data)
   if (data.status === 200) {
     cookies().set("token", data.token, {
       httpOnly: true,

@@ -25,6 +25,7 @@ const connectToDb = async () => {
     throw new Error(error);
   }
 };
+
 export const POST = async (req, res) => {
     await connectToDb();
     const body = await req.json();
