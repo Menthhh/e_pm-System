@@ -1,9 +1,8 @@
+"use client"
 import { useEffect, useState } from "react";
 import Footer from "./Footer";
 import Navbar from "./Navbar";
 import HomeIcon from '@mui/icons-material/Home';
-import { getSession } from "@/lib/utils/utils";
-import { config } from "../config/config.js";
 import Image from 'next/image';
 import useFetchCards from "@/lib/hooks/useFetchCards";
 
@@ -37,7 +36,7 @@ const Layout = ({ children, className = "" }) => {
   return (
     <div className="flex flex-col min-h-screen ">
       <Navbar menu={menus} />
-        <div className={`flex-1 ${className} pt-24 pb-24 `}>
+        <div className={`flex-1 ${className} pt-24 pb-36 `}>
           {children}
         </div>
       <Footer />

@@ -1,3 +1,4 @@
+
 import useSession from "./useSession";
 import { useState, useEffect } from "react";
 import { config } from "../../config/config";
@@ -7,7 +8,6 @@ const useFetchUser = (refresh = null) => {
     const [user, setUser] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    console.log("fetchUser", session)
     
 
     useEffect(() => {

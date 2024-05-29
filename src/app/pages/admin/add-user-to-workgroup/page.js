@@ -296,15 +296,15 @@ const Page = () => {
 
 
   return (
-    <Layout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
-      <div className="w-full h-full bg-white container px-8  rounded-lg flex flex-col gap-8">
+    <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-3">
+      <div className="w-full h-full bg-white container px-8 rounded-lg flex flex-col gap-8">
         <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {user.workgroup} </h1>
         <h1 className="text-1xl font-semibold">Add User to Workgroup</h1>
         <div className="mt-4">
           <TableComponent headers={workgroupHeader} datas={dataUsersWorkgroup} searchColumn={"Name"} TableName={"Members"} />
         </div>
         <hr className="w-full" />
-        <div className="mt-4">
+        <div className="mt-2">
           <TableComponent headers={userHeader} datas={dataUsers} searchColumn={"Name"} TableName={"All users"} />
         </div>
       </div>

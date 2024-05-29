@@ -1,4 +1,3 @@
-import GroupIcon from '@mui/icons-material/Group';
 import Link from 'next/link';
 import Image from "next/image";
 

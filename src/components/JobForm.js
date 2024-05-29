@@ -1,4 +1,4 @@
-
+"use client";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import InfoIcon from '@mui/icons-material/Info';

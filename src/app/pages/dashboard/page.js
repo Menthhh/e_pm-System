@@ -1,9 +1,7 @@
 "use client"
-import TableComponent from "@/components/TableComponent";
 import Card from "@/components/Card";
 import { useState } from "react";
 import Layout from "@/components/Layout";
-import Link from "next/link.js";
 import useFetchUsers from "@/lib/hooks/useFetchUser.js";
 import useFetchCards from "@/lib/hooks/useFetchCards.js";
 import useFetchJobs from "@/lib/hooks/useFetchJobs.js";

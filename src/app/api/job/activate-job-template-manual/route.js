@@ -52,7 +52,6 @@ export const POST = async (req, res) => {
         }
 
         const newID = await Status.findOne({ status_name: "new" });
-        console.log("newID", newID)
         if (!newID) {
             return NextResponse.json({ status: 404, file: __filename, error: "Status not found" });
         }
