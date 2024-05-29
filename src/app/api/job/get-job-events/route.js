@@ -22,36 +22,6 @@ const connectToDb = async () => {
   }
 };
 
-// const events = [
-//     {
-//       title: 'All Day Event very long title',
-//       allDay: true,
-//       start: new Date(2024, 3, 1),
-//       end: new Date(2024, 3, 1),
-//       color: '#FFD700'
-//     },
-//     {
-//       title: 'Long Event',
-//       start: new Date(2024, 3, 7),
-//       end: new Date(2024, 3, 10),
-//       color: '#DAF7A6'
-//     },
-//     {
-//       title: 'Some Event',
-//       start: new Date(2024, 3, 9),
-//       end: new Date(2024, 3, 9),
-//       color: '#FFC300'
-//     },
-//     {
-//       title: 'Conference',
-//       start: new Date(2024, 3, 11),
-//       end: new Date(2024, 3, 13),
-//       desc: 'Big conference for important people',
-//       color: '#C70039'
-//     },
-//     // Add other events similarly with color property
-//   ];
-
 
 export const GET = async (req, res) => {
     await connectToDb();

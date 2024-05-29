@@ -19,7 +19,7 @@ const connectToDb = async () => {
     console.log("New connection");
   } catch (error) {
     console.log(error);
-    throw new Error(error);
+    
   }
 };
 export const DELETE = async (req, {params}) => {

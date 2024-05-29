@@ -19,7 +19,6 @@ const connectToDb = async () => {
     console.log("New connection");
   } catch (error) {
     console.log(error);
-    throw new Error(error);
   }
 };
 
@@ -28,7 +27,8 @@ export const GET = async (req, res) => {
 
     try {
         const jobTemplates = await JobTemplate.find();
-        const data = await Promise.all(jobTemplates.map(async jobTemplate => {
+        const data = await Promise.all(
+          jobTemplates.map(async jobTemplate => {
             const machines = await Machine.find({ _id: jobTemplate.MACHINE_ID });
             const machineName = machines.length > 0 ? machines[0].MACHINE_NAME : null;
             const createdAt = new Date(jobTemplate.createdAt).toLocaleString();
