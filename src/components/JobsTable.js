@@ -22,7 +22,7 @@ const JobsTable = (  {refresh} ) => {
             "Status": (
                 <div
                     style={{ backgroundColor: job.STATUS_COLOR }}
-                    className="px-4 py-1 rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm"
+                    className="py-1 rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm"
                 >
                     {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
                 </div>

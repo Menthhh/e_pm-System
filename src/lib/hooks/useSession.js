@@ -17,7 +17,6 @@ const useSession = () => {
         setError(null);
         try {
             const resSession = await getSession();
-            console.log("session data", resSession)
             setSession(resSession);
         } catch (error) {
             setError(error);

@@ -42,7 +42,7 @@ const Page = () => {
 
   // Define the eventPropGetter function
   const eventPropGetter = (event) => {
-    const backgroundColor = event.color || '#3174ad'; // default color if no color specified
+    const backgroundColor = event.color || '#3174ad'; 
     return { style: { backgroundColor } };
   };
 

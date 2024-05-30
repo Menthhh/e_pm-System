@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { Workgroup } from "@/lib/models/Workgroup";
 import { RoleHasAction } from "@/lib/models/RoleHasAction";
 import { connectToDb } from "@/app/api/mongo/index.js";
+import mongoose from 'mongoose';
 
 export const GET = async (req, { params }) => {
     await connectToDb();
@@ -57,7 +58,6 @@ export const GET = async (req, { params }) => {
 
         let workgroupName = workgroupData.length > 0 ? workgroupData[0].workgroup : "No workgroup";
 
-        //get user's actions
         const user_roleID = new mongoose.Types.ObjectId(user.ROLE);
 
         const userActions = await RoleHasAction.aggregate([

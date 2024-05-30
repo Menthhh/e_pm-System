@@ -4,6 +4,7 @@ import { User } from "@/lib/models/User.js";
 import { RoleHasAction } from "@/lib/models/RoleHasAction";
 import { Card } from "@/lib/models/Card";
 import { connectToDb } from "@/app/api/mongo/index.js";
+import mongoose from 'mongoose';
 
 export const GET = async (req, { params }) => {
     await connectToDb();

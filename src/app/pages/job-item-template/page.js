@@ -86,6 +86,7 @@ const Page = () => {
                 },
                 body: JSON.stringify({ jobTemplate_id }),
               });
+              console.log(response)
               const data = await response.json();
               if (data.status === 200) {
                 swalWithBootstrapButtons.fire({

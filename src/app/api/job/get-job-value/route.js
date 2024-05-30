@@ -15,7 +15,7 @@ export const GET = async (req, res) => {
     try {
         const job = await Job.findOne({ _id: JobID });
         const jobItems = await JobItem.find({ JOB_ID: JobID });
-        const machine = await Machine.findOne({ _id: job.MACHINE_ID });
+        const machine = await Machine.findOne({ WD_TAG: job.WD_TAG });
         const machineName = machine ? machine.MACHINE_NAME : null;
         const workgroup = await Workgroup.findOne({ _id: job.WORKGROUP_ID });
         const workgroupName = workgroup ? workgroup.WORKGROUP_NAME : null;

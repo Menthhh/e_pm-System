@@ -1,5 +1,6 @@
-
+import { config } from "@/config/config.js";
 import { useState, useEffect } from "react";
+
 const useFetchMachines = () => {
     const [machines, setMachines] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -8,7 +9,7 @@ const useFetchMachines = () => {
     useEffect(() => {
         const fetchMachines = async () => {
             try {
-                const res = await fetch("/api/machine/get-machines");
+                const res = await fetch(`${config.host}/api/machine/get-machines`);
                 const data = await res.json();
                 setMachines(data.machines);
                 setLoading(false);

@@ -1,17 +1,6 @@
-// const fetchJobItemTemplates = async () => {
-//     try {
-//         const response = await fetch(`${config.host}/api/job-item-template/get-job-item-template/${jobTemplate_id}`);
-//         const data = await response.json();
-//         if (data.status === 200) {
-//             setJobItemTemplates(data.jobItemTemplates);
-//         }
-//     } catch (err) {
-//         console.log(err);
-//     }
-// };
 
 import { useEffect, useState } from "react";
-import { config } from "../../config/config";
+import { config } from "@/config/config.js";
 
 const useFetchJobItemTemplates = (jobTemplate_id, refresh = null) => {
     const [jobItemTemplates, setJobItemTemplates] = useState([]);

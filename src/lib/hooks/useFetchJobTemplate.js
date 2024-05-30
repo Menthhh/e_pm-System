@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { config } from "../../config/config";
+import { config } from "@/config/config.js";
 
 const useFetchJobTemplate = (jobTemplate_id, refresh = null) => {
     const [jobTemplate, setJobTemplate] = useState({});

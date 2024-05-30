@@ -1,6 +1,3 @@
-
-// http://localhost:3000/api/location/get-locations]
-
 import { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 

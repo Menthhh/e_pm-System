@@ -1,7 +1,6 @@
-
 import useSession from "./useSession";
 import { useState, useEffect } from "react";
-import { config } from "../../config/config";
+import { config } from "@/config/config.js";
 
 const useFetchUser = (refresh = null) => {
     const { session, isLoading: sessionLoading, error: sessionError } = useSession();
@@ -22,7 +21,6 @@ const useFetchUser = (refresh = null) => {
                     throw new Error("Failed to fetch user");
                 }
                 const data = await response.json();
-                console.log("user", data)
                 setUser(data.user);
             } catch (error) {
                 setError(error);
@@ -35,9 +33,6 @@ const useFetchUser = (refresh = null) => {
             fetchUser(session.user_id);
         }
 
-        if (sessionError) {
-            console.log(sessionError);
-        }
     }, [sessionLoading, refresh, session]);
 
     return { user, isLoading, error };
