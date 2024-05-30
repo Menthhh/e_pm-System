@@ -13,89 +13,22 @@ import JobReview from "@/components/JobReview";
 
 
 
-const Page = ({searchParams}) => {
+const Page = ({ searchParams }) => {
     const job_id = searchParams.job_id
     const view = "true"
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
-    const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
     const [isShowJobInfo, setIsShowJobInfo] = useState(true);
     const [isShowJobItem, setIsShowJobItem] = useState(true);
     const [jobItemDetail, setJobItemDetail] = useState(null);
     const [testMethodDescription, setTestMethodDescription] = useState(null);
     const [AddCommentForm, setAddCommentForm,] = useState(false);
     const [commentDetail, setCommentDetail] = useState(null);
-    const [inputValues, setInputValues] = useState([]);
-    const { status } = useFetchStatus(refresh);
-    const [machineName, setMachineName] = useState(null);
+
 
     const toggleJobInfo = () => {
         setIsShowJobInfo(!isShowJobInfo);
     }
-
-
-
-    const handleBeforeValue = (e, item) => {
-        const value = e.target.value;
-        setInputValues(prev => {
-            const existingIndex = prev.findIndex(entry => entry.jobItemID === item.JobItemID);
-            if (existingIndex !== -1) {
-                const updatedValues = [...prev]; // Create a copy of the previous array
-                updatedValues[existingIndex] = { // Update the object at existingIndex
-                    ...updatedValues[existingIndex], // Preserve other properties
-                    BeforeValue: value // Update the beforeValue property
-                };
-                return updatedValues; // Return the updated array
-            }
-            return [...prev, { // If the item doesn't exist, add it with the beforeValue
-                ...item,
-                jobItemID: item.JobItemID,
-                BeforeValue: value
-            }];
-        });
-    };
-
-    const handleInputChange = (e, item) => {
-        const value = e.target.value;
-        setInputValues(prev => {
-            const existingIndex = prev.findIndex(entry => entry.jobItemID === item.JobItemID);
-            if (existingIndex !== -1) {
-                const updatedValues = [...prev]; // Create a copy of the previous array
-                updatedValues[existingIndex] = { // Update the object at existingIndex
-                    ...updatedValues[existingIndex], // Preserve other properties
-                    value: value // Update the value property
-                };
-                return updatedValues; // Return the updated array
-            }
-            return [...prev, { // If the item doesn't exist, add it with the value
-                ...item,
-                jobItemID: item.JobItemID,
-                value: value
-            }];
-        });
-    };
-
-    const handleSubmitComment = async (e) => {
-        e.preventDefault();
-        const comment = e.target.comment.value;
-        setInputValues(prev => {
-            const existingIndex = prev.findIndex(entry => entry.jobItemID === commentDetail.JobItemID);
-            if (existingIndex !== -1) {
-                const updatedValues = [...prev]; // Create a copy of the previous array
-                updatedValues[existingIndex] = { // Update the object at existingIndex
-                    ...updatedValues[existingIndex], // Preserve other properties
-                    Comment: comment // Update the comment property
-                };
-                return updatedValues; // Return the updated array
-            }
-            return [...prev, { // If the item doesn't exist, add it with the comment
-                ...commentDetail,
-                jobItemID: commentDetail.JobItemID,
-                Comment: comment
-            }];
-        });
-        setAddCommentForm(false);
-    };
 
 
     const toggleJobItem = () => {
@@ -110,49 +43,16 @@ const Page = ({searchParams}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const wdTag = e.target.wd_tag.value;
-        console.log(wdTag);
+        const formData = new FormData(event.target);
+        const action = formData.get('action');
 
-        const body = {
-            jobData: {
-                JobID: jobData.JobID,
-                wd_tag: wdTag,
-            },
-            jobItemsData: [...inputValues]
-        };
-        if (inputValues.length === 0 || inputValues.length < jobItems.length || !wdTag || inputValues.some(item => !item.value)) {
-            Swal.fire({
-                title: "Error!",
-                text: "Please fill all the fields!",
-                icon: "error"
-            });
-            return;
+        if (action === 'approve') {
+
+            console.log('Approved');
+        } else if (action === 'disapprove') {
+            toggleAddComment();
         }
-        try {
-            const response = await fetch(`${config.host}/api/job/update-job`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(body)
-            });
 
-            if (!response.ok) {
-                console.log("Error:", response.statusText);
-            }
-
-            Swal.fire({
-                title: "Good job!",
-                text: "You have submit the form!",
-                icon: "success"
-            });
-
-
-            e.target.reset();
-            setRefresh((prev) => (!prev));
-        } catch (err) {
-            console.error("Error:", err);
-        }
     };
 
 
@@ -164,25 +64,12 @@ const Page = ({searchParams}) => {
         setJobItemDetail(item);
     }
 
-    const handleWdChange = (selectedOption) => {
-        const wd_tag = selectedOption.value; // Extract value from selected option
-        console.log(wd_tag);
-        machines.forEach((machine) => {
-            if (machine.wd_tag === wd_tag) {
-                setMachineName(machine.name);
-            }
-        });
-    };
+    const handleSubmitComment = async (e) => {
+    }
 
 
     return (
-        // machines,
-        // machineName,
-        // handleInputChange,
-        // handleBeforeValue,
-        // handleWdChange,
-        // view,
-        // toggleAddComment
+
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
             <JobReview
                 jobData={jobData}
@@ -194,6 +81,7 @@ const Page = ({searchParams}) => {
                 isShowJobItem={isShowJobItem}
                 toggleJobInfo={toggleJobInfo}
                 isShowJobInfo={isShowJobInfo}
+                toggleAddComment={toggleAddComment}
             />
             {jobItemDetail && <ItemInformationModal
                 jobItemDetail={jobItemDetail}
@@ -205,7 +93,6 @@ const Page = ({searchParams}) => {
                 toggleAddComment={toggleAddComment}
                 handleSubmitComment={handleSubmitComment}
                 commentDetail={commentDetail}
-
             />}
         </Layout>
     );

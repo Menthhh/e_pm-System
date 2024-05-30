@@ -17,6 +17,7 @@ const JobForm = (
         isShowJobItem,
         toggleJobInfo,
         isShowJobInfo,
+        toggleAddComment
     }
 ) => {
 
@@ -99,7 +100,7 @@ const JobForm = (
                                 <th className="w-[50px] px-4 py-2">Lower Spec</th>
                                 <th className="w-[150px] py-2">Before Value</th>
                                 <th className="w-[150px] px-4 py-2">Actual Value</th>
-                                <th className="w-[5px] py-2">See images</th>
+                                <th className="w-[5px] px-2 py-2">See images</th>
                             </tr>
                         </thead>
                         <tbody className="text-center">
@@ -142,9 +143,30 @@ const JobForm = (
                         </tbody>
                     </table>
                 </div>
-                <div>
-
+                <div className="flex justify-end gap-4 mt-4">
+                    <button
+                        type="submit"
+                        name="action"
+                        value="approve"
+                        variant="contained"
+                        color="primary"
+                        className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+                    >
+                        Approve
+                    </button>
+                    <button
+                        type="button"
+                        name="action"
+                        value="disapprove"
+                        variant="contained"
+                        color="secondary"
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => toggleAddComment(jobData)}
+                    >
+                        Disapprove
+                    </button>
                 </div>
+
             </div>
 
 

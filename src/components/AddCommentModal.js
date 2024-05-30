@@ -16,7 +16,7 @@ const AddCommentModal = ({
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                     <div className="sm:flex sm:items-start">
                         <form className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left flex flex-col gap-3 justify-start items-center  w-full"
-                            onSubmit={handleSubmitComment}
+                           
                         >
                             <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-headline">
                                 Add Comment to {commentDetail.JobItemTitle}
