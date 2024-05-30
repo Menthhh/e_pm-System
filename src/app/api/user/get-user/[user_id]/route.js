@@ -2,29 +2,9 @@
 import { User } from "@/lib/models/User.js";
 import { NextResponse } from 'next/server';
 import { Workgroup } from "@/lib/models/Workgroup";
-import mongoose from 'mongoose';
 import { RoleHasAction } from "@/lib/models/RoleHasAction";
+import { connectToDb } from "@/app/api/mongo/index.js";
 
-
-const db_url = "mongodb://localhost:27017/e_pm";
-
-const connection = {};
-
-const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-    
-  }
-};
 export const GET = async (req, { params }) => {
     await connectToDb();
     

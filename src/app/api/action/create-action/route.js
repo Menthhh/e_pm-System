@@ -1,26 +1,8 @@
 
 import { Action } from "@/lib/models/Action.js";
 import { NextResponse } from 'next/server';
-import mongoose from "mongoose";
+import { connectToDb } from "@/app/api/mongo/index.js";
 
-const connection = {};
-const db_url = process.env.MONGODB_URI;
-
-const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-    
-  }
-};
 
 export const POST = async (req, res) => {
     await connectToDb();

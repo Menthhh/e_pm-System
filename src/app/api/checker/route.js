@@ -4,27 +4,7 @@ import { NextResponse } from 'next/server';
 
 import { Status } from "@/lib/models/Status";
 import { addHours, addDays, addMonths } from 'date-fns';
-
-import mongoose from "mongoose";
-
-
-const db_url = process.env.MONGODB_URI;
-const connection = {};
-
-const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { connectToDb } from "@/app/api/mongo/index.js";
 
 const convertTimeout = async (timeout, createdAt) => {
     const startDate = new Date(createdAt);
@@ -68,7 +48,7 @@ export const GET = async (req, res) => {
             const jobExpiryTime = await convertTimeout(job.TIMEOUT, job.createdAt);
 
             //check if job is overdue
-            if (now > jobExpiryTime && statusName !== 'overdue') {
+            if (now > jobExpiryTime && statusName !== 'overdue' && statusName !== 'complete') {
                 job.JOB_STATUS_ID = overdueStatus._id;
                 await job.save();
             }

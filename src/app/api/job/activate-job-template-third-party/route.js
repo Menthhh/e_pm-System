@@ -8,24 +8,7 @@ import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { config } from "@/config/config.js";
 import { Status } from "@/lib/models/Status";
-
-import mongoose from "mongoose";
-const connection = {};
-const db_url = process.env.MONGODB_URI;
-const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const GET = async (req, res) => {
     await connectToDb();

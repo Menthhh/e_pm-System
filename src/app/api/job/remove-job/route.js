@@ -4,24 +4,7 @@ import { JobTemplateActivate } from "@/lib/models/AE/JobTemplateActivate";
 import { JobItemTemplateActivate } from "@/lib/models/AE/JobItemTemplateActivate.js";
 import { Job } from "@/lib/models/Job.js";
 import { JobItem } from "@/lib/models/JobItem.js";
-
-import mongoose from "mongoose";
-const connection = {};
-const db_url = process.env.MONGODB_URI;
-const connectToDb = async () => {
-  console.log("Connecting to DB");
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(db_url);
-    connection.isConnected = db.connections[0].readyState;
-    console.log("New connection");
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const DELETE = async (req, res) => {
     await connectToDb();
