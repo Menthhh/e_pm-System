@@ -210,7 +210,7 @@ const JobForm = (
 
                                         }
                                         <InfoIcon
-                                            className="absolute right-[2px] top-1 text-blue-600 size-4 cursor-pointer "
+                                            className="absolute right-[2px] top-1 text-blue-600 size-4 cursor-pointer"
                                             onClick={() => toggleAddComment(item)}
 
                                         />

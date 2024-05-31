@@ -11,17 +11,20 @@ const jobsActiveHeader = [
     "Action"
 ]
 
-const JobsTable = (  {refresh} ) => {
+const JobsTable = ({ refresh }) => {
     const { jobs, isLoading: jobsLoading } = useFetchJobs(refresh);
 
     const jobsActiveBody = jobs && jobs.map((job, index) => {
+        let statusColor = job.STATUS_COLOR;
+
+
         return {
             "ID": index + 1,
             "Job Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
             "Status": (
                 <div
-                    style={{ backgroundColor: job.STATUS_COLOR }}
+                    style={{ backgroundColor: statusColor }}
                     className="py-1 rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm"
                 >
                     {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
@@ -72,6 +75,19 @@ const JobsTable = (  {refresh} ) => {
                                         View
                                     </Link>
                                 </div>
+                            ) : job.STATUS_NAME === "renew" ? (
+                                <Link
+                                    className="text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-[12px] ipadmini:text-sm px-5 py-2 text-center"
+                                    href={{
+                                        pathname: "/pages/view-jobs",
+                                        query: {
+                                            job_id: job._id,
+                                            retake: "true"
+                                        },
+                                    }}
+                                >
+                                    Retake
+                                </Link>
                             ) : (
                                 <button
                                     className="text-white bg-gray-500 hover:bg-gray-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-[12px] ipadmini:text-sm px-5 py-2 text-center cursor-not-allowed"
@@ -100,4 +116,3 @@ const JobsTable = (  {refresh} ) => {
 }
 
 export default JobsTable;
-    

@@ -4,20 +4,21 @@ import useFetchJobValue from "@/lib/hooks/useFetchJobValue";
 import React, { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 import Swal from 'sweetalert2'
-import useFetchStatus from "@/lib/hooks/useFetchStatus";
-import useFetchMachines from "@/lib/hooks/useFetchMachines";
 import TestMethodDescriptionModal from "@/components/TestMethodDescriptionModal";
 import ItemInformationModal from "@/components/ItemInformationModal";
-import AddCommentModal from "@/components/AddCommentModal";
 import JobReview from "@/components/JobReview";
+import useFetchUser from "@/lib/hooks/useFetchUser";
+import { useRouter } from 'next/navigation';
+import CommentReview from "@/components/CommentReview";
 
 
 
 const Page = ({ searchParams }) => {
+    const router = useRouter();
     const job_id = searchParams.job_id
-    const view = "true"
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
+    const { user, isLoading: userLoading, error: userError } = useFetchUser();
     const [isShowJobInfo, setIsShowJobInfo] = useState(true);
     const [isShowJobItem, setIsShowJobItem] = useState(true);
     const [jobItemDetail, setJobItemDetail] = useState(null);
@@ -36,24 +37,62 @@ const Page = ({ searchParams }) => {
     }
 
     const toggleAddComment = (item) => {
+        console.log(item);
         setCommentDetail(() => item);
         setAddCommentForm(!AddCommentForm);
     }
 
 
-    const handleSubmit = async (e) => {
+    const handleApprove = async (e) => {
         e.preventDefault();
-        const formData = new FormData(event.target);
-        const action = formData.get('action');
 
-        if (action === 'approve') {
+        try {
+            const response = await fetch(`${config.host}/api/approval/approve`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    job_id: job_id,
+                    user_id: user._id,
+                    isApproved: true,
+                    comment: null
+                })
+            });
+            const data = await response.json();
+            if (data.status === 200) {
+                Swal.fire({
+                    title: 'Success',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    setRefresh(!refresh);
 
-            console.log('Approved');
-        } else if (action === 'disapprove') {
-            toggleAddComment();
+                    router.push('/pages/job-approve');
+
+
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Something went wrong',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
 
-    };
+    }
+
 
 
     const handleShowTestMethodDescription = (item) => {
@@ -64,7 +103,52 @@ const Page = ({ searchParams }) => {
         setJobItemDetail(item);
     }
 
-    const handleSubmitComment = async (e) => {
+    const handleReject = async (e) => {
+        e.preventDefault();
+        const comment = e.target.comment.value;
+        console.log(commentDetail);
+        console.log(comment)
+        try {
+            const response = await fetch(`${config.host}/api/approval/approve`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    job_id: commentDetail.JobID,
+                    user_id: user._id,
+                    isApproved: false,
+                    comment: comment
+                })
+            });
+            const data = await response.json();
+            if (data.status === 200) {
+                Swal.fire({
+                    title: 'Success',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    setRefresh(!refresh);
+                    router.push('/pages/job-approve');
+                });
+            } else {
+                Swal.fire({
+                    title: 'Server Error',
+                    text: data.error,
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            }
+        }catch (error) {
+            console.log('Error:', error);
+            Swal.fire({
+                title: 'Error',
+                text: 'Something went wrong',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+        }
     }
 
 
@@ -74,7 +158,7 @@ const Page = ({ searchParams }) => {
             <JobReview
                 jobData={jobData}
                 jobItems={jobItems}
-                handleSubmit={handleSubmit}
+                handleApprove={handleApprove}
                 handleShowJobItemDescription={handleShowJobItemDescription}
                 handleShowTestMethodDescription={handleShowTestMethodDescription}
                 toggleJobItem={toggleJobItem}
@@ -89,9 +173,9 @@ const Page = ({ searchParams }) => {
             />}
             {testMethodDescription && <TestMethodDescriptionModal
                 setTestMethodDescription={setTestMethodDescription} />}
-            {AddCommentForm && <AddCommentModal
+            {AddCommentForm && <CommentReview
                 toggleAddComment={toggleAddComment}
-                handleSubmitComment={handleSubmitComment}
+                handleReject={handleReject}
                 commentDetail={commentDetail}
             />}
         </Layout>

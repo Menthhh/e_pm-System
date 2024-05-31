@@ -10,7 +10,7 @@ const JobForm = (
     {
         jobData,
         jobItems,
-        handleSubmit,
+        handleApprove,
         handleShowJobItemDescription,
         handleShowTestMethodDescription,
         toggleJobItem,
@@ -25,7 +25,7 @@ const JobForm = (
 
     return (
         <form className="flex flex-col gap-8"
-            onSubmit={handleSubmit}
+            onSubmit={handleApprove}
         >
             <h1 className="text-3xl font-bold text-primary flex items-center cursor-pointer" onClick={toggleJobInfo}>
                 Job Information
@@ -108,7 +108,6 @@ const JobForm = (
                                 <tr key={index}>
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.JobItemTitle} </div>
-
                                         <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowJobItemDescription(item)}
@@ -117,7 +116,6 @@ const JobForm = (
                                     </td>
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.TestMethod} </div>
-
                                         <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowTestMethodDescription(item)}
