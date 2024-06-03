@@ -8,6 +8,7 @@ const publicRoutes = [
     "/pages/register",
     "/api/auth/login",
     "/api/auth/register",
+    "/api/schedule-checker",
 ];
 
 const developingRoutes = [

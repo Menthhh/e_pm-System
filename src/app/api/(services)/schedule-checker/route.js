@@ -1,7 +1,6 @@
 
 import { Job } from "@/lib/models/Job";
 import { NextResponse } from 'next/server';
-
 import { Status } from "@/lib/models/Status";
 import { addHours, addDays, addMonths } from 'date-fns';
 import { connectToDb } from "@/app/api/mongo/index.js";
@@ -34,6 +33,11 @@ export const GET = async (req, res) => {
     await connectToDb();
 
     try {
+        const currentTime = new Date();
+        //human readable date
+        console.log("-----------------------------------------------------------")
+        console.log("Checking for overdue jobs: ", currentTime.toLocaleString());
+        console.log("-----------------------------------------------------------")
         const jobs = await Job.find();
         const now = new Date();
 

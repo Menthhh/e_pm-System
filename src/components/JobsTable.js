@@ -26,7 +26,7 @@ const JobsTable = ({ refresh }) => {
             "Status": (
                 <div
                     style={{ backgroundColor: statusColor }}
-                    className="py-1 rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm"
+                    className="py-1 rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm flex justify-center items-center "
                 >
                     {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
                 </div>
