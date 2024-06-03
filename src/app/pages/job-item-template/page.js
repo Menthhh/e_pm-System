@@ -59,7 +59,7 @@ const Page = () => {
         }
     };
 
-    const handleRemove = async (jobTemplate_id) => {
+    const handleRemove = async (jobTemplate_id, JobTemplateCreateID) => {
         const swalWithBootstrapButtons = Swal.mixin({
           customClass: {
             confirmButton: "btn btn-success",
@@ -84,7 +84,7 @@ const Page = () => {
                 headers: {
                   "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ jobTemplate_id }),
+                body: JSON.stringify({ jobTemplate_id, JobTemplateCreateID }),
               });
               console.log(response)
               const data = await response.json();
@@ -133,7 +133,7 @@ const Page = () => {
                     </Link>
                     <button
                         className="bg-red-500 hover:bg-red-700 text-white font-semibold py-2 px-2 rounded"
-                        onClick={() => handleRemove(jobTemplate._id)}
+                        onClick={() => handleRemove(jobTemplate._id, jobTemplate.JobTemplateCreateID)}
                         disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["remove-job-template"])}
                         style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["remove-job-template"]) ? "not-allowed" : "pointer" }}
                     >

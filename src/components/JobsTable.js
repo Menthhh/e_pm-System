@@ -13,6 +13,7 @@ const jobsActiveHeader = [
 
 const JobsTable = ({ refresh }) => {
     const { jobs, isLoading: jobsLoading } = useFetchJobs(refresh);
+    
 
     const jobsActiveBody = jobs && jobs.map((job, index) => {
         let statusColor = job.STATUS_COLOR;
@@ -56,7 +57,7 @@ const JobsTable = ({ refresh }) => {
                                             pathname: "/pages/view-jobs",
                                             query: {
                                                 job_id: job._id,
-                                                views: "false"
+                                                view: "false"
                                             },
                                         }}
                                     >
@@ -79,7 +80,7 @@ const JobsTable = ({ refresh }) => {
                                 <Link
                                     className="text-white bg-orange-500 hover:bg-orange-600 focus:ring-4 focus:outline-none font-bold rounded-lg text-[12px] ipadmini:text-sm px-5 py-2 text-center"
                                     href={{
-                                        pathname: "/pages/view-jobs",
+                                        pathname: "/pages/job-renew",
                                         query: {
                                             job_id: job._id,
                                             retake: "true"

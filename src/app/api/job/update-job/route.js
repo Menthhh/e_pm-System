@@ -31,10 +31,9 @@ export const PUT = async (req, res) => {
             for (const item of jobItemTemplatesAcivateFiltered) {
                 const jobItemUpdate = await JobItem.findOne({ _id: item.JOB_ITEM_ID });
                 if (!jobItemUpdate.ACTUAL_VALUE && !jobItemUpdate.BEFORE_VALUE) {
-                    jobItemUpdate.BEFORE_VALUE = jobItemData.value;
-                    
+                    jobItemUpdate.BEFORE_VALUE = jobItemData.value;            
                 }
-                //or has a before value but it IS NOT equa; to latest actual value
+
                 if (jobItemUpdate.BEFORE_VALUE && jobItemUpdate.BEFORE_VALUE !== jobItemData.value && !jobItemUpdate.ACTUAL_VALUE) {
                     jobItemUpdate.BEFORE_VALUE = jobItemData.value;
                 }
@@ -46,7 +45,6 @@ export const PUT = async (req, res) => {
         const job = await Job.findOne({ _id: jobData.JobID });
         job.WD_TAG = jobData.wd_tag;
         const complete_status = await Status.findOne({ status_name: 'waiting for approval' });
-        console.log(complete_status._id)
         job.JOB_STATUS_ID = complete_status._id
         await job.save();
 

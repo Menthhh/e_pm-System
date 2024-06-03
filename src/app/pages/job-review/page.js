@@ -6,7 +6,7 @@ import { config } from "@/config/config.js";
 import Swal from 'sweetalert2'
 import TestMethodDescriptionModal from "@/components/TestMethodDescriptionModal";
 import ItemInformationModal from "@/components/ItemInformationModal";
-import JobReview from "@/components/JobReview";
+import JobReview from "./JobReview";
 import useFetchUser from "@/lib/hooks/useFetchUser";
 import { useRouter } from 'next/navigation';
 import CommentReview from "@/components/CommentReview";
@@ -150,7 +150,6 @@ const Page = ({ searchParams }) => {
             });
         }
     }
-
 
     return (
 

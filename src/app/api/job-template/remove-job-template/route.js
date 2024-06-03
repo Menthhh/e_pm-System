@@ -7,11 +7,14 @@ import { JobItemTemplate } from "@/lib/models/JobItemTemplate";
 export const DELETE = async (req, res) => {
   await connectToDb();
   const body = await req.json();
-  const { jobTemplate_id } = body;
-
+  const { jobTemplate_id, JobTemplateCreateID } = body;
+  console.log(jobTemplate_id, JobTemplateCreateID);
   try {
-    //remove job item template where jobtemplateid = jobtemplateid 
-    const approvers = await JobItemTemplate.deleteMany({ JOB_TEMPLATE_ID: jobTemplate_id });
+    const approvers = await JobItemTemplate.deleteMany(
+      {
+        JOB_TEMPLATE_ID: jobTemplate_id,
+        JobTemplateCreateID: JobTemplateCreateID
+      });
     const jobItemTemplate = await JobItemTemplate.deleteMany({ JOB_TEMPLATE_ID: jobTemplate_id });
     const jobTemplate = await JobTemplate.findByIdAndDelete(jobTemplate_id);
     return NextResponse.json({ status: 200, jobTemplate });

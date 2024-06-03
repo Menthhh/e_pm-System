@@ -2,49 +2,30 @@
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import InfoIcon from '@mui/icons-material/Info';
-import Select from 'react-select';
+import ImageIcon from '@mui/icons-material/Image';
 import { useState } from 'react';
 
-import WebcamEditted from './WebcamEditted';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 
 const JobForm = (
     {
         jobData,
         jobItems,
-        machines,
-        machineName,
-        handleInputChange,
-        handleBeforeValue,
-        handleWdChange,
-        handleSubmit,
+        handleApprove,
         handleShowJobItemDescription,
         handleShowTestMethodDescription,
         toggleJobItem,
         isShowJobItem,
         toggleJobInfo,
         isShowJobInfo,
-        view,
         toggleAddComment
-
     }
 ) => {
-    const [showWebcam, setShowWebcam] = useState(false);
-
-    const handleAddImages = () => {
-        setShowWebcam(true);
-    };
-
-    const handleCloseWebcam = () => {
-        setShowWebcam(false);
-    };
 
 
 
     return (
         <form className="flex flex-col gap-8"
-            onSubmit={handleSubmit}
+            onSubmit={handleApprove}
         >
             <h1 className="text-3xl font-bold text-primary flex items-center cursor-pointer" onClick={toggleJobInfo}>
                 Job Information
@@ -88,45 +69,17 @@ const JobForm = (
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.Status} disabled />
                 </div>
 
+
                 <div className="flex flex-col">
                     <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">WD Tag</label>
-                    {
-                        view === "true" ?
-                            <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"
-                                value={jobData.wd_tag}
-                                disabled />
-                            :
-                            (jobData.WDtag ?
-                                <Select
-                                    className="mb-5"
-                                    options={machines.map((item) => ({
-                                        value: item.wd_tag,
-                                        label: item.wd_tag
-                                    }))}
-                                    onChange={(selectedOption) => handleWdChange(selectedOption)}
-                                    name="wd_tag"
-
-                                    value={{ value: jobData.WDtag, label: jobData.WDtag }}
-                                    disabled
-                                />
-                                :
-                                <Select
-                                    className="mb-5"
-                                    options={machines.map((item) => ({
-                                        value: item.wd_tag,
-                                        label: item.wd_tag
-                                    }))}
-                                    onChange={(selectedOption) => handleWdChange(selectedOption)}
-                                    name="wd_tag"
-                                />)
-                    }
-
-
+                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.WD_TAG} disabled />
                 </div>
+
                 <div className="flex flex-col">
                     <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Machine Name</label>
-                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={machineName} disabled />
+                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.MachineName} disabled />
                 </div>
+
 
             </div>
             <hr />
@@ -147,7 +100,7 @@ const JobForm = (
                                 <th className="w-[50px] px-4 py-2">Lower Spec</th>
                                 <th className="w-[150px] py-2">Before Value</th>
                                 <th className="w-[150px] px-4 py-2">Actual Value</th>
-                                <th className="w-[150px] px-4 py-2">Add images</th>
+                                <th className="w-[5px] px-2 py-2">See images</th>
                             </tr>
                         </thead>
                         <tbody className="text-center">
@@ -155,7 +108,6 @@ const JobForm = (
                                 <tr key={index}>
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.JobItemTitle} </div>
-
                                         <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowJobItemDescription(item)}
@@ -164,7 +116,6 @@ const JobForm = (
                                     </td>
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.TestMethod} </div>
-
                                         <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowTestMethodDescription(item)}
@@ -174,49 +125,15 @@ const JobForm = (
                                     <td className="border px-4 py-2">{item.UpperSpec}</td>
                                     <td className="border px-4 py-2">{item.LowerSpec}</td>
                                     <td className="border  py-2 relative">
-                                        { //if view is true then disable the input field
-                                            view === "true" ?
-                                                <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
-                                                :
-                                                (item.BeforeValue ?
-                                                    <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
-                                                    :
-                                                    <input
-                                                        type="text"
-                                                        id={`before_value_${item.JobItemID}`}
-                                                        onChange={(e) => handleBeforeValue(e, item)}
-                                                        className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-full p-1.5"
-                                                        placeholder="fill in value"
-                                                    />
-                                                )
-                                        }
-
+                                        <input type="text" id={`before_value_${item.JobItemID}`} value={item.BeforeValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
                                     </td>
                                     <td className="border px-4 py-2 relative">
-                                        { //if view is true then disable the input field
-                                            view === "true" ? <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
-                                                : (
-                                                    item.ActualValue ?
-                                                        <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
-                                                        :
-                                                        <input
-                                                            type="text"
-                                                            id={`actual_value_${item.JobItemID}`}
-                                                            onChange={(e) => handleInputChange(e, item)}
-                                                            className="bg-white border border-gray-300 text-gray-900 text-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 rounded-lg"
-                                                            placeholder="fill in value"
-                                                        />
-                                                )
-
-                                        }
-                                        <InfoIcon
-                                            className="absolute right-[2px] top-1 text-blue-600 size-4 cursor-pointer"
-                                            onClick={() => toggleAddComment(item)}
-
-                                        />
+                                        <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed" disabled />
                                     </td>
-                                    <td className="border px-4 py-2 relative">
-                                        <button type="button" onClick={handleAddImages} className="bg-primary text-white rounded-md px-2 py-1">Add Images</button>
+                                    <td className="border py-2 relative">
+                                        <div className="cursor-pointer" >
+                                            <ImageIcon className="text-blue-600 size-15" />
+                                        </div>
                                     </td>
 
                                 </tr>
@@ -224,26 +141,32 @@ const JobForm = (
                         </tbody>
                     </table>
                 </div>
-                <div>
-                    {view === "true" || jobData.Status === "complete" ?
-                        null
-                        :
-                        <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
-                        >
-                            Submit
-                        </button>
-                    }
+                <div className="flex justify-end gap-4 mt-4">
+                    <button
+                        type="submit"
+                        name="action"
+                        value="approve"
+                        variant="contained"
+                        color="primary"
+                        className='bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded'
+                    >
+                        Approve
+                    </button>
+                    <button
+                        type="button"
+                        name="action"
+                        value="disapprove"
+                        variant="contained"
+                        color="secondary"
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                        onClick={() => toggleAddComment(jobData)}
+                    >
+                        Disapprove
+                    </button>
                 </div>
-            </div>
-            <Modal
-                open={showWebcam}
-                onClose={handleCloseWebcam}
-            >
-                <Box className="fixed inset-0 flex items-center justify-center z-50 w-screen h-screen">
-                    <WebcamEditted handleCloseWebcam={handleCloseWebcam} />
-                </Box>
 
-            </Modal>
+            </div>
+
 
         </form>
     )

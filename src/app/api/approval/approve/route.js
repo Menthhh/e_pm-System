@@ -24,7 +24,7 @@ export const POST = async (req, res) => {
         }
 
         const jobApprove = new JobApproves({
-            JOB_ID: job_id,
+            JOB: job,
             USER_ID: user_id,
             IS_APPROVE: isApproved,
             COMMENT: comment

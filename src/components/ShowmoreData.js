@@ -19,7 +19,7 @@ const ShowmoreData = ({ data, close }) => {
                     confirmButtonText: 'OK'
                 });
             } else if (event.status_name === 'complete') {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&views=true`);
+                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
             } else if (event.status_name === 'overdue') {
                 Swal.fire({
                     title: 'Job is overdue',
@@ -29,13 +29,13 @@ const ShowmoreData = ({ data, close }) => {
                 });
             }
             else if (event.status_name === 'new') {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&views=false`);
+                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=false`);
             }
             else if (event.status_name === 'ongoing') {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&views=false`);
+                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=false`);
             }
             else {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&views=true`);
+                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
             }
         }
     };

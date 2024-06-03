@@ -9,13 +9,13 @@ import useFetchMachines from "@/lib/hooks/useFetchMachines";
 import TestMethodDescriptionModal from "@/components/TestMethodDescriptionModal";
 import ItemInformationModal from "@/components/ItemInformationModal";
 import AddCommentModal from "@/components/AddCommentModal";
-import JobForm from "@/components/JobForm";
+import JobForm from "./JobForm.js";
 
 
 
 const Page = ({searchParams}) => {
     const job_id = searchParams.job_id
-    const view = searchParams.views
+    const view = searchParams.view
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
     const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
@@ -59,8 +59,6 @@ const Page = ({searchParams}) => {
         if (view === "false") {
             updateJobStatusToOngoing();
         }
-
-        console.log("views" + view);
 
     }, [inputValues]);
 
@@ -203,7 +201,7 @@ const Page = ({searchParams}) => {
         });
     };
 
-
+    
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
             <JobForm
