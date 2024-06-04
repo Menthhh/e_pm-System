@@ -148,8 +148,8 @@ const JobForm = (
                                 <th className="w-[50px] px-4 py-2">
                                     Test Method
                                 </th>
-                                <th className="w-[50px] px-4 py-2">Upper Spec</th>
                                 <th className="w-[50px] px-4 py-2">Lower Spec</th>
+                                <th className="w-[50px] px-4 py-2">Upper Spec</th>
                                 <th className="w-[150px] py-2">Before Value</th>
                                 <th className="w-[150px] px-4 py-2">Actual Value</th>
                                 <th className="w-[5px] py-2">Add images</th>

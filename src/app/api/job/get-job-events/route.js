@@ -10,10 +10,19 @@ export const GET = async (req, res) => {
     await connectToDb();
     const searchParams = req.nextUrl.searchParams;
     const workgroup_id = searchParams.get("workgroup_id");
+    console.log("workgroup_id", workgroup_id)
 
     try {
         // Find job templates by workgroup ID
-        const jobTemplates = await JobTemplate.find({ WORKGROUP_ID: workgroup_id });
+        //if workgroup not deine then return all job templates
+        let jobTemplates;
+        
+        if (workgroup_id === "all") {
+            jobTemplates = await JobTemplate.find();
+        } else {
+            jobTemplates = await JobTemplate.find({ WORKGROUP_ID: workgroup_id });
+        }
+
         console.log("jobTemplates", jobTemplates);
 
         // Find job template activations and sort them
@@ -41,12 +50,12 @@ export const GET = async (req, res) => {
                 color: statusColor,
             };
         });
-        
-    
-        const resolvedEvents = await Promise.all(events);
-        
 
-        return NextResponse.json({ status: 200, events:resolvedEvents });
+
+        const resolvedEvents = await Promise.all(events);
+
+
+        return NextResponse.json({ status: 200, events: resolvedEvents });
     } catch (error) {
         console.error("Error fetching job events:", error);
         return NextResponse.json({ status: 404, file: __filename, error: error.message || error });

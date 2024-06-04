@@ -10,11 +10,13 @@ import TestMethodDescriptionModal from "@/components/TestMethodDescriptionModal"
 import ItemInformationModal from "@/components/ItemInformationModal";
 import AddCommentModal from "@/components/AddCommentModal";
 import JobRetakeForm from "./JobRetakeForm.js";
+import { useRouter } from 'next/navigation'
 
 
 
 const Page = ({ searchParams }) => {
     const job_id = searchParams.job_id
+    const router = useRouter();
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading } = useFetchJobValue(job_id, refresh);
     const [isShowJobInfo, setIsShowJobInfo] = useState(true);
@@ -85,9 +87,6 @@ const Page = ({ searchParams }) => {
             }
         });
 
-        console.log(comments);
-        console.log(actualValues);
-
         try {
             const response = await fetch(`${config.host}/api/job/job-retake`, {
                 method: 'PUT',
@@ -101,22 +100,32 @@ const Page = ({ searchParams }) => {
                 })
             });
             const data = await response.json();
-            if (data.status === 200) {
+            console.log(data.status)
+            if (data.status === 455) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "This job is not the latest revision Check the latest revision number and try again!",
+                    icon: "error"
+                });
+            }
+            else {
                 Swal.fire({
                     title: 'Success',
                     text: data.message,
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then(() => {
+                    // Replace the current URL in the browser's history with the dashboard URL
+                    window.history.replaceState({}, '', '/pages/dashboard');
+
+                    // Redirect to the dashboard page
+                    if (router) {
+                        router.push('/pages/dashboard');
+                    }
+                    // Trigger a refresh
                     setRefresh(!refresh);
                 });
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: data.error,
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
+
             }
         } catch (error) {
             console.error('Error:', error);

@@ -164,17 +164,24 @@ const Page = ({searchParams}) => {
                 body: JSON.stringify(body)
             });
 
-            if (!response.ok) {
-                console.log("Error:", response.statusText);
+            const data = await response.json();
+            console.log(data.status)
+            if (data.status === 455) {
+                Swal.fire({
+                    title: "Error!",
+                    text: "This job is not the latest revision Check the latest revision number and try again!",
+                    icon: "error"
+                });
+            }
+            else {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Job updated successfully!",
+                    icon: "success"
+                });
             }
 
-            Swal.fire({
-                title: "Good job!",
-                text: "You have submit the form!",
-                icon: "success"
-            });
-
-
+        
             e.target.reset();
             setRefresh((prev) => (!prev));
         } catch (err) {

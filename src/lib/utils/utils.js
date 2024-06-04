@@ -120,3 +120,19 @@ export const convertKeyToDate = async (uniqueKey) => {
   
   return date;
 }
+
+
+
+export const getRevisionNo = async () => {
+  try {
+    const res = await fetch("https://wdcdagilesdk.oracleoutsourcing.com/AgileDocumentViewer/DocAttachmentServlet?&docDesc=&docType=&docCategory=&productName=&businessUnit=&classification=&affectedSite=&affectedAreas=&docOwner=&xmlFlag=searchCriteria&docNum=80-020231-003");
+    const data = await res.json();
+    return data[0].Revision
+  }
+  catch (err) {
+    console.error("Error occurred:", err); // Log the error
+    return { message: "Error occurred while fetching data" };
+  }
+}
+
+    

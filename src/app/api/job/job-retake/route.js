@@ -15,14 +15,20 @@ import { JobItem } from "@/lib/models/JobItem";
 import { Status } from "@/lib/models/Status";
 import { NextResponse } from 'next/server';
 import { connectToDb } from "@/app/api/mongo/index.js";
+import { getRevisionNo } from "@/lib/utils/utils";
 
 export const PUT = async (req, res) => {
     await connectToDb();
     const body = await req.json();
     const { jobID, actualValue, comment } = body;
-    console.log(jobID, actualValue, comment);
     try {
         const job = await Job.findOne({ _id: jobID });
+        const latestDocNo = await getRevisionNo();
+        if (job.CHECKLIST_VERSION !== latestDocNo) {
+            console.log("This job is not the latest revision")
+            return NextResponse.json({ status: 455, message: "This job is not the latest revision" });
+        }
+
         const status = await Status.findOne({ status_name: "waiting for approval" });
         job.JOB_STATUS_ID = status._id;
         await job.save();

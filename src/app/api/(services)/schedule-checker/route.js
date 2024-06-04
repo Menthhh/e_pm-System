@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 import { Status } from "@/lib/models/Status";
 import { addHours, addDays, addMonths } from 'date-fns';
 import { connectToDb } from "@/app/api/mongo/index.js";
+import { getRevisionNo } from "@/lib/utils/utils";
 
 const convertTimeout = async (timeout, createdAt) => {
     const startDate = new Date(createdAt);
@@ -33,10 +34,12 @@ export const GET = async (req, res) => {
     await connectToDb();
 
     try {
+        const currentRevisionNumber = await getRevisionNo();
         const currentTime = new Date();
         //human readable date
         console.log("-----------------------------------------------------------")
         console.log("Checking for overdue jobs: ", currentTime.toLocaleString());
+        console.log("Current Revision Number: ", currentRevisionNumber);
         console.log("-----------------------------------------------------------")
         const jobs = await Job.find();
         const now = new Date();

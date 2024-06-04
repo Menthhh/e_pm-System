@@ -62,15 +62,27 @@ export const GET = async (req, res) => {
         }));
         
         if (statusName === "renew") {
-            const jobApprove = await JobApproves.findOne({ "JOB._id": JobID });
-            if (jobApprove) {
-                const commentor = await User.findOne({ _id: jobApprove.USER_ID });
-                jobData.comment = jobApprove.COMMENT;
+            // const jobApprove = await JobApproves.findOne({ "JOB._id": JobID });
+            // if (jobApprove) {
+            //     const commentor = await User.findOne({ _id: jobApprove.USER_ID });
+            //     jobData.comment = jobApprove.COMMENT;
+            //     jobData.commentator = commentor.EMP_NAME;
+            //     jobData.commentAt = jobApprove.createdAt.toLocaleString();
+            // } else {
+            //     console.log('JobApproves document not found');
+            // }
+
+            // I want to find the JobApproves that is the latest one 
+            const jobApprove = await JobApproves.find({ "JOB._id": JobID }).sort({ createdAt: -1 }).limit(1);
+            if (jobApprove.length > 0) {
+                const commentor = await User.findOne({ _id: jobApprove[0].USER_ID });
+                jobData.comment = jobApprove[0].COMMENT;
                 jobData.commentator = commentor.EMP_NAME;
-                jobData.commentAt = jobApprove.createdAt.toLocaleString();
+                jobData.commentAt = jobApprove[0].createdAt.toLocaleString();
             } else {
                 console.log('JobApproves document not found');
             }
+
         }
         
 
