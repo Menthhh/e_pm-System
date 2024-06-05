@@ -7,7 +7,7 @@ const useFetchUser = (refresh = null) => {
     const [user, setUser] = useState({});
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
-    
+
 
     useEffect(() => {
         const fetchUser = async (user_id) => {
@@ -33,9 +33,10 @@ const useFetchUser = (refresh = null) => {
             fetchUser(session.user_id);
         }
 
-    }, [sessionLoading, refresh, session]);
+    }, [refresh, session]);
 
     return { user, isLoading, error };
 }
 
 export default useFetchUser;
+

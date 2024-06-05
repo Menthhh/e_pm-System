@@ -1,3 +1,4 @@
+'use client'
 import { config } from "@/config/config.js";
 import { useEffect, useState } from "react";
 

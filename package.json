@@ -42,6 +42,7 @@
     "react-hook-form": "^7.51.3",
     "react-html5-camera-photo": "^1.5.11",
     "react-select": "^5.8.0",
+    "react-spinners": "^0.13.8",
     "react-style-text": "^0.2.8",
     "react-type-animation": "^3.2.0",
     "react-webcam": "^7.2.0",

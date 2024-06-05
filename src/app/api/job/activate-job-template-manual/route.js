@@ -13,13 +13,16 @@ import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const POST = async (req, res) => {
     await connectToDb();
+    console.log("req", req);
     const body = await req.json();
     const {
         JobTemplateID,
         ACTIVATER_ID,
         JobTemplateCreateID,
     } = body;
+
     try {
+
         //1 create job
         //1.1 find job template where jobtemplateid = jobtemplateid and jobtemplatecreateid = jobtemplatecreateid
         const jobTemplate = await JobTemplate.findOne({ _id: JobTemplateID, JobTemplateCreateID: JobTemplateCreateID });
@@ -48,7 +51,6 @@ export const POST = async (req, res) => {
             TIMEOUT: jobTemplate.TIMEOUT,
         });
         await job.save();
-        console.log("Job", job)
 
         //2 update to jobtemplateactivate
         const jobTemplateActivate = new JobTemplateActivate({
@@ -82,7 +84,6 @@ export const POST = async (req, res) => {
 
 
             const currentJobItems = await JobItem.find({ JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id });
-            console.log("currentJobItems", currentJobItems); 
 
             // if there is no job item yet
             if (currentJobItems.length === 1) {

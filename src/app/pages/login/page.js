@@ -1,7 +1,7 @@
 import LoginForm from "@/components/LoginForm";
 
 
-const Home = () => {
+const Home =  () => {
 
   return (
      <LoginForm />

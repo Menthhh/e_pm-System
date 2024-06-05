@@ -25,11 +25,21 @@ import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { Status } from "@/lib/models/Status";
 import { connectToDb } from "@/app/api/mongo/index.js";
+import { Schedule } from "@/lib/models/Schedule.js";
+
+// import mongoose from 'mongoose';
+
+// const scheduleSchema = new mongoose.Schema({
+//     JOB_TEMPLATE_ID : { type: mongoose.Schema.Types.ObjectId, ref: 'JobTemplate', required: true },
+//     ACTIVATE_DATE: { type: Date, required: true },
+// }, { timestamps: true });
+
+// export const Schedule = mongoose.models?.Schedule || mongoose.model('Schedule', scheduleSchema);
 
 export const POST = async (req, res) => {
     await connectToDb();
     const body = await req.json();
-    
+
     const {
         activationDate,
         recurrence,
@@ -38,90 +48,35 @@ export const POST = async (req, res) => {
         ACTIVATER_ID,
         endDate,
     } = body;
-    
+
     try {
-        // Find the job template
-        const jobTemplate = await JobTemplate.findOne({ _id: jobTemplateID, JobTemplateCreateID: jobTemplateCreateID });
+        console.log(jobTemplateCreateID)
+        // // Find the job template
+        const jobTemplate = await JobTemplate.findOne({ _id: jobTemplateID });
         if (!jobTemplate) {
             return NextResponse.json({ status: 404, file: __filename, error: "Job template not found" });
         }
-
-        // Find the approvers
-        const approvers = await Approves.find({ JOB_TEMPLATE_ID: jobTemplateID, JobTemplateCreateID: jobTemplateID });
-        if (!approvers) {
-            return NextResponse.json({ status: 404, file: __filename, error: "Approvers not found" });
-        }
-
-        // Find the plan status
-        const planID = await Status.findOne({ status_name: "plan" });
-        if (!planID) {
-            return NextResponse.json({ status: 404, file: __filename, error: "Status not found" });
-        }
-
-        // Calculate the end date based on the recurrence type
+ 
+        // // Calculate the end date based on the recurrence type
         let endDateObj;
         if (recurrence && endDate) {
             endDateObj = new Date(endDate); // Convert endDate to a Date object
         }
 
-        // Activate jobs until the end date based on the recurrence type
+        // // Activate jobs until the end date based on the recurrence type
         let currentDate = new Date(activationDate);
         while (!endDateObj || currentDate <= endDateObj) {
-            // Create a new job
+            //     // Create a new job
             const AdvanceActivationDate = new Date(currentDate);
-            const job = new Job({
-                JOB_NAME: jobTemplate.JOB_TEMPLATE_NAME,
-                JOB_STATUS_ID: planID._id,
-                DOC_NUMBER: jobTemplate.DOC_NUMBER,
-                CHECKLIST_VERSION: jobTemplate.CHECKLIST_VERSION,
-                WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
-                ACTIVATE_USER: ACTIVATER_ID,
-                JOB_APPROVERS: approvers.map((approver) => approver.USER_ID),
-                TIMEOUT: jobTemplate.TIMEOUT,
-                createdAt: AdvanceActivationDate
+            const schedule = new Schedule({
+                JOB_TEMPLATE_ID: jobTemplateID,
+                JOB_TEMPLATE_CREATE_ID: jobTemplateCreateID,
+                JOB_TEMPLATE_NAME: jobTemplate.JOB_TEMPLATE_NAME,
+                ACTIVATE_DATE: AdvanceActivationDate,
             });
-            await job.save();
 
-            // Update job template activate
-            const jobTemplateActivate = new JobTemplateActivate({
-                JobTemplateID: jobTemplate._id,
-                JobTemplateCreateID: jobTemplateCreateID,
-                JOB_ID: job._id,
-                RECURRING_TYPE: recurrence,
-                createdAt: AdvanceActivationDate
-            });
-            await jobTemplateActivate.save();
-
-            // Create job items
-            const jobItemTemplates = await JobItemTemplate.find({ JOB_TEMPLATE_ID: jobTemplateID});
-            if (!jobItemTemplates) {
-                return NextResponse.json({ status: 404, file: __filename, error: "Job item templates not found" });
-            }
-
-            await Promise.all(jobItemTemplates.map(async (jobItemTemplate) => {
-                const jobItem = new JobItem({
-                    JOB_ID: job._id,
-                    JOB_ITEM_TITLE: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
-                    JOB_ITEM_NAME: jobItemTemplate.JOB_ITEM_TEMPLATE_NAME,
-                    UPPER_SPEC: jobItemTemplate.UPPER_SPEC,
-                    LOWER_SPEC: jobItemTemplate.LOWER_SPEC,
-                    TEST_METHOD: jobItemTemplate.TEST_METHOD,
-                    TEST_LOCATION_ID: jobItemTemplate.TEST_LOCATION_ID,
-                    JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
-                    createdAt: AdvanceActivationDate
-                });
-                await jobItem.save();
-
-                // Update job item template activate
-                const jobItemTemplateActivate = new JobItemTemplateActivate({
-                    JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
-                    JobItemTemplateCreateID: jobItemTemplate.JobItemTemplateCreateID,
-                    JOB_ITEM_ID: jobItem._id,
-                    createdAt: AdvanceActivationDate
-                });
-                await jobItemTemplateActivate.save();
-            }));
-
+            console.log("Schedule", schedule)   
+            await schedule.save();
             // Increment currentDate based on the recurrence type
             if (recurrence === 'daily') {
                 currentDate.setDate(currentDate.getDate() + 1); // Add one day for daily recurrence
@@ -135,6 +90,7 @@ export const POST = async (req, res) => {
                 break; // If recurrence type is not specified or invalid, exit the loop
             }
         }
+
 
         return NextResponse.json({ status: 200, message: 'Jobs activated successfully' });
     } catch (err) {

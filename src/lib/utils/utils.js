@@ -2,7 +2,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { config } from "../../config/config.js";
+import { config } from "@/config/config";
 
 
 const secretKey = process.env.SECRET_KEY;
@@ -132,6 +132,28 @@ export const getRevisionNo = async () => {
   catch (err) {
     console.error("Error occurred:", err); // Log the error
     return { message: "Error occurred while fetching data" };
+  }
+}
+
+export const ActivateJobTemplate = async (body) => {
+  try {
+    const res = await fetch(`${config.host}/api/job/activate-job-template-manual`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        JobTemplateID: body.JobTemplateID,
+        ACTIVATER_ID: body.ACTIVATER_ID,
+        JobTemplateCreateID: body.JobTemplateCreateID,
+      }),
+    });
+    const data = await res.json();
+    return data;
+  }
+  catch (err) {
+    console.error("Error occurred:", err); // Log the error
+    return { message: "Error occurred while activating job template" };
   }
 }
 

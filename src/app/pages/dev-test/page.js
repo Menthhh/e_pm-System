@@ -1,184 +1,37 @@
-import "./
+'use client'
 
 const Page = () => {
 
+  function onSubmit() {
+    alert('trye to send email..');
+    fetchData();
+  }
+
+  async function fetchData() {
+    try {
+      let usrsparams = "?mailto=tonkla.pokaew@wdc.com";
+      usrsparams += "&subject=epm_test";
+      usrsparams += "&body=Hello World";
+      usrsparams += "&mailsender=epm-system@wdc.com";
+      usrsparams += "&cc=";
+      usrsparams += "&namesender=epm-system@wdc.com";
+      const response = await fetch('http://172.17.70.201/tme/api/email_send.php' + usrsparams);
+      const data = await response.json();
+      console.log(data);
+      alert('Sent email Done');
+    } catch (error) {
+      console.error('Error:', error);
+      alert(error.message);
+    }
+  }
+
   return (
-    <>
-      <div class="container">
+    <div style={{ padding: '30px' }}>
+      <h3 className='pl-6'> Email Test Sender</h3>
+      <hr></hr>
+      <button style={{ paddingLeft: '10px', border: '1px solid red' }} onClick={onSubmit}>Click</button>
+    </div>
 
-        <div class="h1Container">
-
-          <div class="cube h1 w1 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w1 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w1 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w2 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w2 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w2 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w3 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w3 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h1 w3 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-        </div>
-
-        <div class="h2Container">
-
-          <div class="cube h2 w1 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w1 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w1 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w2 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w2 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w2 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w3 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w3 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h2 w3 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-        </div>
-
-        <div class="h3Container">
-
-          <div class="cube h3 w1 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w1 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w1 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w2 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w2 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w2 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w3 l1">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w3 l2">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-
-          <div class="cube h3 w3 l3">
-            <div class="face top"></div>
-            <div class="face left"></div>
-            <div class="face right"></div>
-          </div>
-        </div>
-
-      </div>
-    </>
   );
 };
 

@@ -11,7 +11,7 @@ const jobsActiveHeader = [
     "Action"
 ]
 
-const JobsTable = ({ refresh }) => {
+const JobsTable = async ({ refresh }) => {
     const { jobs, isLoading: jobsLoading } = useFetchJobs(refresh);
     
 
@@ -26,7 +26,7 @@ const JobsTable = ({ refresh }) => {
             "Status": (
                 <div
                     style={{ backgroundColor: statusColor }}
-                    className="py-1 w-[200px] rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm flex justify-center items-center px-5"
+                    className="py-1  rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm flex justify-center items-center px-6"
                 >
                     {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
                 </div>

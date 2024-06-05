@@ -1,7 +1,7 @@
 'use client'
 import { useEffect } from 'react';
 
-const WebcamEditted = () => {
+const Camera = () => {
     let newWindow;
     const handleClick = (data) => {
         alert('Path Picture from Uploader :: ' + data);
@@ -48,4 +48,4 @@ const WebcamEditted = () => {
     );
 };
 
-export default WebcamEditted;
+export default Camera;
