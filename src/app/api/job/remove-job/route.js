@@ -5,6 +5,7 @@ import { JobItemTemplateActivate } from "@/lib/models/AE/JobItemTemplateActivate
 import { Job } from "@/lib/models/Job.js";
 import { JobItem } from "@/lib/models/JobItem.js";
 import { connectToDb } from "@/app/api/mongo/index.js";
+import { Schedule } from '@/lib/models/Schedule.js';
 
 export const DELETE = async (req, res) => {
     await connectToDb();
@@ -12,9 +13,18 @@ export const DELETE = async (req, res) => {
     const { job_id } = body;
 
     try {
+        console.log("job_id", job_id);
+        // find if it exist in schedule
+        const schedule = await Schedule.findOne({ JOB_TEMPLATE_ID: job_id });
+        if (schedule) {
+            //then remove from schedule
+            console.log("schedule", schedule)
+            await Schedule.findOneAndDelete({ JOB_TEMPLATE_ID: job_id });
+            return NextResponse.json({ status: 200 });
+        }
+
         const jobTemplateActivate = await JobTemplateActivate.findOneAndDelete({ JOB_ID: job_id });
-        
-        //find list of job_item_id from job_item where job_id = job_id
+
         const jobItems = await JobItem.find({ JOB_ID: job_id });
         //remove all job_item_template_activate where job_item_id equals to job_item_id
         jobItems.forEach(async (jobItem) => {

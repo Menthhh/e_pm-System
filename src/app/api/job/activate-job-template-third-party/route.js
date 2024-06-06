@@ -9,6 +9,9 @@ import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { config } from "@/config/config.js";
 import { Status } from "@/lib/models/Status";
 import { connectToDb } from "@/app/api/mongo/index.js";
+import { Workgroup } from '@/lib/models/Workgroup';
+import { User } from '@/lib/models/User';
+import { sendEmails } from '@/lib/utils/utils';
 
 export const GET = async (req, res) => {
     await connectToDb();
@@ -46,7 +49,6 @@ export const GET = async (req, res) => {
             TIMEOUT: jobTemplate.TIMEOUT,
         });
         await job.save();
-        console.log("Job", job)
 
         //2 update to jobtemplateactivate
         const jobTemplateActivate = new JobTemplateActivate({
@@ -80,7 +82,6 @@ export const GET = async (req, res) => {
 
 
             const currentJobItems = await JobItem.find({ JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id });
-            console.log("currentJobItems", currentJobItems);
 
             // if there is no job item yet
             if (currentJobItems.length === 1) {
@@ -114,7 +115,24 @@ export const GET = async (req, res) => {
             await jobItemTemplateActivate.save();
         }));
 
-        const link = `${config.host}/api/job/get-job-value?job_id=${job._id}`;
+        const link = `${config.host}api/job/get-job-value?job_id=${job._id}`;
+
+        const workgroup = await Workgroup.findOne({ _id: jobTemplate.WORKGROUP_ID });
+        const userlist = workgroup ? workgroup.USER_LIST : [];
+    
+        const userEmails = await Promise.all(userlist.map(async (user) => {
+            const use = await User.findOne({ _id: user });
+            return use.EMAIL;
+        }));
+        
+        const activater = "Third Party"
+        const jobData = {
+            name: job.JOB_NAME,
+            activatedBy: activater,
+            timeout: job.TIMEOUT,
+        };
+        await sendEmails(userEmails, jobData);  
+
         return NextResponse.json({ status: 200, JobID: job._id, ToSeeData: link});
     } catch (err) {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });

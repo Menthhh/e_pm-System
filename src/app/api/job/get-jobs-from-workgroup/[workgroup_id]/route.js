@@ -1,43 +1,18 @@
-
 import { Job } from "@/lib/models/Job";
 import { NextResponse } from 'next/server';
 import { User } from "@/lib/models/User";
 import { Status } from "@/lib/models/Status";
-import { addHours, addDays, addMonths } from 'date-fns';
 import { connectToDb } from "@/app/api/mongo/index.js";
-
-const convertTimeout = async (timeout, createdAt) => {
-    const startDate = new Date(createdAt);
-    switch (timeout) {
-        case "12 hrs":
-            return addHours(startDate, 12);
-        case "1 days":
-            return addDays(startDate, 1);
-        case "7 days":
-            return addDays(startDate, 7);
-        case "15 days":
-            return addDays(startDate, 15);
-        case "30 days":
-            return addDays(startDate, 30);
-        case "3 months":
-            return addMonths(startDate, 3);
-        case "6 months":
-            return addMonths(startDate, 6);
-        case "12 months":
-            return addMonths(startDate, 12);
-        default:
-            return addHours(startDate, 12);
-    }
-}
+import { Schedule } from "@/lib/models/Schedule.js";
 
 export const GET = async (req, { params }) => {
     await connectToDb();
     const { workgroup_id } = params;
     try {
         const jobs = await Job.find({ WORKGROUP_ID: workgroup_id });
-        const now = new Date();
+        //job template's schedule workgroup_id must be equal to workgroup_id
+        const schedules = await Schedule.find({ WORKGROUP_ID: workgroup_id });
 
-        const overdueStatus = await Status.findOne({ status_name: 'overdue' });
 
         const activaterPromises = jobs.map(async (job) => {
             const user = await User.findOne({ _id: job.ACTIVATE_USER });
@@ -46,30 +21,44 @@ export const GET = async (req, { params }) => {
             const statusName = status?.status_name || 'Unknown';
             const statusColor = status?.color || 'Unknown';
 
-            const jobCreationTime = new Date(job.createdAt);
-            const jobExpiryTime = await convertTimeout(job.TIMEOUT, job.createdAt);
-
-            if (now > jobExpiryTime && statusName !== 'overdue' && statusName !== 'complete') {
-                job.JOB_STATUS_ID = overdueStatus._id;
-                await job.save();
-            }
-
-            //change if job status is plan and its created date is equal to today date then change status to new
-            if (statusName === 'plan' && jobCreationTime.toDateString() === now.toDateString()) {
-                const newStatus = await Status.findOne({ status_name: 'new' });
-                job.JOB_STATUS_ID = newStatus._id;
-                await job.save();
-            }
-
             return {
                 ...job.toObject(),
                 ACTIVATER_NAME: activaterName,
-                STATUS_NAME: statusName === 'overdue' ? 'overdue' : statusName,
+                STATUS_NAME: statusName,
                 STATUS_COLOR: statusColor
             };
         });
 
-        let jobsWithActivater = await Promise.all(activaterPromises);
+        const schedulePromises = schedules.map(async (schedule) => {
+            const status = await Status.findOne({ status_name: schedule.STATUS });
+            const statusColor = status?.color || 'Unknown';
+
+            return {
+                _id: schedule.JOB_TEMPLATE_ID,
+                REVIEWS: "",
+                WD_TAG: "",
+                JOB_STATUS_ID: "",
+                JOB_APPROVERS: [],
+                JOB_NAME: schedule.JOB_TEMPLATE_NAME,
+                DOC_NUMBER: schedule.DOC_NUMBER,
+                CHECKLIST_VERSION: "",
+                WORKGROUP_ID: "",
+                ACTIVATE_USER: "Scheduler",
+                TIMEOUT: "",
+                createdAt: new Date(schedule.ACTIVATE_DATE).toISOString(),
+                updatedAt: schedule.updatedAt,
+                ACTIVATER_NAME: "Scheduler",
+                STATUS_NAME: schedule.STATUS,
+                STATUS_COLOR: statusColor,
+                JOB_TEMPLATE_CREATE_ID: schedule.JOB_TEMPLATE_CREATE_ID,
+                JOB_TEMPLATE_NAME: schedule.JOB_TEMPLATE_NAME,
+                ACTIVATE_DATE: schedule.ACTIVATE_DATE,
+                SCHEDULE_STATUS: schedule.STATUS,
+            };
+        });
+
+        const combinedPromises = [...activaterPromises, ...schedulePromises];
+        let jobsWithActivater = await Promise.all(combinedPromises);
 
         jobsWithActivater.sort((a, b) => {
             return new Date(b.updatedAt) - new Date(a.updatedAt);

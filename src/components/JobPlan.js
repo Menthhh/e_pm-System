@@ -35,6 +35,7 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
         let nextDate;
 
         if (dateType === 'dayOfWeek') {
+            console.log(selectedDayOfWeek)
             nextDate = getNextDayOfWeek(selectedDayOfWeek);
         } else if (dateType === 'dayOfMonth') {
             nextDate = getNextDayOfMonth(selectedDayOfMonth);
@@ -193,6 +194,7 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
                                 value={selectedDayOfWeek}
                                 onChange={(e) => setSelectedDayOfWeek(e.target.value)}
                             >
+                            <option value="" disabled>Select Day of the Week</option>
                                 <option value="monday">Monday</option>
                                 <option value="tuesday">Tuesday</option>
                                 <option value="wednesday">Wednesday</option>
@@ -214,6 +216,7 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
                                 value={selectedDayOfMonth}
                                 onChange={(e) => setSelectedDayOfMonth(e.target.value)}
                             >
+                            <option value="" disabled>Select Day of the Month</option>
                                 {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
                                     <option key={day} value={day}>{day}</option>
                                 ))}

@@ -50,32 +50,31 @@ export const POST = async (req, res) => {
     } = body;
 
     try {
-        console.log(jobTemplateCreateID)
-        // // Find the job template
         const jobTemplate = await JobTemplate.findOne({ _id: jobTemplateID });
         if (!jobTemplate) {
             return NextResponse.json({ status: 404, file: __filename, error: "Job template not found" });
         }
- 
-        // // Calculate the end date based on the recurrence type
+
+        // Calculate the end date based on the recurrence type
         let endDateObj;
         if (recurrence && endDate) {
             endDateObj = new Date(endDate); // Convert endDate to a Date object
         }
 
-        // // Activate jobs until the end date based on the recurrence type
+        // Activate jobs until the end date based on the recurrence type
         let currentDate = new Date(activationDate);
+        console.log("currentDate", currentDate)
         while (!endDateObj || currentDate <= endDateObj) {
-            //     // Create a new job
+            // Create a new job
             const AdvanceActivationDate = new Date(currentDate);
             const schedule = new Schedule({
                 JOB_TEMPLATE_ID: jobTemplateID,
                 JOB_TEMPLATE_CREATE_ID: jobTemplateCreateID,
                 JOB_TEMPLATE_NAME: jobTemplate.JOB_TEMPLATE_NAME,
                 ACTIVATE_DATE: AdvanceActivationDate,
+                DOC_NUMBER: jobTemplate.DOC_NUMBER,
+                WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
             });
-
-            console.log("Schedule", schedule)   
             await schedule.save();
             // Increment currentDate based on the recurrence type
             if (recurrence === 'daily') {

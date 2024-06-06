@@ -5,13 +5,11 @@ export const POST = async (req, res) => {
     try {
         const { to, subject, text } = await req.json();
         const transporter = nodemailer.createTransport({
-            service: 'host',
-            host: 'smtp.gmail.com',
-            port: 587,
-            secure: false, // true for 465, false for other ports
-            auth: {
-                user: process.env.EMAIL_USER, // generated ethereal user
-                pass: process.env.EMAIL_PASSWORD, // generated ethereal password
+            host: 'mailrelay.wdc.com',
+            port: 25,
+            secure: false, // No authentication required
+            tls: {
+                rejectUnauthorized: false // Ignore expired certificates
             }
         });
 

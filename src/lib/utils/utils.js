@@ -26,7 +26,7 @@ export async function decrypt(input) {
 export async function login(prevState, formData) {
   const username = formData.get("username");
   const password = formData.get("password");
- 
+
 
   const res = await fetch(`${config.host}/api/auth/login`, {
     method: "POST",
@@ -49,7 +49,7 @@ export async function login(prevState, formData) {
     const path = routing(data.user.Role);
     redirect(path);
 
-  } else{
+  } else {
     return { message: "Wrong credential Please try again" };
   }
 }
@@ -107,8 +107,8 @@ export async function getSession() {
 
 
 export const generateUniqueKey = async () => {
-  const timestamp = Date.now().toString(16); 
-  const randomSuffix = Math.random().toString(16).substring(2); 
+  const timestamp = Date.now().toString(16);
+  const randomSuffix = Math.random().toString(16).substring(2);
   return `${timestamp}-${randomSuffix}`;
 }
 
@@ -117,7 +117,7 @@ export const convertKeyToDate = async (uniqueKey) => {
   const [timestampHex, randomSuffix] = uniqueKey.split('-');
   const timestamp = parseInt(timestampHex, 16);
   const date = new Date(timestamp);
-  
+
   return date;
 }
 
@@ -157,4 +157,31 @@ export const ActivateJobTemplate = async (body) => {
   }
 }
 
-    
+export async function sendEmails(emailList, job) {
+  const usrsparams = new URLSearchParams({
+    subject: "New CheckList Job activated",
+    body: `
+      You have a new checklist to do.
+      Please check the EPM system for more details.
+      Details:
+      name: ${job.name}
+      activated by: ${job.activatedBy}
+      timeout: ${job.timeout}
+      `,
+    mailsender: "epm-system@wdc.com",
+    cc: "",
+    namesender: "epm-system@wdc.com",
+  });
+
+  const emailString = emailList.join(",");
+  usrsparams.set("mailto", emailString);
+  console.log("Sending emails to:", emailString);
+
+  const response = await fetch(`http://172.17.70.201/tme/api/email_send.php?${usrsparams}`);
+
+  if (response.ok) {
+    console.log("Emails sent successfully");
+  } else {
+    console.error("Failed to send emails", response.statusText);
+  }
+}

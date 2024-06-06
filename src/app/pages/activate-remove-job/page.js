@@ -237,7 +237,6 @@ const Page = () => {
                     className="text-white text-[12px] bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none font-bold rounded-lg px-4 py-2 text-center ipadmini:text-sm"
                     href="#" onClick={() => handleRemove(job._id)}
                 >
-
                     Remove
                 </button>
 

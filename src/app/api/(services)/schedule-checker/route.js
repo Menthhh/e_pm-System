@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import { Status } from "@/lib/models/Status";
 import { addHours, addDays, addMonths } from 'date-fns';
 import { connectToDb } from "@/app/api/mongo/index.js";
-import { ActivateJobTemplate, getRevisionNo } from "@/lib/utils/utils";
+import { ActivateJobTemplate, getRevisionNo, sendEmails } from "@/lib/utils/utils";
 import { Schedule } from "@/lib/models/Schedule";
 import { User } from "@/lib/models/User";
 import { JobTemplate } from "@/lib/models/JobTemplate";
@@ -13,6 +13,7 @@ import { JobTemplateActivate } from "@/lib/models/AE/JobTemplateActivate";
 import { JobItem } from "@/lib/models/JobItem";
 import { JobItemTemplate } from "@/lib/models/JobItemTemplate";
 import { JobItemTemplateActivate } from "@/lib/models/AE/JobItemTemplateActivate";
+import { Workgroup } from "@/lib/models/Workgroup";
 
 
 const convertTimeout = async (timeout, createdAt) => {
@@ -50,7 +51,7 @@ const logText = async () => {
     console.log("-----------------------------------------------------------")
 }
 
-export const GET = async (req, res) => {
+export const POST = async (req, res) => {
     await connectToDb();
     // await logText();
 
@@ -186,6 +187,24 @@ export const GET = async (req, res) => {
                     });
                     await jobItemTemplateActivate.save();
                 }));
+
+                const workgroup = await Workgroup.findOne({ _id: jobTemplate.WORKGROUP_ID });
+                const userlist = workgroup ? workgroup.USER_LIST : [];
+            
+                const userEmails = await Promise.all(userlist.map(async (user) => {
+                    const use = await User.findOne({ _id: user });
+                    return use.EMAIL;
+                }));
+                
+                const activater = "Scheduler"
+                const jobData = {
+                    name: job.JOB_NAME,
+                    activatedBy: activater,
+                    timeout: job.TIMEOUT,
+                };
+                
+                await sendEmails(userEmails, jobData);  
+
                 await Schedule.deleteOne({ _id: jobTemplateSchedule._id });
             }
         })

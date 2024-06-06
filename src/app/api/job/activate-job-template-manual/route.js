@@ -9,11 +9,13 @@ import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
 import { JobTemplate } from "@/lib/models/JobTemplate.js";
 import { Status } from "@/lib/models/Status";
 import { connectToDb } from "@/app/api/mongo/index.js";
+import { sendEmails } from '@/lib/utils/utils';
+import { Workgroup } from '@/lib/models/Workgroup';
+import { User } from '@/lib/models/User';
 
 
 export const POST = async (req, res) => {
     await connectToDb();
-    console.log("req", req);
     const body = await req.json();
     const {
         JobTemplateID,
@@ -117,6 +119,22 @@ export const POST = async (req, res) => {
             await jobItemTemplateActivate.save();
         }));
 
+        const workgroup = await Workgroup.findOne({ _id: jobTemplate.WORKGROUP_ID });
+        const userlist = workgroup ? workgroup.USER_LIST : [];
+    
+        const userEmails = await Promise.all(userlist.map(async (user) => {
+            const use = await User.findOne({ _id: user });
+            return use.EMAIL;
+        }));
+        
+        const activater = await User.findOne({ _id: ACTIVATER_ID });
+        const jobData = {
+            name: job.JOB_NAME,
+            activatedBy: activater ? activater.EMP_NAME : null,
+            timeout: job.TIMEOUT,
+        };
+        await sendEmails(userEmails, jobData);  
+       
         return NextResponse.json({ status: 200, data: job });
     } catch (err) {
         return NextResponse.json({ status: 500, file: __filename, error: err.message });
