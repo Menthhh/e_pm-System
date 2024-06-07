@@ -13,6 +13,7 @@ const publicRoutes = [
 
 const developingRoutes = [
     "/pages/job-calendar",
+    "/pages/dev-test",
 ]
 
 const SA = {

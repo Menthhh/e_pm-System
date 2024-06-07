@@ -23,6 +23,12 @@ export const POST = async (req, res) => {
       TEAM: team
     });
 
+    //check EMP_NUMBER and USERNAME, and EMAIL if they already exist then return status 400 and its duplicate value, tell them which field is duplicate
+    const existing = await User.findOne({ $or: [{ EMP_NUMBER: emp_number }, { USERNAME: username }, { EMAIL: email }] });
+    if (existing) {
+      return NextResponse.json({ status: 400, message: 'User already exists', duplicateField: existing.EMP_NUMBER === emp_number ? 'EMP_NUMBER' : existing.USERNAME === username ? 'USERNAME' : 'EMAIL' });
+    }
+    
     await user.save();
     return NextResponse.json({ status: 200, message: 'User created successfully', user })
   } catch (err) {

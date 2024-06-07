@@ -14,16 +14,23 @@ export const GET = async (req, res) => {
     const searchParams = req.nextUrl.searchParams;
     const JobID = searchParams.get("job_id");
     try {
+        let machineName;
         const job = await Job.findOne({ _id: JobID });
+        if (!job) return NextResponse.json({ status: 404, message: "Checklist has been deleted already, or wrong ChecklistID" });
         const jobItems = await JobItem.find({ JOB_ID: JobID });
-        const machine = job.WD_TAG ? await Machine.findOne({ WD_TAG: job.WD_TAG }) : null;
-        const machineName = machine ? machine.MACHINE_NAME : null;
         const workgroup = await Workgroup.findOne({ _id: job.WORKGROUP_ID });
         const workgroupName = workgroup ? workgroup.WORKGROUP_NAME : null;
         const user = await User.findOne({ _id: job ? job.ACTIVATE_USER : null });
         const activatedBy = user ? user.EMP_NAME : null;
         const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
         const statusName = status ? status.status_name : null;
+
+        if (job.MACHINE_ID) {
+            const machine = await Machine.findOne({ _id: job.MACHINE_ID });
+            machineName = machine ? machine.MACHINE_NAME : null;
+        } else {
+            machineName = null;
+        }
 
         
             
@@ -55,6 +62,7 @@ export const GET = async (req, res) => {
                 "BeforeValue": jobItem.BEFORE_VALUE,
                 "ActualValue": jobItem.ACTUAL_VALUE,
                 "Comment": jobItem.COMMENT,
+                "RealTimeValue": jobItem.REAL_TIME_VALUE,
                 "TestLocationName": location ? location.LocationName : "",
                 "ExecuteDate": jobItem.EXECUTE_DATE,
                 "LastestUpdate": jobItem.updatedAt.toLocaleString(),
@@ -62,16 +70,6 @@ export const GET = async (req, res) => {
         }));
         
         if (statusName === "renew") {
-            // const jobApprove = await JobApproves.findOne({ "JOB._id": JobID });
-            // if (jobApprove) {
-            //     const commentor = await User.findOne({ _id: jobApprove.USER_ID });
-            //     jobData.comment = jobApprove.COMMENT;
-            //     jobData.commentator = commentor.EMP_NAME;
-            //     jobData.commentAt = jobApprove.createdAt.toLocaleString();
-            // } else {
-            //     console.log('JobApproves document not found');
-            // }
-
             // I want to find the JobApproves that is the latest one 
             const jobApprove = await JobApproves.find({ "JOB._id": JobID }).sort({ createdAt: -1 }).limit(1);
             if (jobApprove.length > 0) {

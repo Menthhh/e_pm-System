@@ -1,38 +1,113 @@
 'use client'
+import { useState, useEffect } from 'react';
+import mqtt from 'mqtt';
 
-const Page = () => {
+const MqttTestComponent = () => {
+  const [message, setMessage] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [client, setClient] = useState(null);
 
-  function onSubmit() {
-    alert('trye to send email..');
-    fetchData();
-  }
+  const topic_adrrees = '666285b06a66ee86fa3331ce';
+  const connectUrl = 'ws://172.17.70.201:9001'; 
+  const options = {
+    username: 'user1',
+    password: 'password'
+  };
+  const mqttClient = mqtt.connect(connectUrl, options);
 
-  async function fetchData() {
-    try {
-      let usrsparams = "?mailto=tonkla.pokaew@wdc.com";
-      usrsparams += "&subject=epm_test";
-      usrsparams += "&body=Hello World";
-      usrsparams += "&mailsender=epm-system@wdc.com";
-      usrsparams += "&cc=";
-      usrsparams += "&namesender=epm-system@wdc.com";
-      const response = await fetch('http://172.17.70.201/tme/api/email_send.php' + usrsparams);
-      const data = await response.json();
-      console.log(data);
-      alert('Sent email Done');
-    } catch (error) {
-      console.error('Error:', error);
-      alert(error.message);
+  useEffect(() => {
+    mqttClient.on('connect', () => {
+      console.log('Connected to MQTT broker');
+    });
+
+    mqttClient.on('error', (err) => {
+      console.error('Connection error: ', err);
+      mqttClient.end();
+    });
+
+    setClient(mqttClient);
+
+    return () => {
+      if (mqttClient) {
+        mqttClient.end();
+      }
+    };
+  }, []);
+
+  const handleSendMessage = () => {
+    if (client) {
+      client.publish(topic_adrrees, document.getElementById('display-name').value + " Say " + message);
+      console.log('Message sent: ', message);
     }
-  }
+  };
+
+
+  const handleClickSubscribe = () => {
+
+
+
+    mqttClient.subscribe(topic_adrrees, (err) => {
+      if (!err) {
+        console.log('Subscribed to ' + topic_adrrees);
+        document.getElementById('btn-connect').style.border = "1px solid green";
+        document.getElementById('btn-connect').disabled = true;
+
+        
+      } else {
+        console.error('Subscription error: ', err);
+      }
+    });
+  };
+  
+  mqttClient.on('message', (topic, message) => {
+    console.log("Topic: ", topic.toString());
+    console.log('Received message:', message.toString());
+    const receivedMessage = message.toString();
+  });
 
   return (
-    <div style={{ padding: '30px' }}>
-      <h3 className='pl-6'> Email Test Sender</h3>
-      <hr></hr>
-      <button style={{ paddingLeft: '10px', border: '1px solid red' }} onClick={onSubmit}>Click</button>
-    </div>
+    <div style={{ padding: '20px' }}>
+      <h1>Chat with mqtt protocol</h1>
+      <div style={{ padding: "5px" }}>
+        <label for="display-name">Topic &nbsp;: &nbsp;</label>
+        <input type="text" value={topic_adrrees}
+          placeholder="Enter topic"
+          style={{ border: "1px solid gray;", padding: "10px" }} /> &nbsp;&nbsp;&nbsp;&nbsp;
+        <button id='btn-connect' onClick={handleClickSubscribe} style={{ padding: '10px', border: "1px solid red" }}  >Subscrib</button>
 
+      </div>
+
+
+
+      <div style={{ padding: "5px" }}>
+
+        <label for="display-name">Name &nbsp;: &nbsp;</label>
+
+
+        <input type="text" value={displayName}
+          id='display-name'
+          onChange={displayName => setDisplayName(displayName.target.value)}
+          placeholder="Enter name"
+          style={{ border: "1px solid gray;", padding: "10px" }} /> &nbsp;&nbsp;&nbsp;&nbsp;
+
+      </div>
+
+      <div style={{ padding: "5px" }}>
+        <input
+          style={{ padding: '10px', border: '1px solid gray' }}
+          type="text"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          placeholder="Enter message"
+        />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <button onClick={handleSendMessage} style={{ padding: '10px', border: "1px solid red" }}>Send Message</button>
+      </div>
+
+
+      <hr></hr>
+      <div id="message-response"></div>
+    </div>
   );
 };
 
-export default Page;
+export default MqttTestComponent;

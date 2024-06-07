@@ -3,6 +3,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { config } from "@/config/config";
+import mqtt from 'mqtt';
 
 
 const secretKey = process.env.SECRET_KEY;
@@ -71,6 +72,13 @@ export async function register(prevState, formData) {
   const password = formData.get("password");
   const team = formData.get("team");
 
+  // Check if any field is empty
+  for (let [key, value] of formData.entries()) {
+    if (!value) {
+      return { message: "Please fill all the fields", status: 400 };
+    }
+  }
+
   const res = await fetch(`${config.host}/api/auth/register`, {
     method: "POST",
     headers: {
@@ -86,12 +94,16 @@ export async function register(prevState, formData) {
     }),
   });
   const data = await res.json();
-  if (data.status === 500) {
-    return { message: data.error };
-  }
-  redirect("/pages/login")
 
+  if (data.status === 500) {
+    return { message: data.error, status: data.status };
+  } else if (data.status === 400) {
+    return { message: `${data.duplicateField} already exists`, status: data.status };
+  } else {
+    return { message: "User created successfully", status: 200 };
+  }
 }
+
 
 export async function logout() {
   console.log("logging out")
@@ -185,3 +197,21 @@ export async function sendEmails(emailList, job) {
     console.error("Failed to send emails", response.statusText);
   }
 }
+
+
+export const qtSubscribe = (topic_adrrees) => {
+  const connectUrl = 'ws://172.17.70.201:9001';
+  const options = {
+    username: 'user1',
+    password: 'password'
+  };
+  const mqttClient = mqtt.connect(connectUrl, options);
+  console.log("topic_adrrees: ", topic_adrrees);
+  mqttClient.subscribe(topic_adrrees, (err) => {
+    if (!err) {
+      console.log('Subscribed to ' + topic_adrrees);
+    } else {
+      console.error('Subscription error: ', err);
+    }
+  });
+};

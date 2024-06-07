@@ -9,9 +9,16 @@ export const PUT = async (req, res) => {
     const { JOB_ID } = body;
     try {
         const job = await Job.findOne({ _id: JOB_ID });
+        const jobStatus = await Status.findOne({ _id: job.JOB_STATUS_ID });
+        const jobStatusName = jobStatus.status_name;
         const ongoing_status = await Status.findOne({ status_name: 'ongoing' });
-        job.JOB_STATUS_ID = ongoing_status._id;
-        await job.save();
+
+        // Update the job status to ongoing if the current status is new
+        if (jobStatusName === 'new') {
+            job.JOB_STATUS_ID = ongoing_status._id;
+            await job.save();
+        }
+
         return NextResponse.json({ status: 200 });
     } catch (err) {
         console.error("Error occurred:", err); // Log the error

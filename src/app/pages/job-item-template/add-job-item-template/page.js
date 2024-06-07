@@ -10,21 +10,26 @@ import useFetchTestLocations from "@/lib/hooks/useFetchTestLocations";
 import Select from 'react-select';
 import { useState } from "react";
 import Link from "next/link";
+import AddIcon from "@mui/icons-material/Add";
+import ErrorIcon from "@mui/icons-material/Error";
+import Image from "next/image";
 
 
-const jobItemTemplateHeader = ["ID", "Title",  "Upper Spec", "Lower Spec", "Test Method", "Create At", "Action"];
+const jobItemTemplateHeader = ["ID", "Title", "Upper Spec", "Lower Spec", "Test Method", "Create At", "Action"];
 const enabledFunction = {
     "add-job-item-template": "6638600dd81a314967236df5",
     "remove-job-item-template": "66386025d81a314967236df7",
 };
 
-const Page = ({searchParams}) => {
+const Page = ({ searchParams }) => {
     const jobTemplate_id = searchParams.jobTemplate_id
     const [refresh, setRefresh] = useState(false);
     const { jobItemTemplates, isLoading: jobItemTemplatesLoading } = useFetchJobItemTemplates(jobTemplate_id, refresh);
     const { user, isLoading: userLoading } = useFetchUser(refresh);
     const { jobTemplate, isLoading: jobTemplateLoading } = useFetchJobTemplate(jobTemplate_id, refresh);
     const { locations, isLoading: locationsLoading } = useFetchTestLocations(refresh);
+
+    const [selectedFile, setSelectedFile] = useState(null);
 
 
     const jobItemTemplateBody = jobItemTemplates.map((jobItemTemplate, index) => {
@@ -39,16 +44,17 @@ const Page = ({searchParams}) => {
             Action: (
                 <div className="flex items-center justify-center gap-2">
                     <Link
-                    className="text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center
+                        className="text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center
                     bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    href={{
-                        pathname: "/pages/edit-job-item-template",
-                        query: { jobItemTemplate_id: jobItemTemplate._id,
-                            jobTemplate_id: jobTemplate_id,
-                         },
-                    }}
+                        href={{
+                            pathname: "/pages/edit-job-item-template",
+                            query: {
+                                jobItemTemplate_id: jobItemTemplate._id,
+                                jobTemplate_id: jobTemplate_id,
+                            },
+                        }}
                     >
-                    Edit
+                        Edit
                     </Link>
                     <button
                         className={`text-white font-bold rounded-lg text-sm px-2 py-2.5 text-center 
@@ -99,7 +105,7 @@ const Page = ({searchParams}) => {
     };
 
     const handleRemove = async (jobItemTemplate_id) => {
-        
+
         try {
             const response = await fetch(`${config.host}/api/job-item-template/remove-job-item-template`, {
                 method: "DELETE",
@@ -124,7 +130,49 @@ const Page = ({searchParams}) => {
                 <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {jobTemplate.JOB_TEMPLATE_NAME} </h1>
                 <h1 className="text-1xl font-semibold">Add Item to Job Template</h1>
             </div>
-            <form onSubmit={HandleSubmit}>
+            <form onSubmit={HandleSubmit} className="flex flex-col justify-center gap-8">
+                <div className="flex flex-col gap-4 justify-center items-center w-full ">
+                    <div
+                        id="fileInputDropzone"
+                        className=" rounded-2xl h-[202px] border-2 border-[#4398E7] flex justify-center items-center bg-white w-1/6"
+                    >
+                        <input
+                            id="fileInput" // Add an id to the file input
+                            className="absolute mx-auto my-auto h-full w-full opacity-0 cursor-pointer"
+                        />
+
+                        <div className="flex flex-col justify-center items-center">
+                            {selectedFile ? (
+                                <Image
+
+                                    alt="selected"
+                                    width={100}
+                                    height={100}
+                                />
+                            ) : (
+                                <>
+                                    <Image
+                                        src="/assets/images/image.png"
+                                        alt="plus"
+                                        width={50}
+                                        height={50}
+                                    />
+                                    <h1 className="text-secondary">วางไฟล์รูปภาพเพื่ออัปโหลด</h1>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                    <button
+                        className="bg-[#347EC2] text-white px-4 py-2 rounded-lg drop-shadow-lg hover:bg-[#4398E7] hover:text-white"
+                        type="button"
+                        onClick={() => document.querySelector('input[type="file"]')?.click()}
+                    >
+                        <div className="flex justify-center items-center gap-2">
+                            <AddIcon />
+                            <p>เพิ่มรูปภาพ</p>
+                        </div>
+                    </button>
+                </div>
                 <div className="grid gap-6 mb-6 md:grid-cols-3">
                     <div>
                         <label
@@ -242,8 +290,6 @@ const Page = ({searchParams}) => {
                             isSearchable={true}
 
                         />
-                            
-        
 
                     </div>
 
@@ -258,7 +304,6 @@ const Page = ({searchParams}) => {
                 >
                     Add Job Item Template
                 </button>
-
             </form>
 
             <TableComponent

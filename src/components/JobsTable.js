@@ -1,3 +1,4 @@
+'use client'
 import useFetchJobs from "@/lib/hooks/useFetchJobs.js";
 import TableComponent from "./TableComponent";
 import Link from "next/link";
@@ -11,7 +12,7 @@ const jobsActiveHeader = [
     "Action"
 ]
 
-const JobsTable = async ({ refresh }) => {
+const JobsTable = ({ refresh }) => {
     const { jobs, isLoading: jobsLoading } = useFetchJobs(refresh);
     
 

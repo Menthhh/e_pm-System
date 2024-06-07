@@ -1,21 +1,23 @@
-"use client";
+"use client"
 import Layout from "@/components/Layout.js";
 import useFetchJobValue from "@/lib/hooks/useFetchJobValue";
 import React, { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import useFetchStatus from "@/lib/hooks/useFetchStatus";
 import useFetchMachines from "@/lib/hooks/useFetchMachines";
 import TestMethodDescriptionModal from "@/components/TestMethodDescriptionModal";
 import ItemInformationModal from "@/components/ItemInformationModal";
 import AddCommentModal from "@/components/AddCommentModal";
 import JobForm from "./JobForm.js";
+import { useRouter } from "next/navigation";
+import mqtt from 'mqtt';
+import { qtSubscribe } from "@/lib/utils/utils.js";
 
-
-
-const Page = ({searchParams}) => {
-    const job_id = searchParams.job_id
-    const view = searchParams.view
+const Page = ({ searchParams }) => {
+    const router = useRouter();
+    const job_id = searchParams.job_id;
+    const view = searchParams.view;
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
     const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
@@ -23,11 +25,63 @@ const Page = ({searchParams}) => {
     const [isShowJobItem, setIsShowJobItem] = useState(true);
     const [jobItemDetail, setJobItemDetail] = useState(null);
     const [testMethodDescription, setTestMethodDescription] = useState(null);
-    const [AddCommentForm, setAddCommentForm,] = useState(false);
+    const [AddCommentForm, setAddCommentForm] = useState(false);
     const [commentDetail, setCommentDetail] = useState(null);
     const [inputValues, setInputValues] = useState([]);
     const { status } = useFetchStatus(refresh);
     const [machineName, setMachineName] = useState(null);
+
+    const [message, setMessage] = useState('');
+    const [displayName, setDisplayName] = useState('');
+    const [client, setClient] = useState(null);
+
+    const topic_adrrees = '666285b06a66ee86fa3331ce';
+    const connectUrl = 'ws://172.17.70.201:9001';
+    const options = {
+        username: 'user1',
+        password: 'password'
+    };
+    const mqttClient = mqtt.connect(connectUrl, options);
+
+    useEffect(() => {
+        mqttClient.on('connect', () => {
+            console.log('Connected to MQTT broker');
+        });
+
+        mqttClient.on('error', (err) => {
+            console.error('Connection error: ', err);
+            mqttClient.end();
+        });
+
+        setClient(mqttClient);
+
+        
+        //looop through jobItems and subscribe to each jobItemID
+        jobItems.forEach((item) => {
+            console.log("item.JobItemID: ", item.JobItemID)
+            mqttClient.subscribe(item.JobItemID, (err) => {
+                if (!err) {
+                    console.log('Subscribed to ' + item.JobItemID);
+                } else {
+                    console.error('Subscription error: ', err);
+                }
+            });
+        });
+
+        return () => {
+            if (mqttClient) {
+                mqttClient.end();
+            }
+        };
+    }, [jobItems]);
+
+
+    mqttClient.on('message', (topic, message) => {
+        console.log('Topic received:', topic.toString());
+        console.log('Received message:', message.toString());
+    //change placeholder to display message
+        document.getElementById(topic.toString()).placeholder = message.toString();
+    });
 
     const toggleJobInfo = () => {
         setIsShowJobInfo(!isShowJobInfo);
@@ -55,7 +109,6 @@ const Page = ({searchParams}) => {
             }
         }
 
-
         if (view === "false") {
             updateJobStatusToOngoing();
         }
@@ -67,14 +120,14 @@ const Page = ({searchParams}) => {
         setInputValues(prev => {
             const existingIndex = prev.findIndex(entry => entry.jobItemID === item.JobItemID);
             if (existingIndex !== -1) {
-                const updatedValues = [...prev]; // Create a copy of the previous array
-                updatedValues[existingIndex] = { // Update the object at existingIndex
-                    ...updatedValues[existingIndex], // Preserve other properties
-                    BeforeValue: value // Update the beforeValue property
+                const updatedValues = [...prev];
+                updatedValues[existingIndex] = {
+                    ...updatedValues[existingIndex],
+                    BeforeValue: value
                 };
-                return updatedValues; // Return the updated array
+                return updatedValues;
             }
-            return [...prev, { // If the item doesn't exist, add it with the beforeValue
+            return [...prev, {
                 ...item,
                 jobItemID: item.JobItemID,
                 BeforeValue: value
@@ -87,14 +140,14 @@ const Page = ({searchParams}) => {
         setInputValues(prev => {
             const existingIndex = prev.findIndex(entry => entry.jobItemID === item.JobItemID);
             if (existingIndex !== -1) {
-                const updatedValues = [...prev]; // Create a copy of the previous array
-                updatedValues[existingIndex] = { // Update the object at existingIndex
-                    ...updatedValues[existingIndex], // Preserve other properties
-                    value: value // Update the value property
+                const updatedValues = [...prev];
+                updatedValues[existingIndex] = {
+                    ...updatedValues[existingIndex],
+                    value: value
                 };
-                return updatedValues; // Return the updated array
+                return updatedValues;
             }
-            return [...prev, { // If the item doesn't exist, add it with the value
+            return [...prev, {
                 ...item,
                 jobItemID: item.JobItemID,
                 value: value
@@ -108,14 +161,14 @@ const Page = ({searchParams}) => {
         setInputValues(prev => {
             const existingIndex = prev.findIndex(entry => entry.jobItemID === commentDetail.JobItemID);
             if (existingIndex !== -1) {
-                const updatedValues = [...prev]; // Create a copy of the previous array
-                updatedValues[existingIndex] = { // Update the object at existingIndex
-                    ...updatedValues[existingIndex], // Preserve other properties
-                    Comment: comment // Update the comment property
+                const updatedValues = [...prev];
+                updatedValues[existingIndex] = {
+                    ...updatedValues[existingIndex],
+                    Comment: comment
                 };
-                return updatedValues; // Return the updated array
+                return updatedValues;
             }
-            return [...prev, { // If the item doesn't exist, add it with the comment
+            return [...prev, {
                 ...commentDetail,
                 jobItemID: commentDetail.JobItemID,
                 Comment: comment
@@ -123,7 +176,6 @@ const Page = ({searchParams}) => {
         });
         setAddCommentForm(false);
     };
-
 
     const toggleJobItem = () => {
         setIsShowJobItem(!isShowJobItem);
@@ -133,7 +185,6 @@ const Page = ({searchParams}) => {
         setCommentDetail(() => item);
         setAddCommentForm(!AddCommentForm);
     }
-
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -169,7 +220,7 @@ const Page = ({searchParams}) => {
             if (data.status === 455) {
                 Swal.fire({
                     title: "Error!",
-                    text: "This job is not the latest revision Check the latest revision number and try again!",
+                    text: "This job is not the latest revision. Check the latest revision number and try again!",
                     icon: "error"
                 });
             }
@@ -178,10 +229,13 @@ const Page = ({searchParams}) => {
                     title: "Success!",
                     text: "Job updated successfully!",
                     icon: "success"
+                }).then(() => {
+                    window.history.replaceState({}, '', '/pages/dashboard');
+                    if (router) {
+                        router.push('/pages/dashboard');
+                    }
                 });
             }
-
-        
             e.target.reset();
             setRefresh((prev) => (!prev));
         } catch (err) {
@@ -189,17 +243,17 @@ const Page = ({searchParams}) => {
         }
     };
 
-
     const handleShowTestMethodDescription = (item) => {
         setTestMethodDescription(true);
     }
 
     const handleShowJobItemDescription = (item) => {
+        qtSubscribe(item.JobItemID);
         setJobItemDetail(item);
     }
 
     const handleWdChange = (selectedOption) => {
-        const wd_tag = selectedOption.value; // Extract value from selected option
+        const wd_tag = selectedOption.value;
         console.log(wd_tag);
         machines.forEach((machine) => {
             if (machine.wd_tag === wd_tag) {
@@ -208,7 +262,6 @@ const Page = ({searchParams}) => {
         });
     };
 
-    
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">
             <JobForm
@@ -229,20 +282,25 @@ const Page = ({searchParams}) => {
                 view={view}
                 toggleAddComment={toggleAddComment}
             />
-            {jobItemDetail && <ItemInformationModal
-                jobItemDetail={jobItemDetail}
-                setJobItemDetail={setJobItemDetail}
-            />}
-            {testMethodDescription && <TestMethodDescriptionModal
-                setTestMethodDescription={setTestMethodDescription} />}
-            {AddCommentForm && <AddCommentModal
-                toggleAddComment={toggleAddComment}
-                handleSubmitComment={handleSubmitComment}
-                commentDetail={commentDetail}
-
-            />}
+            {testMethodDescription && (
+                <TestMethodDescriptionModal
+                    setTestMethodDescription={setTestMethodDescription}
+                />
+            )}
+            {jobItemDetail && (
+                <ItemInformationModal
+                    setJobItemDetail={setJobItemDetail}
+                    jobItemDetail={jobItemDetail}
+                />
+            )}
+            {AddCommentForm && (
+                <AddCommentModal
+                    setAddCommentForm={setAddCommentForm}
+                    handleSubmitComment={handleSubmitComment}
+                />
+            )}
         </Layout>
     );
-};
+}
 
 export default Page;

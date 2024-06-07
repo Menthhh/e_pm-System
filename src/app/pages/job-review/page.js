@@ -68,10 +68,7 @@ const Page = ({ searchParams }) => {
                     confirmButtonText: 'OK'
                 }).then(() => {
                     setRefresh(!refresh);
-
                     router.push('/pages/job-approve');
-
-
                 });
             } else {
                 Swal.fire({
@@ -130,7 +127,10 @@ const Page = ({ searchParams }) => {
                     confirmButtonText: 'OK'
                 }).then(() => {
                     setRefresh(!refresh);
-                    router.push('/pages/job-approve');
+                    window.history.replaceState({}, '', '/pages/job-approve');
+                    if (router) {
+                        router.push('/pages/job-approve');
+                    }
                 });
             } else {
                 Swal.fire({

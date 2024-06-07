@@ -28,6 +28,7 @@ const JobForm = (
     }
 ) => {
     const [showWebcam, setShowWebcam] = useState(false);
+    
 
     const handleAddImages = () => {
         setShowWebcam(true);
@@ -36,7 +37,8 @@ const JobForm = (
     const handleCloseWebcam = () => {
         setShowWebcam(false);
     };
-    console.log(jobData)
+
+  
     return (
         <form className="flex flex-col gap-8"
             onSubmit={handleSubmit}
@@ -122,14 +124,14 @@ const JobForm = (
                     <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Machine Name</label>
                     {
                         view === "true" ?
-                        (
-                            jobData.MachineName ?
-                            <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"
-                                value={jobData.MachineName}
-                                disabled />:
-                            <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"/>
-                        ):
-                       <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={machineName} disabled />
+                            (
+                                jobData.MachineName ?
+                                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed"
+                                        value={jobData.MachineName}
+                                        disabled /> :
+                                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" />
+                            ) :
+                            <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={machineName} disabled />
                     }
                 </div>
 
@@ -198,30 +200,36 @@ const JobForm = (
 
                                     </td>
                                     <td className="border px-4 py-2 relative">
-                                        { //if view is true then disable the input field
-                                            view === "true" ? <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed"
-                                                disabled />
-                                                : (
+                                        {
+                                            view === "true" ?
+                                                <input type="text"
+                                                    id={item.JobItemID}
+                                                    value={item.ActualValue}
+                                                    className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed"
+                                                    disabled
+                                                /> :
+                                                (
                                                     item.ActualValue ?
-                                                        <input type="text" id={`actual_value_${item.JobItemID}`} value={item.ActualValue} className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed"
-                                                            disabled />
-                                                        :
-                                                        <input
-                                                            type="text"
-                                                            id={`actual_value_${item.JobItemID}`}
+                                                        <input type="text"
+                                                            id={item.JobItemID}
+                                                            value={item.ActualValue}
+                                                            className="bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-not-allowed"
+                                                            disabled
+                                                        /> :
+                                                        <input type="text"
+                                                            id={item.JobItemID}
                                                             onChange={(e) => handleInputChange(e, item)}
-                                                            className="bg-white border border-gray-300 text-gray-900 text-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-full p-1.5 rounded-lg"
+                                                            className="bg-white border border-gray-300 text-gray-900 text-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500 text-center w-full p-1.5 rounded-lg"
                                                             placeholder="fill in value"
                                                         />
                                                 )
-
                                         }
                                         <InfoIcon
                                             className="absolute right-[2px] top-1 text-blue-600 size-4 cursor-pointer"
                                             onClick={() => toggleAddComment(item)}
-
                                         />
                                     </td>
+
                                     <td className="border py-2 relative">
                                         <CameraAltIcon className="text-blue-600 size-8 cursor-pointer" onClick={handleAddImages} />
                                     </td>

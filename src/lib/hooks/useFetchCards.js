@@ -1,4 +1,4 @@
-
+'use client'
 import { useEffect, useState } from "react";
 import useSession from "./useSession";
 import { config } from "@/config/config.js";

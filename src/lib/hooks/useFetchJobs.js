@@ -1,3 +1,4 @@
+'use client'
 import { useEffect, useState } from "react";
 import { config } from "@/config/config.js";
 import useFetchUser from "./useFetchUser";
