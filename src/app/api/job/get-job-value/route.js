@@ -66,6 +66,7 @@ export const GET = async (req, res) => {
                 "TestLocationName": location ? location.LocationName : "",
                 "ExecuteDate": jobItem.EXECUTE_DATE,
                 "LastestUpdate": jobItem.updatedAt.toLocaleString(),
+                "File": jobItem.FILE ? jobItem.FILE : null
             };
         }));
         

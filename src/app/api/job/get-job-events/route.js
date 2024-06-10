@@ -10,7 +10,7 @@ export const GET = async (req, res) => {
     await connectToDb();
     const searchParams = req.nextUrl.searchParams;
     const workgroup_id = searchParams.get("workgroup_id");
-    console.log("workgroup_id", workgroup_id);
+
 
     try {
         // Fetch job templates based on workgroup_id
@@ -21,7 +21,7 @@ export const GET = async (req, res) => {
             jobTemplates = await JobTemplate.find({ WORKGROUP_ID: workgroup_id });
         }
 
-        console.log("jobTemplates", jobTemplates);
+  
 
         // Fetch job template activations
         const jobTemplatesActivates = await Promise.all(jobTemplates.map(async (jobTemplate) => {

@@ -1,6 +1,9 @@
+import Image from 'next/image';
 
+const TestMethodDescriptionModal = ({ setTestMethodDescription, showDetail }) => {
+    // Replace backslashes with forward slashes in the File path
+    const imagePath = showDetail.File.replace(/\\/g, '/');
 
-const TestMethodDescriptionModal = ({ setTestMethodDescription, testData }) => {
     return (
         <div className="fixed inset-0 overflow-y-auto mt-5 z-[200]">
             <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
@@ -16,18 +19,12 @@ const TestMethodDescriptionModal = ({ setTestMethodDescription, testData }) => {
                                     Test Method Description
                                 </h3>
 
-                                <div className=" bg-gray-400 w-96 h-96 text-center self-center">
-                                </div>
+                                <Image src={imagePath} alt="overlay" width={300} height={300} className="rounded-lg" />
 
-
-                                {/* <p className="text-sm text-gray-500">
-                                    {testData}
-                                </p> */}
-                                <div>
-                                    lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-                                </div>
-
-
+                                <p className="text-sm text-gray-500">
+                                    {showDetail.TestMethod}
+                                </p>
+                               
                             </div>
                         </div>
                     </div>

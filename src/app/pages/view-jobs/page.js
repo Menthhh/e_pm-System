@@ -30,6 +30,7 @@ const Page = ({ searchParams }) => {
     const [inputValues, setInputValues] = useState([]);
     const { status } = useFetchStatus(refresh);
     const [machineName, setMachineName] = useState(null);
+    const [showDetail, setShowDetail] = useState(null);
 
     const [message, setMessage] = useState('');
     const [displayName, setDisplayName] = useState('');
@@ -55,7 +56,7 @@ const Page = ({ searchParams }) => {
 
         setClient(mqttClient);
 
-        
+
         //looop through jobItems and subscribe to each jobItemID
         jobItems.forEach((item) => {
             console.log("item.JobItemID: ", item.JobItemID)
@@ -79,7 +80,7 @@ const Page = ({ searchParams }) => {
     mqttClient.on('message', (topic, message) => {
         console.log('Topic received:', topic.toString());
         console.log('Received message:', message.toString());
-    //change placeholder to display message
+        //change placeholder to display message
         document.getElementById(topic.toString()).placeholder = message.toString();
     });
 
@@ -182,8 +183,9 @@ const Page = ({ searchParams }) => {
     }
 
     const toggleAddComment = (item) => {
-        setCommentDetail(() => item);
-        setAddCommentForm(!AddCommentForm);
+        console.log(item);
+        setCommentDetail(item);
+        setAddCommentForm(prev => !prev);
     }
 
     const handleSubmit = async (e) => {
@@ -244,6 +246,7 @@ const Page = ({ searchParams }) => {
     };
 
     const handleShowTestMethodDescription = (item) => {
+        setShowDetail(item);
         setTestMethodDescription(true);
     }
 
@@ -284,6 +287,7 @@ const Page = ({ searchParams }) => {
             />
             {testMethodDescription && (
                 <TestMethodDescriptionModal
+                    showDetail={showDetail}
                     setTestMethodDescription={setTestMethodDescription}
                 />
             )}
@@ -295,8 +299,9 @@ const Page = ({ searchParams }) => {
             )}
             {AddCommentForm && (
                 <AddCommentModal
-                    setAddCommentForm={setAddCommentForm}
+                    toggleAddComment={toggleAddComment}
                     handleSubmitComment={handleSubmitComment}
+                    commentDetail={commentDetail}
                 />
             )}
         </Layout>

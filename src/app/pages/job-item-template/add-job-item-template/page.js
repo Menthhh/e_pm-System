@@ -11,8 +11,10 @@ import Select from 'react-select';
 import { useState } from "react";
 import Link from "next/link";
 import AddIcon from "@mui/icons-material/Add";
-import ErrorIcon from "@mui/icons-material/Error";
+
 import Image from "next/image";
+import { useDropzone } from "react-dropzone";
+import Swal from "sweetalert2";
 
 
 const jobItemTemplateHeader = ["ID", "Title", "Upper Spec", "Lower Spec", "Test Method", "Create At", "Action"];
@@ -31,12 +33,21 @@ const Page = ({ searchParams }) => {
 
     const [selectedFile, setSelectedFile] = useState(null);
 
+    const onDrop = (acceptedFiles) => {
+        if (acceptedFiles && acceptedFiles.length > 0) {
+            setSelectedFile(acceptedFiles[0]);
+        }
+    };
+
+    const { getRootProps, getInputProps } = useDropzone({
+        onDrop,
+        accept: "image/*",
+    });
 
     const jobItemTemplateBody = jobItemTemplates.map((jobItemTemplate, index) => {
         return {
             ID: index + 1,
             Title: jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE,
-
             Upper_Spec: jobItemTemplate.UPPER_SPEC,
             Lower_Spec: jobItemTemplate.LOWER_SPEC,
             Test_Method: jobItemTemplate.TEST_METHOD,
@@ -72,6 +83,7 @@ const Page = ({ searchParams }) => {
         };
     });
 
+
     const HandleSubmit = async (e) => {
         e.preventDefault();
         const form = new FormData(e.target);
@@ -84,27 +96,44 @@ const Page = ({ searchParams }) => {
             TEST_METHOD: form.get("test_method"),
             JOB_TEMPLATE_ID: jobTemplate_id,
             JobTemplateCreateID: jobTemplate.JobTemplateCreateID,
-            TEST_LOCATION_ID: form.get("test_location"),
+            TEST_LOCATION_ID: form.get("test_location")
         };
-        console.log(data)
+
+        const formData = new FormData();
+        formData.append('AUTHOR_ID', data.AUTHOR_ID);
+        formData.append('JOB_ITEM_TEMPLATE_TITLE', data.JOB_ITEM_TEMPLATE_TITLE);
+        formData.append('JOB_ITEM_TEMPLATE_NAME', data.JOB_ITEM_TEMPLATE_NAME);
+        formData.append('UPPER_SPEC', data.UPPER_SPEC);
+        formData.append('LOWER_SPEC', data.LOWER_SPEC);
+        formData.append('TEST_METHOD', data.TEST_METHOD);
+        formData.append('JOB_TEMPLATE_ID', data.JOB_TEMPLATE_ID);
+        formData.append('JobTemplateCreateID', data.JobTemplateCreateID);
+        formData.append('TEST_LOCATION_ID', data.TEST_LOCATION_ID);
+        formData.append('FILE', selectedFile);
+
         try {
             const response = await fetch(`${config.host}/api/job-item-template/create-job-item-template`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+                body: formData,
             });
-            const res = await response.json();
-            if (res.status === 200) {
+
+            const result = await response.json();
+
+            if (response.ok) {
+                Swal.fire("Success", "Product added successfully", "success");
                 setRefresh((prev) => !prev);
+            } else {
+                Swal.fire("Error", result.message || "Failed to add product", "error");
             }
-        } catch (err) {
-            console.log(err);
+        } catch (error) {
+            console.error(error);
+            Swal.fire("Error", "Failed to add product", "error");
         }
     };
 
+
     const handleRemove = async (jobItemTemplate_id) => {
+        console.log(jobItemTemplate_id)
 
         try {
             const response = await fetch(`${config.host}/api/job-item-template/remove-job-item-template`, {
@@ -115,77 +144,93 @@ const Page = ({ searchParams }) => {
                 body: JSON.stringify({ jobItemTemplate_id }),
             });
             const data = await response.json();
-            if (data.status === 200) {
-                setRefresh((prev) => !prev);
-            }
+            console.log(data)
+            
+            setRefresh((prev) => !prev);
+            
         } catch (err) {
             console.log(err);
         }
     }
 
-    console.log(locations)
+    const handleClearImage = () => {
+        setSelectedFile(null);
+    }
+
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-7">
             <div className="flex flex-col gap-3">
-                <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {jobTemplate.JOB_TEMPLATE_NAME} </h1>
+                <h1 className="text-2xl font-bold text-primary flex items-center">{">"} {jobTemplate.JOB_TEMPLATE_NAME} </h1>
                 <h1 className="text-1xl font-semibold">Add Item to Job Template</h1>
             </div>
             <form onSubmit={HandleSubmit} className="flex flex-col justify-center gap-8">
-                <div className="flex flex-col gap-4 justify-center items-center w-full ">
-                    <div
-                        id="fileInputDropzone"
-                        className=" rounded-2xl h-[202px] border-2 border-[#4398E7] flex justify-center items-center bg-white w-1/6"
-                    >
-                        <input
-                            id="fileInput" // Add an id to the file input
-                            className="absolute mx-auto my-auto h-full w-full opacity-0 cursor-pointer"
-                        />
+                <div className="grid gap-6 mb-6 md:grid-cols-3 row-span-4">
+                    <div className="flex flex-col gap-4 justify-center items-center w-full row-span-4">
+                        <div
+                            {...getRootProps()}
+                            id="fileInputDropzone"
+                            className="w-5/6 bg-white rounded-2xl h-[202px] border-2 border-[#4398E7] flex justify-center items-center"
+                        >
+                            <input
+                                {...getInputProps()}
+                                id="fileInput"
 
-                        <div className="flex flex-col justify-center items-center">
-                            {selectedFile ? (
-                                <Image
+                            />
 
-                                    alt="selected"
-                                    width={100}
-                                    height={100}
-                                />
-                            ) : (
-                                <>
+                            <div className="flex flex-col justify-center items-center">
+                                {selectedFile ? (
                                     <Image
-                                        src="/assets/images/image.png"
-                                        alt="plus"
-                                        width={50}
-                                        height={50}
+                                        src={URL.createObjectURL(selectedFile)}
+                                        alt="selected"
+                                        width={100}
+                                        height={100}
                                     />
-                                    <h1 className="text-secondary">วางไฟล์รูปภาพเพื่ออัปโหลด</h1>
-                                </>
-                            )}
+                                ) : (
+                                    <>
+                                        <Image
+                                            src="/assets/images/image.png"
+                                            alt="plus"
+                                            width={50}
+                                            height={50}
+                                        />
+                                        <h1 className="text-secondary">
+                                            Drop your image here, or click to select one
+                                        </h1>
+                                    </>
+                                )}
+                            </div>
+                        </div>
+                        <div className="flex gap-4">
+                            <button
+                                className="bg-[#347EC2] text-white px-4 py-2 rounded-lg drop-shadow-lg hover:bg-[#4398E7] hover:text-white"
+                                type="button"
+                                onClick={() => document.getElementById('fileInput').click()}
+                            >
+                                <div className="flex justify-center items-center gap-2 font-bold">
+                                    <AddIcon />
+                                    <p> Add the image</p>
+                                </div>
+                            </button>
+                            <button
+                                className="bg-red-500 font-bold text-white px-4 py-2 rounded-lg drop-shadow-lg hover:bg-red-700 hover:text-white" type="button" onClick={handleClearImage}>
+                                <div className="flex justify-center items-center gap-2">
+                                    <p>Clear the image</p>
+                                </div>
+                            </button>
                         </div>
                     </div>
-                    <button
-                        className="bg-[#347EC2] text-white px-4 py-2 rounded-lg drop-shadow-lg hover:bg-[#4398E7] hover:text-white"
-                        type="button"
-                        onClick={() => document.querySelector('input[type="file"]')?.click()}
-                    >
-                        <div className="flex justify-center items-center gap-2">
-                            <AddIcon />
-                            <p>เพิ่มรูปภาพ</p>
-                        </div>
-                    </button>
-                </div>
-                <div className="grid gap-6 mb-6 md:grid-cols-3">
                     <div>
                         <label
-                            for="author"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            htmlFor="author"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Author
                         </label>
                         <input
                             type="text"
                             id="author"
-                            className="bg-gray-200 border cursor-not-allowed border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 opacity-50  "
-                            value={user.name || ""}
+                            className="bg-gray-200 border cursor-not-allowed border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 opacity-50"
+                            value={user?.name || ""}
                             disabled
                             name="author"
                             required
@@ -193,8 +238,8 @@ const Page = ({ searchParams }) => {
                     </div>
                     <div>
                         <label
-                            for="job_item_template_title"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            htmlFor="job_item_template_title"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Job Item Template Title
                         </label>
@@ -209,15 +254,15 @@ const Page = ({ searchParams }) => {
                     </div>
                     <div>
                         <label
-                            for="job_item_template_name"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            htmlFor="job_item_template_name"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Job Item Template Name
                         </label>
                         <input
                             type="text"
                             id="job_item_template_name"
-                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="1234"
                             name="job_item_template_name"
                             required
@@ -225,15 +270,15 @@ const Page = ({ searchParams }) => {
                     </div>
                     <div>
                         <label
-                            for="Upper_Spec"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            htmlFor="upper_spec"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Upper Spec
                         </label>
                         <input
                             type="text"
                             id="upper_spec"
-                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="321"
                             name="upper_spec"
                             required
@@ -241,15 +286,15 @@ const Page = ({ searchParams }) => {
                     </div>
                     <div>
                         <label
-                            for="lower_spec"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            htmlFor="lower_spec"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Lower Spec
                         </label>
                         <input
                             type="text"
                             id="lower_spec"
-                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="1234"
                             name="lower_spec"
                             required
@@ -257,15 +302,15 @@ const Page = ({ searchParams }) => {
                     </div>
                     <div>
                         <label
-                            for="test_method"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            htmlFor="test_method"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Test Method
                         </label>
                         <input
                             type="text"
                             id="test_method"
-                            class="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="test method"
                             name="test_method"
                             required
@@ -273,12 +318,12 @@ const Page = ({ searchParams }) => {
                     </div>
                     <div>
                         <label
-                            for="test_method"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            htmlFor="test_location"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Test location
+                            Test Location
                         </label>
-                        <Select name="test_location" id="test_location" className=" text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full "
+                        <Select name="test_location" id="test_location" className="text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 w-full"
                             options={
                                 locations.map(location => {
                                     return {
@@ -288,15 +333,13 @@ const Page = ({ searchParams }) => {
                                 })
                             }
                             isSearchable={true}
-
                         />
-
                     </div>
-
                 </div>
+
                 <button
                     type="submit"
-                    className={`text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center 
+                    className={`text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center w-1/3 hover:bg-blue-800 focus:ring-4 focus:outline-none
                     ${user && user.actions && !user.actions.some(action => action._id === enabledFunction["add-job-item-template"]) ?
                             'bg-blue-500 cursor-not-allowed' :
                             'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'}`}
@@ -314,7 +357,6 @@ const Page = ({ searchParams }) => {
             />
 
         </Layout>
-
     );
 };
 

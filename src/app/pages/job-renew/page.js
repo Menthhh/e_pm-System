@@ -26,6 +26,8 @@ const Page = ({ searchParams }) => {
     const [AddCommentForm, setAddCommentForm,] = useState(false);
     const [commentDetail, setCommentDetail] = useState(null);
     const [inputValues, setInputValues] = useState([]);
+    const [showDetail, setShowDetail] = useState(null);
+
 
     const toggleJobInfo = () => {
         setIsShowJobInfo(!isShowJobInfo);
@@ -63,7 +65,7 @@ const Page = ({ searchParams }) => {
 
     const toggleAddComment = (item) => {
         setCommentDetail(() => item);
-        setAddCommentForm(!AddCommentForm);
+        setAddCommentForm(prev => !prev);
     }
 
 
@@ -142,6 +144,7 @@ const Page = ({ searchParams }) => {
 
 
     const handleShowTestMethodDescription = (item) => {
+        setShowDetail(item);
         setTestMethodDescription(true);
     }
 
@@ -185,7 +188,11 @@ const Page = ({ searchParams }) => {
                 setJobItemDetail={setJobItemDetail}
             />}
             {testMethodDescription && <TestMethodDescriptionModal
-                setTestMethodDescription={setTestMethodDescription} />}
+                setTestMethodDescription={setTestMethodDescription} 
+                showDetail={showDetail}
+
+
+                />}
             {AddCommentForm && <AddCommentModal
                 toggleAddComment={toggleAddComment}
                 handleSubmitComment={handleSubmitComment}

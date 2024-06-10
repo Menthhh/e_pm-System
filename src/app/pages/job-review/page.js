@@ -25,6 +25,7 @@ const Page = ({ searchParams }) => {
     const [testMethodDescription, setTestMethodDescription] = useState(null);
     const [AddCommentForm, setAddCommentForm,] = useState(false);
     const [commentDetail, setCommentDetail] = useState(null);
+    const [showDetail, setShowDetail] = useState(null);
 
 
     const toggleJobInfo = () => {
@@ -38,7 +39,7 @@ const Page = ({ searchParams }) => {
 
     const toggleAddComment = (item) => {
         console.log(item);
-        setCommentDetail(() => item);
+        setCommentDetail(item);
         setAddCommentForm(!AddCommentForm);
     }
 
@@ -93,6 +94,7 @@ const Page = ({ searchParams }) => {
 
 
     const handleShowTestMethodDescription = (item) => {
+        setShowDetail(item);
         setTestMethodDescription(true);
     }
 
@@ -140,7 +142,7 @@ const Page = ({ searchParams }) => {
                     confirmButtonText: 'OK'
                 });
             }
-        }catch (error) {
+        } catch (error) {
             console.log('Error:', error);
             Swal.fire({
                 title: 'Error',
@@ -171,7 +173,9 @@ const Page = ({ searchParams }) => {
                 setJobItemDetail={setJobItemDetail}
             />}
             {testMethodDescription && <TestMethodDescriptionModal
-                setTestMethodDescription={setTestMethodDescription} />}
+                setTestMethodDescription={setTestMethodDescription}
+                showDetail={showDetail}
+            />}
             {AddCommentForm && <CommentReview
                 toggleAddComment={toggleAddComment}
                 handleReject={handleReject}

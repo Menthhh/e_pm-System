@@ -22,7 +22,7 @@ export const GET = async (req, { params }) => {
             const user = await User.findOne({ _id: approver });
             return user;
         }));
-        console.log("users", users)
+
         const data = {
             _id: jobTemplate._id,
             JobTemplateCreateID: jobTemplate.JobTemplateCreateID,

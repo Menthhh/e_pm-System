@@ -81,6 +81,7 @@ export const POST = async (req, res) => {
                 TEST_METHOD: jobItemTemplate.TEST_METHOD,
                 TEST_LOCATION_ID: jobItemTemplate.TEST_LOCATION_ID,
                 JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
+                FILE: jobItemTemplate.FILE,
             });
             await jobItem.save();
 

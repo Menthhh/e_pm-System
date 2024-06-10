@@ -5,7 +5,7 @@ import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
 import SALayout from "@/components/SALayout";
 import MessageBox from "@/components/MessageBox";
-import {config} from "../../../../config/config.js";
+import { config } from "../../../../config/config.js";
 import Swal from "sweetalert2";
 
 const headers = ["ID", "WorkGroup", "Action"];
@@ -38,6 +38,7 @@ const Page = () => {
         throw new Error("Failed to fetch roles");
       }
       const data = await response.json();
+      console.log(data)
       setWorkgroups(data.workgroups);
     } catch (error) {
       console.error(error);
@@ -71,7 +72,10 @@ const Page = () => {
     ],
   }));
 
-  const createWorkgroup = async () => {
+  const createWorkgroup = async (e) => {
+    e.preventDefault();
+    const newWorkgroup = e.target.workgroup_name.value;
+    console.log(newWorkgroup);
     try {
       await fetch(`${config.host}/api/workgroup/create-workgroup`, {
         method: "POST",
@@ -79,7 +83,7 @@ const Page = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          WORKGROUP_NAME: newWorkgroupInput.current.value,
+          WORKGROUP_NAME: newWorkgroup,
         }),
       });
       setRefresh(!refresh);
@@ -96,7 +100,7 @@ const Page = () => {
       },
       buttonsStyling: true
     });
-  
+
     swalWithBootstrapButtons.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -134,57 +138,38 @@ const Page = () => {
       }
     });
   };
-  
 
-  const newWorkgroupFormInput = (
-    <form onSubmit={createWorkgroup} className="flex gap-4 fixed">
-      <input
-        type="text"
-        placeholder="Role Name"
-        ref={newWorkgroupInput}
-        className="py-2 px-4 ring-1 ring-black rounded-md"
-      />
-      <button className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md">
-        Add Workgroup
-      </button>
-      <button
-        className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-md"
-        onClick={() => setNewWorkgroup(!newWorkgroup)}
-      >
-        Cancel
-      </button>
-    </form>
-  );
 
 
   return (
     <SALayout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
-    <div className="w-full h-full bg-white container px-8 rounded-lg flex flex-col gap-8">
-      <h1 className="text-2xl font-bold text-primary flex items-center">{">"} Manage WorkGroups </h1>
-      <form onSubmit={createWorkgroup} className="flex gap-4 ">
-        <input
-          type="text"
-          placeholder="Role Name"
-          ref={newWorkgroupInput}
-          className="py-2 px-4 ring-1 ring-black rounded-md"
-        />
-        <button className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md">
-          Add Workgroup
-        </button>
-    
-      </form>
-      <div className="container mx-auto h-1/2 overflow-scrol">
-        {workgroups.length > 0 && (
-          <TableComponent
-            headers={headers}
-            datas={data}
-            searchColumn={"Workgroup"}
-            TableName={"All Workgroups"}
+      <div className="w-full h-full bg-white container px-8 rounded-lg flex flex-col gap-8">
+        <h1 className="text-2xl font-bold text-primary flex items-center">{">"} Manage WorkGroups </h1>
+        <form onSubmit={createWorkgroup} className="flex gap-4 ">
+          <input
+            type="text"
+            placeholder="Role Name"
+            name="workgroup_name"
+            ref={newWorkgroupInput}
+            className="py-2 px-4 ring-1 ring-black rounded-md"
           />
-        )}
-      </div>
+          <button className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md">
+            Add Workgroup
+          </button>
 
-      {showConfirmationDialog && (<MessageBox message={"Are you sure you want to delete this workgroup?"} />)}
+        </form>
+        <div className="container mx-auto h-1/2 overflow-scrol">
+          {workgroups.length > 0 && (
+            <TableComponent
+              headers={headers}
+              datas={data}
+              searchColumn={"Workgroup"}
+              TableName={"All Workgroups"}
+            />
+          )}
+        </div>
+
+        {showConfirmationDialog && (<MessageBox message={"Are you sure you want to delete this workgroup?"} />)}
       </div>
     </SALayout>
   );

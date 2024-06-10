@@ -13,12 +13,12 @@ export const DELETE = async (req, res) => {
     const { job_id } = body;
 
     try {
-        console.log("job_id", job_id);
+       
         // find if it exist in schedule
         const schedule = await Schedule.findOne({ JOB_TEMPLATE_ID: job_id });
         if (schedule) {
             //then remove from schedule
-            console.log("schedule", schedule)
+ 
             await Schedule.findOneAndDelete({ JOB_TEMPLATE_ID: job_id });
             return NextResponse.json({ status: 200 });
         }

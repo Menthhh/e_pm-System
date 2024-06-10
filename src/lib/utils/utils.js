@@ -72,12 +72,6 @@ export async function register(prevState, formData) {
   const password = formData.get("password");
   const team = formData.get("team");
 
-  // Check if any field is empty
-  for (let [key, value] of formData.entries()) {
-    if (!value) {
-      return { message: "Please fill all the fields", status: 400 };
-    }
-  }
 
   const res = await fetch(`${config.host}/api/auth/register`, {
     method: "POST",
