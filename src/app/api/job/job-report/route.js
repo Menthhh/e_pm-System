@@ -8,6 +8,7 @@ export const GET = async (req, res) => {
   try {
     await connectToDb();
 
+   
     const jobCounts = await User.aggregate([
       {
         $lookup: {
@@ -28,9 +29,11 @@ export const GET = async (req, res) => {
       }
     ]);
 
+    console.log("Job counts:", jobCounts);
+
     return NextResponse.json(jobCounts);
   } catch (error) {
-    console.error(error);
+    console.error("Error fetching job counts:", error);
     return NextResponse.error(error);
   }
 };
