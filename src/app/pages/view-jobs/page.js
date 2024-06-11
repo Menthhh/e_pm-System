@@ -12,7 +12,13 @@ import AddCommentModal from "@/components/AddCommentModal";
 import JobForm from "./JobForm.js";
 import { useRouter } from "next/navigation";
 import mqtt from 'mqtt';
-import { qtSubscribe } from "@/lib/utils/utils.js";
+
+
+const connectUrl = process.env.NEXT_PUBLIC_MQT_URL;
+const options = {
+    username: process.env.NEXT_PUBLIC_MQT_USERNAME,
+    password: process.env.NEXT_PUBLIC_MQT_PASSWORD
+};
 
 const Page = ({ searchParams }) => {
     const router = useRouter();
@@ -32,16 +38,6 @@ const Page = ({ searchParams }) => {
     const [machineName, setMachineName] = useState(null);
     const [showDetail, setShowDetail] = useState(null);
 
-    const [message, setMessage] = useState('');
-    const [displayName, setDisplayName] = useState('');
-    const [client, setClient] = useState(null);
-
-    const topic_adrrees = '666285b06a66ee86fa3331ce';
-    const connectUrl = 'ws://172.17.70.201:9001';
-    const options = {
-        username: 'user1',
-        password: 'password'
-    };
     const mqttClient = mqtt.connect(connectUrl, options);
 
     useEffect(() => {
@@ -54,10 +50,6 @@ const Page = ({ searchParams }) => {
             mqttClient.end();
         });
 
-        setClient(mqttClient);
-
-
-        //looop through jobItems and subscribe to each jobItemID
         jobItems.forEach((item) => {
             console.log("item.JobItemID: ", item.JobItemID)
             mqttClient.subscribe(item.JobItemID, (err) => {
@@ -80,7 +72,6 @@ const Page = ({ searchParams }) => {
     mqttClient.on('message', (topic, message) => {
         console.log('Topic received:', topic.toString());
         console.log('Received message:', message.toString());
-        //change placeholder to display message
         document.getElementById(topic.toString()).placeholder = message.toString();
     });
 
@@ -251,7 +242,6 @@ const Page = ({ searchParams }) => {
     }
 
     const handleShowJobItemDescription = (item) => {
-        qtSubscribe(item.JobItemID);
         setJobItemDetail(item);
     }
 

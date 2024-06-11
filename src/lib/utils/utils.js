@@ -3,8 +3,6 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { config } from "@/config/config";
-import mqtt from 'mqtt';
-
 
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
@@ -192,20 +190,3 @@ export async function sendEmails(emailList, job) {
   }
 }
 
-
-export const qtSubscribe = (topic_adrrees) => {
-  const connectUrl = 'ws://172.17.70.201:9001';
-  const options = {
-    username: 'user1',
-    password: 'password'
-  };
-  const mqttClient = mqtt.connect(connectUrl, options);
-  console.log("topic_adrrees: ", topic_adrrees);
-  mqttClient.subscribe(topic_adrrees, (err) => {
-    if (!err) {
-      console.log('Subscribed to ' + topic_adrrees);
-    } else {
-      console.error('Subscription error: ', err);
-    }
-  });
-};

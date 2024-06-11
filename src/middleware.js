@@ -21,11 +21,20 @@ const SA = {
     "name": Roles.SUPER_ADMIN,
     "unaccessible_pages": [
         "/pages/admin/add-user-to-workgroup",
-        "/pages/dashboard"
+        "/pages/dashboard",
+        "/pages/activate-remove-job",
+        "/pages/dashboard",
+        "/pages/edit-job-item-template",
+        "/pages/edit-job-template",
+        "/pages/job-approve",
+        "/pages/job-calendar",
+        "/pages/job-item-template",
+        "/pages/job-manage",
+        "/pages/job-renew",
+        "/pages/job-template",
+        "/pages/job-template",
     ],
-    "unaccessible_api": [
-        
-    ]
+
 }
 
 const ADMIN_GROUP = {

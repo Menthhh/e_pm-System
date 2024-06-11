@@ -11,7 +11,14 @@ import ItemInformationModal from "@/components/ItemInformationModal";
 import AddCommentModal from "@/components/AddCommentModal";
 import JobRetakeForm from "./JobRetakeForm.js";
 import { useRouter } from 'next/navigation'
+import mqtt from 'mqtt';
 
+
+const connectUrl = process.env.NEXT_PUBLIC_MQT_URL;
+const options = {
+    username: process.env.NEXT_PUBLIC_MQT_USERNAME,
+    password: process.env.NEXT_PUBLIC_MQT_PASSWORD
+};
 
 
 const Page = ({ searchParams }) => {
@@ -28,12 +35,47 @@ const Page = ({ searchParams }) => {
     const [inputValues, setInputValues] = useState([]);
     const [showDetail, setShowDetail] = useState(null);
 
+    const mqttClient = mqtt.connect(connectUrl, options);
+
+    useEffect(() => {
+        mqttClient.on('connect', () => {
+            console.log('Connected to MQTT broker');
+        });
+
+        mqttClient.on('error', (err) => {
+            console.error('Connection error: ', err);
+            mqttClient.end();
+        });
+
+        jobItems.forEach((item) => {
+            console.log("item.JobItemID: ", item.JobItemID)
+            mqttClient.subscribe(item.JobItemID, (err) => {
+                if (!err) {
+                    console.log('Subscribed to ' + item.JobItemID);
+                } else {
+                    console.error('Subscription error: ', err);
+                }
+            });
+        });
+
+        return () => {
+            if (mqttClient) {
+                mqttClient.end();
+            }
+        };
+    }, [jobItems]);
+
+
+    mqttClient.on('message', (topic, message) => {
+        console.log('Topic received:', topic.toString());
+        console.log('Received message:', message.toString());
+        document.getElementById(topic.toString()).placeholder = message.toString();
+    });
+
 
     const toggleJobInfo = () => {
         setIsShowJobInfo(!isShowJobInfo);
     }
-
-
     const handleSubmitComment = async (e) => {
         e.preventDefault();
         const comment = e.target.comment.value;

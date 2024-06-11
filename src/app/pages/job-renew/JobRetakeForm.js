@@ -144,6 +144,8 @@ const JobRetakeForm = (
                                             defaultValue={item.ActualValue}
                                             className=" bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5"
                                             name={item.JobItemID}
+                                            id={item.JobItemID}
+                                            placeholder="fill in value"
                                         />
                                         <InfoIcon
                                             className="absolute right-[2px] top-1 text-blue-600 size-4 cursor-pointer"

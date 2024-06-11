@@ -25,8 +25,8 @@ export const GET = async (req, res) => {
         const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
         const statusName = status ? status.status_name : null;
 
-        if (job.MACHINE_ID) {
-            const machine = await Machine.findOne({ _id: job.MACHINE_ID });
+        if (job.WD_TAG) {
+            const machine = await Machine.findOne({ WD_TAG: job.WD_TAG });
             machineName = machine ? machine.MACHINE_NAME : null;
         } else {
             machineName = null;
