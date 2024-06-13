@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const jobsActiveHeader = [
     "ID",
-    "Job Name",
+    "Checklist Name",
     "Document no.",
     "Status",
     "Active",
@@ -22,7 +22,7 @@ const JobsTable = ({ refresh }) => {
 
         return {
             "ID": index + 1,
-            "Job Name": job.JOB_NAME,
+            "Checklist Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
             "Status": (
                 <div

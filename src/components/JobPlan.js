@@ -84,7 +84,8 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
             });
 
             if (!response.ok) {
-                throw new Error('Failed to activate job template');
+
+                console.log(response);
             }
 
             const data = await response.json();
@@ -93,7 +94,7 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
             Swal.fire({
                 icon: 'success',
                 title: 'Success',
-                text: 'Job template activated successfully'
+                text: 'Checklist template activated successfully'
             });
             onClose();
             setRefresh((prev) => !prev);
@@ -102,7 +103,7 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
-                text: 'Failed to activate job template'
+                text: 'Failed to activate Checklist template'
             });
         }
     };

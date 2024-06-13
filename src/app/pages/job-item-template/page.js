@@ -7,7 +7,7 @@ import { config } from "@/config/config.js";
 import Link from "next/link";
 import Swal from "sweetalert2";
 
-const jobItemTemplateHeader = ["ID", "Job Template Name", "Document no.", "Created At", "Action"];
+const jobItemTemplateHeader = ["ID", "Checklist Template Name", "Document no.", "Created At", "Action"];
 
 const enabledFunction = {
     "edit-job-template": "663313bbeccb576a719dfa9c",
@@ -91,13 +91,13 @@ const Page = () => {
               if (data.status === 200) {
                 swalWithBootstrapButtons.fire({
                   title: "Deleted!",
-                  text: "The job template has been deleted.",
+                  text: "The Checklist template has been deleted.",
                   icon: "success"
                 });
                 setRefresh((prev) => !prev);
               }
             } catch (err) {
-              console.error("Error deleting job template:", err);
+              console.error("Error deleting Checklist template:", err);
             }
           } else if (
             /* Read more about handling dismissals below */
@@ -116,7 +116,7 @@ const Page = () => {
     const jobItemTemplateBody = jobTemplates.map((jobTemplate, index) => {
         return {
             ID: index + 1,
-            "Job Template Name": jobTemplate.JOB_TEMPLATE_NAME,
+            "Checklist Template Name": jobTemplate.JOB_TEMPLATE_NAME,
             "Document no.": jobTemplate.DOC_NUMBER,
             "Create At": jobTemplate.createdAt,
             Action: (
@@ -158,12 +158,12 @@ const Page = () => {
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
             <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
-            <h1 className="text-2xl font-bold">Job Templates</h1>
+            <h1 className="text-2xl font-bold">Checklist Templates</h1>
             <TableComponent
                 headers={jobItemTemplateHeader}
                 datas={jobItemTemplateBody}
-                TableName="Job Templates"
-                searchColumn="Job Template Name"
+                TableName="Checklist Templates"
+                searchColumn="Checklist Template Name"
                 PageSize={8}
             />
         </Layout>

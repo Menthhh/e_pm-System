@@ -213,14 +213,14 @@ const Page = ({ searchParams }) => {
             if (data.status === 455) {
                 Swal.fire({
                     title: "Error!",
-                    text: "This job is not the latest revision. Check the latest revision number and try again!",
+                    text: "This Checklist is not the latest revision. Check the latest revision number and try again!",
                     icon: "error"
                 });
             }
             else {
                 Swal.fire({
                     title: "Success!",
-                    text: "Job updated successfully!",
+                    text: "Checklist updated successfully!",
                     icon: "success"
                 }).then(() => {
                     window.history.replaceState({}, '', '/pages/dashboard');

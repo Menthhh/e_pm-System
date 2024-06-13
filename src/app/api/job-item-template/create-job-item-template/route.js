@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { generateUniqueKey } from "@/lib/utils/utils.js";
 import { JobItemTemplate } from "@/lib/models/JobItemTemplate.js";
-import { NextResponse } from 'next/server.js';
+import { NextResponse } from 'next/server';
 import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const POST = async (req, res) => {
@@ -23,17 +23,7 @@ export const POST = async (req, res) => {
         const JobTemplateCreateID = form.get("JobTemplateCreateID");
         const FILE = form.get("FILE");
 
-        const buffer = Buffer.from(await FILE.arrayBuffer());
-        const fileExtension = FILE.name.split(".").pop();
-        const filename = `${JobItemTemplateCreateID}.${fileExtension}`;
-        const relativeFilePath = path.join("job-item-template-images", filename); // Relative path
-
-        // Save the file to the public folder
-        const filePath = path.join(process.cwd(), "public", relativeFilePath);
-        fs.writeFileSync(filePath, buffer);
-
-        // Create a new JobItemTemplate instance
-        const jobItemTemplate = new JobItemTemplate({
+        const jobItemTemplateData = {
             AUTHOR_ID,
             JOB_ITEM_TEMPLATE_TITLE,
             JOB_ITEM_TEMPLATE_NAME,
@@ -43,9 +33,20 @@ export const POST = async (req, res) => {
             JOB_TEMPLATE_ID,
             TEST_LOCATION_ID,
             JobTemplateCreateID,
-            JobItemTemplateCreateID,
-            FILE: `/${relativeFilePath}` // Save the relative file path to the database
-        });
+            JobItemTemplateCreateID
+        };
+
+        if (FILE && FILE.size > 0) { // Check if FILE exists and is not empty
+            const buffer = Buffer.from(await FILE.arrayBuffer());
+            const fileExtension = FILE.name.split(".").pop();
+            const filename = `${JobItemTemplateCreateID}.${fileExtension}`;
+            const relativeFilePath = path.join("job-item-template-images", filename); // Relative path
+            const filePath = path.join(process.cwd(), "public", relativeFilePath);
+            fs.writeFileSync(filePath, buffer);
+            jobItemTemplateData.FILE = `/${relativeFilePath}`;
+        }
+
+        const jobItemTemplate = new JobItemTemplate(jobItemTemplateData);
 
         // Save the JobItemTemplate instance to the database
         await jobItemTemplate.save();

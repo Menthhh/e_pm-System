@@ -60,7 +60,7 @@ const Page = ({searchParams}) => {
                 Swal.fire({
                     icon: 'success',
                     title: 'Success',
-                    text: 'Job Item Template Updated Successfully!',
+                    text: 'Checklist Item Template Updated Successfully!',
                 });
                 setRefresh(!refresh);
             } else {
@@ -85,7 +85,7 @@ const Page = ({searchParams}) => {
         <div className="flex flex-row justify-between items-center">
             <div className="flex flex-col gap-3">
                 <h1 className="text-2xl font-bold text-primary flex  items-center">{">"} {jobItemTemplate.JOB_ITEM_TEMPLATE_TITLE} </h1>
-                <h1 className="text-1xl font-semibold">Edit Item to Job Template</h1>
+                <h1 className="text-1xl font-semibold">Edit Item to Checklist Template</h1>
             </div>
             <Link 
                  href={{
@@ -95,7 +95,7 @@ const Page = ({searchParams}) => {
 
                  className="text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center bg-red-500 hover:bg-red-800"
                  >
-                    Return to Job Item Template
+                    Return to Checklist Item Template
             </Link>
         </div>
             <form onSubmit={HandleSubmit}>
@@ -122,7 +122,7 @@ const Page = ({searchParams}) => {
                             for="job_item_template_title"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Job Item Template Title
+                            Checklist Item Template Title
                         </label>
                         <input
                             type="text"
@@ -139,7 +139,7 @@ const Page = ({searchParams}) => {
                             for="job_item_template_name"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Job Item Template Name
+                            Checklist Item Template Name
                         </label>
                         <input
                             type="text"
@@ -225,7 +225,7 @@ const Page = ({searchParams}) => {
                     className={`text-white font-bold rounded-lg text-sm px-5 py-2.5 text-center bg-primary hover:bg-primary-dark`}
             
                 >
-                    Save Job Item Template
+                    Save Checklist Item Template
                 </button>
                 
             </form>

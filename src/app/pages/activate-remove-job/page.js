@@ -9,11 +9,11 @@ import Swal from 'sweetalert2';
 import JobPlan from "@/components/JobPlan";
 
 
-const jobTemplatesHeader = ["ID", "Job Template Name", "Document no.", "Created At", "Action"];
+const jobTemplatesHeader = ["ID", "Checklist Template Name", "Document no.", "Created At", "Action"];
 
 const jobsHeader = [
     "ID",
-    "Job Name",
+    "Checklist Name",
     "Document no.",
     "Status",
     "Active",
@@ -97,7 +97,7 @@ const Page = () => {
                 Swal.fire({
                     icon: "success",
                     title: "Success",
-                    text: "Job template activated successfully"
+                    text: "Checklist template activated successfully"
                 });
             }
         } catch (error) {
@@ -187,7 +187,7 @@ const Page = () => {
         }
         return {
             "ID": index + 1,
-            "Job Template Name": jobTemplate.JOB_TEMPLATE_NAME,
+            "Checklist Template Name": jobTemplate.JOB_TEMPLATE_NAME,
             "Document no.": jobTemplate.DOC_NUMBER,
             "Create At": jobTemplate.createdAt,
             "Action": (
@@ -221,7 +221,7 @@ const Page = () => {
     const jobsBody = jobs.map((job, index) => {
         return {
             ID: index + 1,
-            "Job Name": job.JOB_NAME,
+            "Checklist Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
             "Status": <div
                 style={{ backgroundColor: job.STATUS_COLOR }}
@@ -298,7 +298,7 @@ const Page = () => {
                     </button>
                     <div className="flex flex-col gap-3">
                         <h1 className="text-2xl font-bold">How to retrieve the Data ?</h1>
-                        <p className="text-sm text-secondary">You can use the following URL pattern followed by the job ID that was sent to you after activation through the above URL.</p>
+                        <p className="text-sm text-secondary">You can use the following URL pattern followed by the Checklist ID that was sent to you after activation through the above URL.</p>
                         <p className="text-sm text-black bg-gray-300 p-2 font-bold">Example: {`${config.host}/api/job/get-job-value?job_id=job_id`}</p>
                     </div>
                 </div>
@@ -319,20 +319,20 @@ const Page = () => {
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
             <h1 className="text-3xl font-bold text-primary flex  items-center">{">"} WorkGroup: {user.workgroup} </h1>
-            <h1 className="text-2xl font-bold">Job Templates</h1>
+            <h1 className="text-2xl font-bold">Checklist Templates</h1>
             <TableComponent
                 headers={jobTemplatesHeader}
                 datas={jobTemplatesBody}
-                TableName="Job Templates"
-                searchColumn="Job Template Name"
+                TableName="Checklist Templates"
+                searchColumn="Checklist Template Name"
                 PageSize={8}
             />
             <h1 className="text-2xl font-bold">Active Jobs</h1>
             <TableComponent
                 headers={jobsHeader}
                 datas={jobsBody}
-                TableName="Active Jobs"
-                searchColumn="Job Name"
+                TableName="Active Checklist"
+                searchColumn="Checklist Name"
                 PageSize={8}
             />
             {isShowDetail && (<ShowDetailModal />)}

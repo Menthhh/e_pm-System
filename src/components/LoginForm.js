@@ -10,7 +10,7 @@ export default function LoginForm() {
 
   return (
     <div className="h-screen w-screen bg-blue-600 flex justify-center items-center">
-    <div className="flex flex-col items-center justify-center container font-sans shadow-2xl drop-shadow-2xl sm:w-7/12 lg:w-4/12 xl:w-3/12">
+    <div className="flex flex-col items-center justify-center container font-sans shadow-2xl drop-shadow-2xl sm:w-7/12 lg:w-4/12 xl:w-12/12">
       <h1 className="text-4xl font-bold text-center w-full p-4 rounded-t-lg bg-blue-700 text-white">
         e_pm
       </h1>

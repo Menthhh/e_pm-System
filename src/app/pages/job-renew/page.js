@@ -148,7 +148,7 @@ const Page = ({ searchParams }) => {
             if (data.status === 455) {
                 Swal.fire({
                     title: "Error!",
-                    text: "This job is not the latest revision Check the latest revision number and try again!",
+                    text: "This Checklist is not the latest revision Check the latest revision number and try again!",
                     icon: "error"
                 });
             }

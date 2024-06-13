@@ -157,13 +157,13 @@ export const ActivateJobTemplate = async (body) => {
   }
   catch (err) {
     console.error("Error occurred:", err); // Log the error
-    return { message: "Error occurred while activating job template" };
+    return { message: "Error occurred while activating Checklist template" };
   }
 }
 
 export async function sendEmails(emailList, job) {
   const usrsparams = new URLSearchParams({
-    subject: "New CheckList Job activated",
+    subject: "New CheckList Checklist activated",
     body: `
       You have a new checklist to do.
       Please check the EPM system for more details.

@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-const Listbox = ({ data, handleSelectedList  }) => {
+const Listbox = ({ data, handleSelectedList }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [selectedItems, setSelectedItems] = useState([]);
+
+    // Update selectedItems in the parent component whenever it changes
+    useEffect(() => {
+        handleSelectedList(selectedItems);
+    }, [selectedItems, handleSelectedList]);
 
     const handleSearchQueryChange = (event) => {
         setSearchQuery(event.target.value);
@@ -16,14 +21,7 @@ const Listbox = ({ data, handleSelectedList  }) => {
     
         // Update the selectedItems state immediately
         setSelectedItems(newSelectedItems);
-    
-        // Pass the updated selectedItems to the parent component
-        handleSelectedList(newSelectedItems);
     };
-    
-    useEffect(() => {
-        handleSelectedList(selectedItems);
-    }, [selectedItems]);
 
     const filteredItems = data.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())

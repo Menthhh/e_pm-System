@@ -1,7 +1,6 @@
 'use client'
 import Layout from "@/components/Layout.js";
 import TableComponent from "@/components/TableComponent.js";
-import { useSearchParams } from "next/navigation";
 import { config } from "@/config/config.js";
 import useFetchJobItemTemplates from "@/lib/hooks/useFetchJobItemTemplates";
 import useFetchUser from "@/lib/hooks/useFetchUser";
@@ -10,7 +9,6 @@ import useFetchTestLocations from "@/lib/hooks/useFetchTestLocations";
 import Select from 'react-select';
 import { useState } from "react";
 import Link from "next/link";
-import AddIcon from "@mui/icons-material/Add";
 
 import Image from "next/image";
 import { useDropzone } from "react-dropzone";
@@ -109,7 +107,9 @@ const Page = ({ searchParams }) => {
         formData.append('JOB_TEMPLATE_ID', data.JOB_TEMPLATE_ID);
         formData.append('JobTemplateCreateID', data.JobTemplateCreateID);
         formData.append('TEST_LOCATION_ID', data.TEST_LOCATION_ID);
-        formData.append('FILE', selectedFile);
+        if (selectedFile) {
+            formData.append('FILE', selectedFile);
+        }
 
         try {
             const response = await fetch(`${config.host}/api/job-item-template/create-job-item-template`, {
@@ -132,6 +132,7 @@ const Page = ({ searchParams }) => {
     };
 
 
+
     const handleRemove = async (jobItemTemplate_id) => {
         console.log(jobItemTemplate_id)
 
@@ -145,9 +146,9 @@ const Page = ({ searchParams }) => {
             });
             const data = await response.json();
             console.log(data)
-            
+
             setRefresh((prev) => !prev);
-            
+
         } catch (err) {
             console.log(err);
         }
@@ -161,15 +162,15 @@ const Page = ({ searchParams }) => {
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-7">
             <div className="flex flex-col gap-3">
                 <h1 className="text-2xl font-bold text-primary flex items-center">{">"} {jobTemplate.JOB_TEMPLATE_NAME} </h1>
-                <h1 className="text-1xl font-semibold">Add Item to Job Template</h1>
+                <h1 className="text-1xl font-semibold">Add Checklist Item to Checklist Template</h1>
             </div>
             <form onSubmit={HandleSubmit} className="flex flex-col justify-center gap-8">
                 <div className="grid gap-6 mb-6 md:grid-cols-3 row-span-4">
-                    <div className="flex flex-col gap-4 justify-center items-center w-full row-span-4">
+                    <div className=" flex flex-col gap-4 justify-center items-center w-full row-span-4">
                         <div
                             {...getRootProps()}
                             id="fileInputDropzone"
-                            className="w-5/6 bg-white rounded-2xl h-[202px] border-2 border-[#4398E7] flex justify-center items-center"
+                            className="px-5 w-full bg-white rounded-2xl h-full border-2 border-[#4398E7] flex justify-center items-center"
                         >
                             <input
                                 {...getInputProps()}
@@ -202,17 +203,17 @@ const Page = ({ searchParams }) => {
                         </div>
                         <div className="flex gap-4">
                             <button
-                                className="bg-[#347EC2] text-white px-4 py-2 rounded-lg drop-shadow-lg hover:bg-[#4398E7] hover:text-white"
+                                className="bg-[#347EC2] text-white text-sm px-4 py-2 rounded-lg drop-shadow-lg hover:bg-[#4398E7] hover:text-white"
                                 type="button"
                                 onClick={() => document.getElementById('fileInput').click()}
                             >
                                 <div className="flex justify-center items-center gap-2 font-bold">
-                                    <AddIcon />
+
                                     <p> Add the image</p>
                                 </div>
                             </button>
                             <button
-                                className="bg-red-500 font-bold text-white px-4 py-2 rounded-lg drop-shadow-lg hover:bg-red-700 hover:text-white" type="button" onClick={handleClearImage}>
+                                className="bg-red-500 text-sm font-bold text-white px-4 py-2 rounded-lg drop-shadow-lg hover:bg-red-700 hover:text-white" type="button" onClick={handleClearImage}>
                                 <div className="flex justify-center items-center gap-2">
                                     <p>Clear the image</p>
                                 </div>
@@ -241,7 +242,7 @@ const Page = ({ searchParams }) => {
                             htmlFor="job_item_template_title"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Job Item Template Title
+                            Checklist Item Template Title
                         </label>
                         <input
                             type="text"
@@ -257,7 +258,7 @@ const Page = ({ searchParams }) => {
                             htmlFor="job_item_template_name"
                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Job Item Template Name
+                            Checklist Item Template Name
                         </label>
                         <input
                             type="text"
@@ -345,14 +346,14 @@ const Page = ({ searchParams }) => {
                             'bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'}`}
                     disabled={!user || !user.actions || !user.actions.some(action => action._id === enabledFunction["add-job-item-template"])}
                 >
-                    Add Job Item Template
+                    Add Checklist Item Template
                 </button>
             </form>
 
             <TableComponent
                 headers={jobItemTemplateHeader}
                 datas={jobItemTemplateBody}
-                TableName={"Job Item Templates"}
+                TableName={"Checklist Item Templates"}
                 searchColumn={"Title"}
             />
 

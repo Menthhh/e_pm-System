@@ -173,7 +173,7 @@ const Page = () => {
             } else {
                 Swal.fire({
                     title: "Good job!",
-                    text: "You have successfully created a job template!",
+                    text: "You have successfully created a Checklist template!",
                     icon: "success"
                 });
                 e.target.reset();
@@ -185,7 +185,7 @@ const Page = () => {
                 setRefresh((prev) => !prev);
             }
         } catch (error) {
-            console.error("Error creating job template:", error);
+            console.error("Error creating Checklist template:", error);
         }
     };
 
@@ -200,7 +200,7 @@ const Page = () => {
   
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
-            <h1 className="text-2xl font-bold">Job Template</h1>
+            <h1 className="text-2xl font-bold">Checklist Template</h1>
             <Link
                 href="/pages/job-item-template"
                 className={`align-left text-white bg-blue-600 hover:bg-blue-800 w-60 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center
@@ -210,7 +210,7 @@ const Page = () => {
                     }`}
             >
                 <div className="flex gap-3 items-center">
-                    <p>View all Job Templates</p>
+                    <p>View all Checklist Templates</p>
                     <NextPlanIcon />
                 </div>
             </Link>
@@ -273,7 +273,7 @@ const Page = () => {
                             for="job_template_name"
                             class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Job Template Name
+                            Checklist Template Name
                         </label>
                         <input
                             type="text"
@@ -368,13 +368,13 @@ const Page = () => {
                     </div>
                 </div>
                 {
-                    // check if user has permission to create job template
+                    // check if user has permission to create Checklist template
                     userEnableFunctions.some(action => action._id === enabledFunction["create-job-template"]) ? (
                         <button
                             type="submit"
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
-                            Create Job Template
+                            Create Checklist Template
                         </button>
                     ) : (
                         <button
@@ -382,7 +382,7 @@ const Page = () => {
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-not-allowed"
                             disabled
                         >
-                            Create Job Template
+                            Create Checklist Template
                         </button>
                     )
                 }

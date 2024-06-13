@@ -28,16 +28,16 @@ const JobForm = (
             onSubmit={handleApprove}
         >
             <h1 className="text-3xl font-bold text-primary flex items-center cursor-pointer" onClick={toggleJobInfo}>
-                Job Information
+            Checklist Information
                 {isShowJobInfo ? <ArrowDropUpIcon className="size-14" /> : <ArrowDropDownIcon className="size-14" />}
             </h1>
             <div className={`grid grid-cols-4 ipadmini:grid-cols-4 gap-x-6 w-full gap-y-2 ${isShowJobInfo ? "" : "hidden"}`}>
                 <div className="flex flex-col">
-                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Job Id</label>
+                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Checklist Id</label>
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.JobID} disabled />
                 </div>
                 <div className="flex flex-col">
-                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Job Name</label>
+                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Checklist Name</label>
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-not-allowed" value={jobData.Name} disabled />
                 </div>
                 <div className="flex flex-col">
@@ -85,7 +85,7 @@ const JobForm = (
             <hr />
             <div className="flex flex-col gap-8">
                 <h1 className="text-3xl font-bold text-primary flex items-center cursor-pointer" onClick={toggleJobItem}>
-                    Job Items Information
+                Checklist Items Information
                     {isShowJobItem ? <ArrowDropUpIcon className="size-14" /> : <ArrowDropDownIcon className="size-14" />}
                 </h1>
                 <div className={`overflow-x-auto ${isShowJobItem ? "" : "hidden"} flex flex-col gap-5`}>

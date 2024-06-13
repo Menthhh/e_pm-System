@@ -13,8 +13,8 @@ const ShowmoreData = ({ data, close }) => {
         if (router) {
             if (event.status_name === 'plan') {
                 Swal.fire({
-                    title: 'Job is in plan status',
-                    text: 'You cannot view the job in plan status',
+                    title: 'Checklist is in plan status',
+                    text: 'You cannot view the Checklist in plan status',
                     icon: 'warning',
                     confirmButtonText: 'OK'
                 });
@@ -22,8 +22,8 @@ const ShowmoreData = ({ data, close }) => {
                 router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
             } else if (event.status_name === 'overdue') {
                 Swal.fire({
-                    title: 'Job is overdue',
-                    text: 'You cannot view the job in overdue status',
+                    title: 'Checklist is overdue',
+                    text: 'You cannot view the Checklist in overdue status',
                     icon: 'warning',
                     confirmButtonText: 'OK'
                 });

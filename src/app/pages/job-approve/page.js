@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const jobApprovesHeader = [
     "ID",
-    "Job Name",
+    "Checklist Name",
     "Document no.",
     "Status",
     "submittedAt",
@@ -21,7 +21,7 @@ const Page = () => {
     const jobApprovesBody = jobApproves && jobApproves.map((jobApprove, index) => {
         return {
             "ID": index + 1,
-            "Job Name": jobApprove.job_name,
+            "Checklist Name": jobApprove.job_name,
             "Document no.": jobApprove.job_doc_number,
             "Status": (
                 <div
