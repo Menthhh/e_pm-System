@@ -12,32 +12,44 @@ const ShowmoreData = ({ data, close }) => {
     const handleSelectEvent = (event) => {
         if (router) {
             if (event.status_name === 'plan') {
-                Swal.fire({
-                    title: 'Checklist is in plan status',
-                    text: 'You cannot view the Checklist in plan status',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
+              Swal.fire({
+                title: 'Checklist is in plan status',
+                text: 'You cannot view the Checklist in plan status',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              });
             } else if (event.status_name === 'complete') {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
+              router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
             } else if (event.status_name === 'overdue') {
-                Swal.fire({
-                    title: 'Checklist is overdue',
-                    text: 'You cannot view the Checklist in overdue status',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
+              Swal.fire({
+                title: 'Checklist is overdue',
+                text: 'You cannot view the Checklist in overdue status',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              });
             }
             else if (event.status_name === 'new') {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=false`);
+              router.push(`/pages/view-jobs?job_id=${event.job_id}&view=false`);
             }
             else if (event.status_name === 'ongoing') {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=false`);
+              router.push(`/pages/view-jobs?job_id=${event.job_id}&view=false`);
             }
+            else if (event.status_name === 'waiting for approval') {
+             Swal.fire({
+                title: 'Checklist is waiting for approval',
+                text: 'You cannot view the Checklist in waiting for approval status',
+                icon: 'warning',
+                confirmButtonText: 'OK'
+              });
+            }
+            else if (event.status_name === 'renew') {
+              router.push(`/pages/job-renew?job_id=${event.job_id}`);
+            }
+      
             else {
-                router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
+              router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
             }
-        }
+          }
     };
 
     return (

@@ -9,6 +9,7 @@ const jobsActiveHeader = [
     "Document no.",
     "Status",
     "Active",
+    "Submitted By",
     "Action"
 ]
 
@@ -27,12 +28,13 @@ const JobsTable = ({ refresh }) => {
             "Status": (
                 <div
                     style={{ backgroundColor: statusColor }}
-                    className="py-1  rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm flex justify-center items-center px-6"
+                    className="py-1 select-none  rounded-full text-black font-bold shadow-xl text-[12px] ipadmini:text-sm flex justify-center items-center px-6"
                 >
                     {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
                 </div>
             ),
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
+            "Submitted By": job.SUBMITTED_BY ? job.SUBMITTED_BY.EMP_NAME : "-",
             "Action": (
                 <div>
                     {job.STATUS_NAME === "complete" ? (

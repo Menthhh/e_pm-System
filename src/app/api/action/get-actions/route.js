@@ -3,6 +3,7 @@ import { Action } from "@/lib/models/Action.js";
 import { NextResponse } from 'next/server';
 import { connectToDb } from "@/app/api/mongo/index.js";
 
+export const dynamic = 'force-dynamic';
 export const GET = async (req) => {
     await connectToDb();
     try {

@@ -4,6 +4,15 @@ import { Job } from "@/lib/models/Job";
 import { User } from "@/lib/models/User";
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
+/**
+ * @method GET
+ * @returns NextResponse
+ * @description Find All Prompts and return
+ */
+
+
 export const GET = async (req, res) => {
   try {
     await connectToDb();

@@ -17,7 +17,8 @@ const JobForm = (
         isShowJobItem,
         toggleJobInfo,
         isShowJobInfo,
-        toggleAddComment
+        toggleAddComment,
+        view
     }
 ) => {
 
@@ -141,6 +142,7 @@ const JobForm = (
                         </tbody>
                     </table>
                 </div>
+                {view ? "" :
                 <div className="flex justify-end gap-4 mt-4">
                     <button
                         type="submit"
@@ -164,6 +166,7 @@ const JobForm = (
                         Disapprove
                     </button>
                 </div>
+                }
 
             </div>
 

@@ -4,7 +4,7 @@ import { User } from "@/lib/models/User.js";
 import { NextResponse } from 'next/server';
 import { Role } from "@/lib/models/Role";
 import { connectToDb } from "@/app/api/mongo/index.js";
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, {params}) => {
     await connectToDb();
     const { workgroup_id } = params;

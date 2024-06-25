@@ -7,19 +7,21 @@ const useFetchReport = (refresh) => {
 
     useEffect(() => {
         const fetchReport = async () => {
+            setIsLoading(true); // Ensure loading state is set to true when fetching
             try {
-                const response = await fetch(`${config.host}/api/job/job-report`, {
+                const response = await fetch(`/api/job/job-report`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
-                    }
+                    },
+                    next : { revalidate: 10 }
                 });
                 const data = await response.json();
                 console.log('data:', data); 
                 setReport(data);
-                setIsLoading(false);
             } catch (error) {
                 console.error('Error:', error);
+            } finally {
                 setIsLoading(false);
             }
         };

@@ -19,6 +19,8 @@ const userSchema = new mongoose.Schema({
     APPROVE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ApproveList', default: [] }]
 }, { timestamps: true });
 
-export const User = mongoose.models?.User || mongoose.model('User', userSchema);
+const User = mongoose.models?.User || mongoose.model('User', userSchema);
+
+export { User, userSchema}
 
 

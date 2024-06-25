@@ -67,7 +67,8 @@ const MqttTestComponent = () => {
 
   return (
     <div style={{ padding: '20px' }}>
-      <h1>Chat with mqtt protocol</h1>
+      <h1>Change mqt baba</h1>
+      <hr></hr>
       <div style={{ padding: "5px" }}>
         <label for="display-name">Topic &nbsp;: &nbsp;</label>
         <input type="text" value={topic_adrrees}

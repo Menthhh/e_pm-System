@@ -106,12 +106,13 @@ const Page = ({searchParams}) => {
         };
 
         try {
-            const res = await fetch(`${config.host}/api/job-template/edit-job-template`, {
+            const res = await fetch(`/api/job-template/edit-job-template`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
+                next: { revalidate: 10 },
             });
             const response = await res.json();
             if (response.status === 500) {

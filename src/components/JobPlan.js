@@ -80,7 +80,8 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(requestData)
+                body: JSON.stringify(requestData),
+                next : { revalidate: 10 }
             });
 
             if (!response.ok) {

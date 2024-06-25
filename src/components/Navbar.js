@@ -22,7 +22,7 @@ const Navbar = ({ menu }) => {
 
     const fetchUser = async (user_id) => {
         try {
-            const response = await fetch( `${config.host}/api/user/get-user/${user_id}`);
+            const response = await fetch( `/api/user/get-user/${user_id}`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error("Failed to fetch user data");
             }
@@ -47,7 +47,7 @@ const Navbar = ({ menu }) => {
 
 
     return (
-        <nav className="w-full h-16 p-4 bg-blue-700 flex justify-between items-center text-white font-bold  font-sans z-[100]   fixed">
+        <nav className="w-full h-16 p-4 bg-blue-700 flex justify-between items-center text-white font-bold  font-sans z-[100] fixed">
             <div className="flex flex-col gap-2 cursor-pointer " onClick={toggleMenu}>
                 <div className={`bg-white w-7 h-0.5 ${showMenu ? 'rotate-45' : ''}`}></div>
                 <div className={`bg-white w-7 h-0.5 ${showMenu ? 'opacity-0' : ''}`}></div>
@@ -75,7 +75,7 @@ const Navbar = ({ menu }) => {
                     ))}
                 </ul>
             </div>
-            <div className="flex gap-3 items-center text-white">
+            <div className="flex gap-3 items-center text-white cursor-default">
                 <div>
                     <p className="text-md font-bold">{user.name}</p> 
                     <p className="text-sm text-right" >{user.role} </p>

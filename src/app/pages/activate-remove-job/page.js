@@ -52,7 +52,7 @@ const Page = () => {
 
     const fetchUser = async (user_id) => {
         try {
-            const response = await fetch(`${config.host}/api/user/get-user/${user_id}`);
+            const response = await fetch(`/api/user/get-user/${user_id}`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error("Failed to fetch user data");
             }
@@ -68,7 +68,7 @@ const Page = () => {
 
     const fetchJobTemplates = async (workgroup_id) => {
         try {
-            const response = await fetch(`${config.host}/api/workgroup/get-job-templates-from-workgroup/${workgroup_id}`);
+            const response = await fetch(`/api/workgroup/get-job-templates-from-workgroup/${workgroup_id}`, { next: { revalidate: 10 } });
             const data = await response.json();
             if (data.status === 200) {
                 setJobTemplates(data.jobTemplates);
@@ -80,7 +80,7 @@ const Page = () => {
 
     const handleActivate = async (requestData) => {
         try {
-            const response = await fetch(`${config.host}/api/job/activate-job-template-manual`, {
+            const response = await fetch(`/api/job/activate-job-template-manual`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -90,6 +90,7 @@ const Page = () => {
                     "JobTemplateCreateID": requestData.jobTemplateCreateID,
                     "ACTIVATER_ID": requestData.ACTIVATER_ID
                 }),
+                next: { revalidate: 10 }
             });
             const responseData = await response.json();
             if (responseData.status === 200) {
@@ -114,7 +115,7 @@ const Page = () => {
 
     const fetchJobs = async (workgroup_id) => {
         try {
-            const response = await fetch(`${config.host}/api/job/get-jobs-from-workgroup/${workgroup_id}`);
+            const response = await fetch(`/api/job/get-jobs-from-workgroup/${workgroup_id}`, { next: { revalidate: 10 } });
             const data = await response.json();
             if (data.status === 200) {
                 setJobs(data.jobs);
@@ -146,12 +147,13 @@ const Page = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const response = await fetch(`${config.host}/api/job/remove-job`, {
+                    const response = await fetch(`/api/job/remove-job`, {
                         method: "DELETE",
                         headers: {
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({ job_id }),
+                        next: { revalidate: 10 }
                     });
                     swalWithBootstrapButtons.fire({
                         title: "Deleted!",
@@ -223,23 +225,30 @@ const Page = () => {
             ID: index + 1,
             "Checklist Name": job.JOB_NAME,
             "Document no.": job.DOC_NUMBER,
-            "Status": <div
-                style={{ backgroundColor: job.STATUS_COLOR }}
-                className="px-4 text-[12px] py-1 rounded-full text-black font-semibold shadow-xl ipadmini:text-sm"
-            >
-                {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
-            </div>,
+            "Status": (
+                <div
+                    style={{ backgroundColor: job.STATUS_COLOR }}
+                    className="px-4 text-[12px] font-bold py-1 rounded-full text-black shadow-xl ipadmini:text-sm whitespace-nowrap overflow-hidden text-ellipsis select-none"
+                >
+                    {job.STATUS_NAME ? job.STATUS_NAME : "pending"}
+                </div>
+            ),
+
+
             "Active": job.createdAt ? new Date(job.createdAt).toLocaleString() : "Not Active",
             "Activator": job.ACTIVATER_NAME,
             "Action": (
-                //remove job
-                <button
-                    className="text-white text-[12px] bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none font-bold rounded-lg px-4 py-2 text-center ipadmini:text-sm"
-                    href="#" onClick={() => handleRemove(job._id)}
-                >
-                    Remove
-                </button>
-
+                //check permission
+                <div className="flex gap-2 items-center justify-center">
+                    <button
+                        className="bg-red-500 hover:bg-red-700 text-white font-semibold py-1 px-2 rounded"
+                        onClick={() => handleRemove(job._id)}
+                        disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["remove-job"])}
+                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["remove-job"]) ? "not-allowed" : "pointer" }}
+                    >
+                        Remove
+                    </button>
+                </div>
             )
         };
     });
@@ -292,14 +301,14 @@ const Page = () => {
                     </div>
                     <button
                         className="bg-red-700 text-white font-bold py-2 px-4 self-end absolute top-0 right-0 hover:bg-red-800 shadow-lg rounded-sm"
-                        onClick={ () => setIsShowDetail(false) } // Close modal on button click
+                        onClick={() => setIsShowDetail(false)} // Close modal on button click
                     >
                         <CloseIcon className="size-18" />
                     </button>
                     <div className="flex flex-col gap-3">
                         <h1 className="text-2xl font-bold">How to retrieve the Data ?</h1>
                         <p className="text-sm text-secondary">You can use the following URL pattern followed by the Checklist ID that was sent to you after activation through the above URL.</p>
-                        <p className="text-sm text-black bg-gray-300 p-2 font-bold">Example: {`${config.host}/api/job/get-job-value?job_id=job_id`}</p>
+                        <p className="text-sm text-black bg-gray-300 p-2 font-bold">Example: {`/api/job/get-job-value?job_id=job_id`}</p>
                     </div>
                 </div>
             </div>
@@ -308,7 +317,7 @@ const Page = () => {
 
 
     const handleViewDetial = (data) => {
-        const link = `${config.host}/api/job/activate-job-template-third-party?jobTemID=${data.jobTemplateID}&actID=${data.ACTIVATER_ID}&jobTemCreateID=${data.jobTemplateCreateID}`
+        const link = `${config.host_link}/api/job/activate-job-template-third-party?jobTemID=${data.jobTemplateID}&actID=${data.ACTIVATER_ID}&jobTemCreateID=${data.jobTemplateCreateID}`
         setDetail(() => ({
             "link": link
         }))

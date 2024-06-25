@@ -6,11 +6,11 @@ import { Status } from "@/lib/models/Status";
 import { connectToDb } from "@/app/api/mongo/index.js";
 import { Schedule } from "@/lib/models/Schedule.js";
 
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
     await connectToDb();
     const searchParams = req.nextUrl.searchParams;
     const workgroup_id = searchParams.get("workgroup_id");
-
 
     try {
         // Fetch job templates based on workgroup_id
@@ -21,7 +21,10 @@ export const GET = async (req, res) => {
             jobTemplates = await JobTemplate.find({ WORKGROUP_ID: workgroup_id });
         }
 
-  
+        // Check if there are no job templates
+        if (jobTemplates.length === 0) {
+            return NextResponse.json({ status: 200, events: [] });
+        }
 
         // Fetch job template activations
         const jobTemplatesActivates = await Promise.all(jobTemplates.map(async (jobTemplate) => {
@@ -43,7 +46,10 @@ export const GET = async (req, res) => {
         const activationEvents = await Promise.all(flattenedActivates.map(async (jobTemplateActivate) => {
             const createdAtDate = new Date(jobTemplateActivate.createdAt);
             const job = await Job.findOne({ _id: jobTemplateActivate.JOB_ID });
-            const jobName = job ? job.JOB_NAME : null;
+            if (!job) {
+                return null; // Skip if the job does not exist
+            }
+            const jobName = job.JOB_NAME;
             const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
             const statusColor = status ? status.color : null;
             const statusName = status ? status.status_name : null;
@@ -57,6 +63,9 @@ export const GET = async (req, res) => {
                 color: statusColor,
             };
         }));
+
+        // Filter out null values from activationEvents
+        const validActivationEvents = activationEvents.filter(event => event !== null);
 
         // Create events from schedules
         const scheduleEvents = await Promise.all(flattenedSchedules.map(async (schedule) => {
@@ -74,8 +83,10 @@ export const GET = async (req, res) => {
             };
         }));
 
-        // Combine activation events and schedule events
-        const resolvedEvents = [...activationEvents, ...await Promise.all(scheduleEvents)];
+        // Combine valid activation events and schedule events
+        const resolvedEvents = [...validActivationEvents, ...await Promise.all(scheduleEvents)];
+
+        console.log("Resolved events:", resolvedEvents);
 
         return NextResponse.json({ status: 200, events: resolvedEvents });
     } catch (error) {

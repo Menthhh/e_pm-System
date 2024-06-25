@@ -32,7 +32,7 @@ const Page = () => {
   const fetchWorkgroups = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/workgroup/get-workgroups`
+        `/api/workgroup/get-workgroups`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
@@ -77,7 +77,7 @@ const Page = () => {
     const newWorkgroup = e.target.workgroup_name.value;
     console.log(newWorkgroup);
     try {
-      await fetch(`${config.host}/api/workgroup/create-workgroup`, {
+      await fetch(`/api/workgroup/create-workgroup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,9 +85,24 @@ const Page = () => {
         body: JSON.stringify({
           WORKGROUP_NAME: newWorkgroup,
         }),
+        next: { revalidate: 10 },
+      });
+      Swal.fire({
+        title: "Success",
+        text: "Workgroup created successfully",
+        icon: "success",
+        confirmButtonText: "OK",
       });
       setRefresh(!refresh);
+
     } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Something went wrong",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      console.log("Error creating workgroup:", error);
       console.error("Error creating workgroup:", error);
     }
   };
@@ -113,9 +128,10 @@ const Page = () => {
       if (result.isConfirmed) {
         try {
           await fetch(
-            `${config.host}/api/workgroup/delete-workgroup/${id}`,
+            `/api/workgroup/delete-workgroup/${id}`,
             {
               method: "DELETE",
+              next: { revalidate: 10 }
             }
           );
           swalWithBootstrapButtons.fire({
@@ -123,7 +139,7 @@ const Page = () => {
             text: "Your file has been deleted.",
             icon: "success"
           });
-          setRefresh(!refresh);
+          setRefresh(prev => !prev);
         } catch (error) {
           console.error("Error deleting workgroup:", error);
         }

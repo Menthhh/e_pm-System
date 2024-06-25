@@ -2,8 +2,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { config } from "@/config/config";
-
+import {config } from "@/config/config.js"
 const secretKey = process.env.SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
@@ -129,7 +128,9 @@ export const convertKeyToDate = async (uniqueKey) => {
 
 export const getRevisionNo = async () => {
   try {
-    const res = await fetch("https://wdcdagilesdk.oracleoutsourcing.com/AgileDocumentViewer/DocAttachmentServlet?&docDesc=&docType=&docCategory=&productName=&businessUnit=&classification=&affectedSite=&affectedAreas=&docOwner=&xmlFlag=searchCriteria&docNum=80-020231-003");
+    const res = await fetch("https://wdcdagilesdk.oracleoutsourcing.com/AgileDocumentViewer/DocAttachmentServlet?&docDesc=&docType=&docCategory=&productName=&businessUnit=&classification=&affectedSite=&affectedAreas=&docOwner=&xmlFlag=searchCriteria&docNum=80-020231-003"
+      ,{next: {revalidate: 10}}
+    );
     const data = await res.json();
     return data[0].Revision
   }
@@ -139,27 +140,6 @@ export const getRevisionNo = async () => {
   }
 }
 
-export const ActivateJobTemplate = async (body) => {
-  try {
-    const res = await fetch(`${config.host}/api/job/activate-job-template-manual`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        JobTemplateID: body.JobTemplateID,
-        ACTIVATER_ID: body.ACTIVATER_ID,
-        JobTemplateCreateID: body.JobTemplateCreateID,
-      }),
-    });
-    const data = await res.json();
-    return data;
-  }
-  catch (err) {
-    console.error("Error occurred:", err); // Log the error
-    return { message: "Error occurred while activating Checklist template" };
-  }
-}
 
 export async function sendEmails(emailList, job) {
   const usrsparams = new URLSearchParams({

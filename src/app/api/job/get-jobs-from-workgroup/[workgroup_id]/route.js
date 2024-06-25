@@ -4,7 +4,7 @@ import { User } from "@/lib/models/User";
 import { Status } from "@/lib/models/Status";
 import { connectToDb } from "@/app/api/mongo/index.js";
 import { Schedule } from "@/lib/models/Schedule.js";
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, { params }) => {
     await connectToDb();
     const { workgroup_id } = params;

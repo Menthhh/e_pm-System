@@ -5,6 +5,7 @@ import { RoleHasAction } from "@/lib/models/RoleHasAction";
 import { connectToDb } from "@/app/api/mongo/index.js";
 import mongoose from "mongoose";
 
+export const dynamic = 'force-dynamic';
 export const GET = async (req, { params }) => {
     await connectToDb();
     const { user_id } = params;

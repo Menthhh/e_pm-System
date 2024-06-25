@@ -21,7 +21,7 @@ const Page = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${config.host}/api/role/get-roles`);
+      const response = await fetch(`/api/role/get-roles`, { next: { revalidate: 10 } });
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
       }
@@ -64,7 +64,7 @@ const Page = () => {
 
   const createRole = async () => {
     try {
-      await fetch(`${config.host}/api/role/create-role`, {
+      await fetch(`/api/role/create-role`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,6 +72,7 @@ const Page = () => {
         body: JSON.stringify({
           ROLE_NAME: newRoleInput.current.value,
         }),
+        next: { revalidate: 10 },
       });
       setRefresh(!refresh);
     } catch (error) {
@@ -93,8 +94,9 @@ const Page = () => {
       if (result.isConfirmed) {
         try {
           // Send delete request if confirmed
-          await fetch(`${config.host}/api/role/delete-role/${id}`, {
+          await fetch(`/api/role/delete-role/${id}`, {
             method: "DELETE",
+            next: { revalidate: 10 }
           });
           // Update UI after successful deletion
           setRefresh(!refresh);

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { JobTemplate } from "@/lib/models/JobTemplate";
 import { Machine } from "@/lib/models/Machine";
 import { connectToDb } from "@/app/api/mongo/index.js";
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, {params}) => {
     await connectToDb();
     const { workgroup_id } = params;

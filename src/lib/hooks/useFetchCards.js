@@ -16,8 +16,8 @@ const useFetchCards = (refresh = null) => {
             setError(null);
             try {
                 const response = await fetch(
-                    `${config.host}/api/user/get-card-from-user/${user_id}`
-                );
+                    `/api/user/get-card-from-user/${user_id}`
+                    , { next: { revalidate: 10 } });
                 if (!response.ok) {
                     throw new Error("Failed to fetch roles");
                 }

@@ -43,7 +43,7 @@ const Page = () => {
   const fetchUser = async (user_id) => {
     try {
       const response = await fetch(
-        `${config.host}/api/user/get-user/${user_id}`
+        `/api/user/get-user/${user_id}`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
@@ -60,7 +60,7 @@ const Page = () => {
   const fetchUsersWorkgroup = async (workgroup_id) => {
     try {
       const response = await fetch(
-        `${config.host}/api/workgroup/get-users-from-workgroup/${workgroup_id}`
+        `/api/workgroup/get-users-from-workgroup/${workgroup_id}`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -76,7 +76,7 @@ const Page = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/user/get-users`
+        `/api/user/get-users`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -92,11 +92,12 @@ const Page = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${config.host}/api/role/get-roles`, {
+      const response = await fetch(`/api/role/get-roles`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
         },
+        next : { revalidate: 10 }
       });
 
       if (!response.ok) {
@@ -137,7 +138,7 @@ const Page = () => {
   const fetchUserEnabledFunction = async (user_id) => {
     try {
       const response = await fetch(
-        `${config.host}/api/action/get-user-action/${user_id}`
+        `/api/action/get-user-action/${user_id}`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch user data");
@@ -153,7 +154,7 @@ const Page = () => {
   const handleAdd = async (user_id, role_id) => {
     const workgroup_id = user.workgroup_id;
     // Update user role
-    const res = await fetch(`${config.host}/api/user/update-user/${user_id}`, {
+    const res = await fetch(`/api/user/update-user/${user_id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -161,11 +162,12 @@ const Page = () => {
       body: JSON.stringify({
         ROLE: role_id,
       }),
+      next : { revalidate: 10 }
     });
 
 
     // Add user to workgroup
-    await fetch(`${config.host}/api/workgroup/add-user-to-workgroup-admin`, {
+    await fetch(`/api/workgroup/add-user-to-workgroup-admin`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -174,6 +176,7 @@ const Page = () => {
         user_id: user_id,
         workgroup_id: workgroup_id,
       }),
+      next : { revalidate: 10 }
     });
 
     setRefresh(!refresh);
@@ -202,7 +205,7 @@ const Page = () => {
       if (result.isConfirmed) {
         // Remove user from workgroup
         try {
-          await fetch(`${config.host}/api/workgroup/remove-user-from-workgroup`, {
+          await fetch(`/api/workgroup/remove-user-from-workgroup`, {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
@@ -211,6 +214,7 @@ const Page = () => {
               user_id: user_id,
               workgroup_id: workgroup_id,
             }),
+            next : { revalidate: 10 }
           });
           swalWithBootstrapButtons.fire({
             title: "Removed!",

@@ -16,6 +16,7 @@ import CommentReview from "@/components/CommentReview";
 const Page = ({ searchParams }) => {
     const router = useRouter();
     const job_id = searchParams.job_id
+    const [view, setView] = useState(true);
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
     const { user, isLoading: userLoading, error: userError } = useFetchUser();
@@ -27,6 +28,24 @@ const Page = ({ searchParams }) => {
     const [commentDetail, setCommentDetail] = useState(null);
     const [showDetail, setShowDetail] = useState(null);
 
+    useEffect(() => {
+        if (user._id && jobData.Approvers) {
+            if (jobData.Approvers.includes(user._id)) {
+                setView(false);
+            }
+            else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'You are not authorized to view this page',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    router.push('/pages/job-approve');
+                });
+            }
+
+        }
+    }, [user, jobData])
 
     const toggleJobInfo = () => {
         setIsShowJobInfo(!isShowJobInfo);
@@ -48,7 +67,7 @@ const Page = ({ searchParams }) => {
         e.preventDefault();
 
         try {
-            const response = await fetch(`${config.host}/api/approval/approve`, {
+            const response = await fetch(`/api/approval/approve`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -58,7 +77,8 @@ const Page = ({ searchParams }) => {
                     user_id: user._id,
                     isApproved: true,
                     comment: null
-                })
+                }),
+                next: { revalidate: 10 }
             });
             const data = await response.json();
             if (data.status === 200) {
@@ -108,7 +128,7 @@ const Page = ({ searchParams }) => {
         console.log(commentDetail);
         console.log(comment)
         try {
-            const response = await fetch(`${config.host}/api/approval/approve`, {
+            const response = await fetch(`/api/approval/approve`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -118,7 +138,8 @@ const Page = ({ searchParams }) => {
                     user_id: user._id,
                     isApproved: false,
                     comment: comment
-                })
+                }),
+                next: { revalidate: 10 }
             });
             const data = await response.json();
             if (data.status === 200) {
@@ -167,6 +188,7 @@ const Page = ({ searchParams }) => {
                 toggleJobInfo={toggleJobInfo}
                 isShowJobInfo={isShowJobInfo}
                 toggleAddComment={toggleAddComment}
+                view={view}
             />
             {jobItemDetail && <ItemInformationModal
                 jobItemDetail={jobItemDetail}

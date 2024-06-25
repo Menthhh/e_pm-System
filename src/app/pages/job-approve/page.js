@@ -53,7 +53,7 @@ const Page = () => {
     return (
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 ">
             <h1 className="text-3xl font-bold text-gray-800 leading-tight mb-4">
-                Waiting for your approval...
+               There are {jobApproves.length} active jobs, that need to be reviewed.
             </h1>
             <TableComponent headers={jobApprovesHeader} datas={jobApprovesBody} TableName="Active Jobs" PageSize={5} />
     

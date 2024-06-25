@@ -11,7 +11,7 @@ const useFetchUsers = () => {
     useEffect(() => {
         const fetchUsers = async () => {
             try {
-                const res = await fetch(`${config.host}/api/user/get-users`);
+                const res = await fetch(`/api/user/get-users`, { next: { revalidate: 10 } });
                 const data = await res.json();
                 setUsers(data.users);
                 setLoading(false);

@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server.js';
 import { User } from "@/lib/models/User.js";
 import { TestLocation } from "@/lib/models/TestLocation";
 import { connectToDb } from "@/app/api/mongo/index.js";
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, { params }) => {
     await connectToDb();
     const { jobtemplate_id } = params;

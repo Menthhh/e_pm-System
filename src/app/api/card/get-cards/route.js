@@ -61,7 +61,7 @@ import { connectToDb } from "@/app/api/mongo/index.js";
  *                   description: Error message
  */
 
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
    
     await connectToDb();

@@ -2,7 +2,7 @@ import { Status } from "@/lib/models/Status";
 import { NextResponse } from 'next/server';
 import { connectToDb } from "@/app/api/mongo/index.js";
 
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
     await connectToDb();
     try {

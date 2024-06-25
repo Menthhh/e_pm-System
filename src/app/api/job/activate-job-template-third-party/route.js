@@ -116,7 +116,7 @@ export const GET = async (req, res) => {
             await jobItemTemplateActivate.save();
         }));
 
-        const link = `${config.host}api/job/get-job-value?job_id=${job._id}`;
+        const link = `api/job/get-job-value?job_id=${job._id}`;
 
         const workgroup = await Workgroup.findOne({ _id: jobTemplate.WORKGROUP_ID });
         const userlist = workgroup ? workgroup.USER_LIST : [];

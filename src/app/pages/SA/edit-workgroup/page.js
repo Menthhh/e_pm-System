@@ -26,7 +26,7 @@ const Page = ({searchParams}) => {
   const fetchWorkgroup = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/workgroup/get-workgroup/${workgroup_id}`
+        `/api/workgroup/get-workgroup/${workgroup_id}`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch workgroup");
@@ -41,7 +41,7 @@ const Page = ({searchParams}) => {
   const fetchUsersWorkgroup = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/workgroup/get-users-from-workgroup/${workgroup_id}`
+        `/api/workgroup/get-users-from-workgroup/${workgroup_id}`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -57,7 +57,7 @@ const Page = ({searchParams}) => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/user/get-users`
+        `/api/user/get-users`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -73,7 +73,7 @@ const Page = ({searchParams}) => {
   }
 
   const handleDelete = async (user_id) => {
-    await fetch(`${config.host}/api/workgroup/remove-user-from-workgroup`, {
+    await fetch(`/api/workgroup/remove-user-from-workgroup`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -82,12 +82,13 @@ const Page = ({searchParams}) => {
         user_id,
         workgroup_id,
       }),
+      next: { revalidate: 10 },
     });
     setRefresh(!refresh);
   }
 
   const handleAdd = async (user_id) => {
-    await fetch(`${config.host}/api/workgroup/add-user-to-workgroup`, {
+    await fetch(`/api/workgroup/add-user-to-workgroup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,6 +97,7 @@ const Page = ({searchParams}) => {
         user_id,
         workgroup_id,
       }),
+      next: { revalidate: 10 },
     });
     setRefresh(!refresh);
   }

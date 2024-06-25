@@ -19,7 +19,7 @@ export const GET = async (req, res) => {
         await jobItem.save();
         const job_id = jobItem.JOB_ID;
 
-        const link = `${config.host}api/job/get-job-value?job_id=${job_id}`;
+        const link = `api/job/get-job-value?job_id=${job_id}`;
 
         return NextResponse.json(
             {

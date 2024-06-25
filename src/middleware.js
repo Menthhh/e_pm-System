@@ -20,32 +20,15 @@ const developingRoutes = [
 const SA = {
   ID: Roles.SUPER_ADMIN_ID,
   name: Roles.SUPER_ADMIN,
-  unaccessible_pages: [
-    "/pages/admin/add-user-to-workgroup",
-    "/pages/dashboard",
-    "/pages/activate-remove-job",
-    "/pages/edit-job-item-template",
-    "/pages/edit-job-template",
-    "/pages/job-approve",
-    "/pages/job-calendar",
-    "/pages/job-item-template",
-    "/pages/job-manage",
-    "/pages/job-renew",
-    "/pages/job-template",
-  ],
-};
-
-const ADMIN_GROUP = {
-  ID: Roles.ADMIN_GROUP_ID,
-  name: Roles.ADMIN_GROUP,
-  unaccessible_pages: [
+  accessible_pages: [
     "/pages/SA/create-role",
     "/pages/SA/create-workgroup",
     "/pages/SA/edit-role",
     "/pages/SA/edit-workgroup",
   ],
-  unaccessible_api: [],
 };
+
+
 
 export default async function middleware(req) {
   const endpoint = req.nextUrl.pathname;
@@ -64,10 +47,7 @@ export default async function middleware(req) {
   }
 
   // Check role-based access
-  if (
-    (userRoleId === SA.ID && SA.unaccessible_pages.includes(endpoint)) ||
-    (userRoleId === ADMIN_GROUP.ID && ADMIN_GROUP.unaccessible_pages.includes(endpoint))
-  ) {
+  if (userRoleId !== SA.ID && SA.accessible_pages.includes(endpoint)) {
     return NextResponse.redirect(new URL('/pages/denied', req.nextUrl));
   }
 
@@ -80,7 +60,6 @@ export default async function middleware(req) {
   return response;
 }
 
-// Configure which paths the middleware should run on
 export const config = {
   matcher: ['/((?!api|_next/static|_next/image|.*\\.png$|api/checker).*)'],
 };

@@ -13,7 +13,7 @@ const useFetchStatus = (refresh) => {
             setLoading(true);
             setError(null);
             try {
-                const response = await fetch(`${config.host}/api/status/get-all-status`);
+                const response = await fetch(`/api/status/get-all-status`);
                 if (!response.ok) {
                     throw new Error("Failed to fetch status");
                 }

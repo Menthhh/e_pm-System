@@ -4,7 +4,7 @@ import { Status } from "@/lib/models/Status.js";
 import { NextResponse } from 'next/server';
 import { User } from "@/lib/models/User.js";
 
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
     await connectToDb();
     const searchParams = req.nextUrl.searchParams;

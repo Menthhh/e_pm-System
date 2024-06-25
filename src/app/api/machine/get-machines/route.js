@@ -40,7 +40,7 @@ import { connectToDb } from "@/app/api/mongo/index.js";
  *                 error:
  *                   type: string
  */
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
     await connectToDb();
     try {

@@ -12,6 +12,7 @@ const jobItemTemplateHeader = ["ID", "Checklist Template Name", "Document no.", 
 const enabledFunction = {
     "edit-job-template": "663313bbeccb576a719dfa9c",
     "remove-job-template": "663313b1eccb576a719dfa9a",
+    "add-job-item-template": "6638600dd81a314967236df5",
 };
 
 const Page = () => {
@@ -34,7 +35,7 @@ const Page = () => {
 
     const fetchUser = async (user_id) => {
         try {
-            const response = await fetch(`${config.host}/api/user/get-user/${user_id}`);
+            const response = await fetch(`/api/user/get-user/${user_id}`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error("Failed to fetch user data");
             }
@@ -49,7 +50,7 @@ const Page = () => {
 
     const fetchJobTemplates = async (workgroup_id) => {
         try {
-            const response = await fetch(`${config.host}/api/workgroup/get-job-templates-from-workgroup/${workgroup_id}`);
+            const response = await fetch(`/api/workgroup/get-job-templates-from-workgroup/${workgroup_id}`, { next: { revalidate: 10 } });
             const data = await response.json();
             if (data.status === 200) {
                 setJobTemplates(data.jobTemplates);
@@ -85,6 +86,7 @@ const Page = () => {
                   "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ jobTemplate_id, JobTemplateCreateID }),
+                next: { revalidate: 10 },
               });
               console.log(response)
               const data = await response.json();
@@ -128,6 +130,8 @@ const Page = () => {
                           pathname: "/pages/edit-job-template",
                           query: { jobTemplate_id: jobTemplate._id },
                         }}
+                        disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"])}
+                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"]) ? "not-allowed" : "pointer" }}
                     >
                         Edit
                     </Link>
@@ -145,8 +149,8 @@ const Page = () => {
                             pathname: "/pages/job-item-template/add-job-item-template",
                             query: { jobTemplate_id: jobTemplate._id },
                         }}
-                        disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"])}
-                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["edit-job-template"]) ? "not-allowed" : "pointer" }}
+                        disabled={!userEnableFunctions.some((action) => action._id === enabledFunction["add-job-item-template"])}
+                        style={{ cursor: !userEnableFunctions.some((action) => action._id === enabledFunction["add-job-item-template"]) ? "not-allowed" : "pointer" }}
                     >
                         Add Item
                     </Link>

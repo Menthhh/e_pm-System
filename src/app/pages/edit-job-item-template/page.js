@@ -49,12 +49,13 @@ const Page = ({searchParams}) => {
         };
 
         try {
-            const res = await fetch(`${config.host}/api/job-item-template/edit-job-item-template`, {
+            const res = await fetch(`/api/job-item-template/edit-job-item-template`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
+                next : { revalidate: 10 }
             });
             if (res.ok) {
                 Swal.fire({

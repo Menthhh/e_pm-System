@@ -15,7 +15,7 @@ const useFetchJobs = (refresh = null) => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(`${config.host}/api/job/get-jobs-from-workgroup/${workgroup_id}`,
+                const response = await fetch(`/api/job/get-jobs-from-workgroup/${workgroup_id}`,
                 { next: { revalidate: 10 } }
                 );
                 const data = await response.json();

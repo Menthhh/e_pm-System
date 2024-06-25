@@ -9,6 +9,7 @@ import { Status } from "@/lib/models/Status";
 import { connectToDb } from "@/app/api/mongo/index.js";
 import { JobApproves } from '@/lib/models/JobApprove';
 
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
     await connectToDb();
     const searchParams = req.nextUrl.searchParams;
@@ -33,7 +34,6 @@ export const GET = async (req, res) => {
         }
 
         
-            
         const jobData = {
             "JobID": JobID,
             "Status": statusName,
@@ -43,11 +43,14 @@ export const GET = async (req, res) => {
             "DocumentNo": job.DOC_NUMBER,
             "ChecklistVer": job.CHECKLIST_VERSION,
             "MachineName": machineName,
+            "WorkGroupID": job.WORKGROUP_ID,
             "WorkgroupName": workgroupName,
             "ActivatedBy": activatedBy,
             "ActivatedAt": job.createdAt.toLocaleString(),
             "LastestUpdate": job.updatedAt.toLocaleString(),
-            "Status": statusName
+            "SubmittedBy": job.SUBMITTED_BY ? job.SUBMITTED_BY.EMP_NAME : "",
+            "Status": statusName,
+            "Approvers": job.JOB_APPROVERS 
         }
         
         const jobItemData = await Promise.all(jobItems.map(async (jobItem) => {

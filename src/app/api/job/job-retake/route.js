@@ -16,13 +16,17 @@ import { Status } from "@/lib/models/Status";
 import { NextResponse } from 'next/server';
 import { connectToDb } from "@/app/api/mongo/index.js";
 import { getRevisionNo } from "@/lib/utils/utils";
+import { User } from "@/lib/models/User";
 
 export const PUT = async (req, res) => {
     await connectToDb();
     const body = await req.json();
-    const { jobID, actualValue, comment } = body;
+    const { jobID, submitUser, actualValue, comment } = body;
+    
     try {
         const job = await Job.findOne({ _id: jobID });
+        const submitteduser = await User.findById(submitUser);
+        console.log(submitteduser)
         const latestDocNo = await getRevisionNo();
         if (job.CHECKLIST_VERSION !== latestDocNo) {
             console.log("This job is not the latest revision")
@@ -31,6 +35,8 @@ export const PUT = async (req, res) => {
 
         const status = await Status.findOne({ status_name: "waiting for approval" });
         job.JOB_STATUS_ID = status._id;
+        job.SUBMITTED_BY = submitteduser;
+
         await job.save();
         await Promise.all(actualValue.map(async (item) => {
             const jobItem = await JobItem.findOne({ _id: item.jobItemID });

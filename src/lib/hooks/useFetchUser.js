@@ -16,7 +16,7 @@ const useFetchUser = (refresh = null) => {
             setError(null);
             try {
                 const response = await fetch(
-                    `${config.host}/api/user/get-user/${user_id}`
+                    `/api/user/get-user/${user_id}`, { next: { revalidate: 10 } }
                 );
                 if (!response.ok) {
                     throw new Error("Failed to fetch user");

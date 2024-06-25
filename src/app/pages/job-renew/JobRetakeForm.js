@@ -17,7 +17,8 @@ const JobRetakeForm = (
         isShowJobItem,
         toggleJobInfo,
         isShowJobInfo,
-        toggleAddComment
+        toggleAddComment,
+        view
 
     }
 ) => {
@@ -164,7 +165,9 @@ const JobRetakeForm = (
                     </table>
                 </div>
                 <div>
-                    <button type="submit" className="bg-primary text-white rounded-md px-2 py-1">Submit</button>
+                    {
+                        view ? "" : <button type="submit" className="bg-primary text-white rounded-md px-2 py-1">Submit</button>
+                    }
                 </div>
             </div>
             {/* <Modal

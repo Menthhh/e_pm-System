@@ -11,9 +11,7 @@ const useFetchTestLocations = (refresh = null) => {
             setIsLoading(true);
             setError(null);
             try {
-                const response = await fetch(
-                    `${config.host}/api/location/get-locations`
-                );
+                const response = await fetch( `/api/location/get-locations`, { next: { revalidate: 10 } });
                 if (!response.ok) {
                     throw new Error("Failed to fetch locations");
                 }

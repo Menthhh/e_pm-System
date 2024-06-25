@@ -9,7 +9,7 @@ const useFetchMachines = () => {
     useEffect(() => {
         const fetchMachines = async () => {
             try {
-                const res = await fetch(`${config.host}/api/machine/get-machines`);
+                const res = await fetch(`/api/machine/get-machines`, { next: { revalidate: 10 } });
                 const data = await res.json();
                 setMachines(data.machines);
                 setLoading(false);

@@ -12,6 +12,7 @@ import AddCommentModal from "@/components/AddCommentModal";
 import JobRetakeForm from "./JobRetakeForm.js";
 import { useRouter } from 'next/navigation'
 import mqtt from 'mqtt';
+import useFetchUser from "@/lib/hooks/useFetchUser.js";
 
 
 const connectUrl = process.env.NEXT_PUBLIC_MQT_URL;
@@ -23,9 +24,11 @@ const options = {
 
 const Page = ({ searchParams }) => {
     const job_id = searchParams.job_id
+    const [view, setView] = useState(true);
     const router = useRouter();
     const [refresh, setRefresh] = useState(false);
     const { jobData, jobItems, isLoading } = useFetchJobValue(job_id, refresh);
+    const { user } = useFetchUser(refresh);
     const [isShowJobInfo, setIsShowJobInfo] = useState(true);
     const [isShowJobItem, setIsShowJobItem] = useState(true);
     const [jobItemDetail, setJobItemDetail] = useState(null);
@@ -38,6 +41,27 @@ const Page = ({ searchParams }) => {
     const mqttClient = mqtt.connect(connectUrl, options);
 
     useEffect(() => {
+
+        if (user && jobData) {
+            // Ensure user and jobData are loaded
+            console.log("user.workgroup_id: ", user.workgroup_id);
+            console.log("jobData.WorkGroupID: ", jobData.WorkGroupID);
+
+            // Ensure both user.workgroup_id and jobData.WorkGroupID are defined
+            if (user.workgroup_id && jobData.WorkGroupID) {
+                if (user.workgroup_id.toString() !== jobData.WorkGroupID.toString()) {
+                    setView(true);
+                } else {
+                    setView(false);
+                }
+            } else {
+                console.error("One of the IDs is undefined:", {
+                    userWorkgroupId: user.workgroup_id,
+                    jobWorkgroupId: jobData.WorkGroupID,
+                });
+            }
+        }
+
         mqttClient.on('connect', () => {
             console.log('Connected to MQTT broker');
         });
@@ -63,7 +87,7 @@ const Page = ({ searchParams }) => {
                 mqttClient.end();
             }
         };
-    }, [jobItems]);
+    }, [jobItems, user, jobData]);
 
 
     mqttClient.on('message', (topic, message) => {
@@ -132,16 +156,18 @@ const Page = ({ searchParams }) => {
         });
 
         try {
-            const response = await fetch(`${config.host}/api/job/job-retake`, {
+            const response = await fetch(`/api/job/job-retake`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
                     jobID,
+                    submitUser: user._id,
                     actualValue: actualValues,
                     comment: comments
-                })
+                }),
+                next: { revalidate: 10 }
             });
             const data = await response.json();
             console.log(data.status)
@@ -224,17 +250,18 @@ const Page = ({ searchParams }) => {
                 toggleJobInfo={toggleJobInfo}
                 isShowJobInfo={isShowJobInfo}
                 toggleAddComment={toggleAddComment}
+                view={view}
             />
             {jobItemDetail && <ItemInformationModal
                 jobItemDetail={jobItemDetail}
                 setJobItemDetail={setJobItemDetail}
             />}
             {testMethodDescription && <TestMethodDescriptionModal
-                setTestMethodDescription={setTestMethodDescription} 
+                setTestMethodDescription={setTestMethodDescription}
                 showDetail={showDetail}
 
 
-                />}
+            />}
             {AddCommentForm && <AddCommentModal
                 toggleAddComment={toggleAddComment}
                 handleSubmitComment={handleSubmitComment}

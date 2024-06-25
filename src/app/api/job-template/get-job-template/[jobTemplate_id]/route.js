@@ -5,7 +5,7 @@ import { Machine } from "@/lib/models/Machine";
 import { Approves } from "@/lib/models/Approves";
 import { User } from "@/lib/models/User";
 import { connectToDb } from "@/app/api/mongo/index.js";
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, { params }) => {
     await connectToDb();
     const { jobTemplate_id } = params;

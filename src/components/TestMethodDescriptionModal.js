@@ -1,8 +1,11 @@
 import Image from 'next/image';
 
-const TestMethodDescriptionModal = ({ setTestMethodDescription, showDetail }) => {
+const TestMethodDescriptionModal = ({ setTestMethodDescription, showDetail = {} }) => {
+    const { File, TestMethod } = showDetail;
+
     // Replace backslashes with forward slashes in the File path
-    const imagePath = showDetail.File.replace(/\\/g, '/');
+    console.log(File);
+    const imagePath = File ? File.replace(/\\/g, '/') : null;
 
     return (
         <div className="fixed inset-0 overflow-y-auto mt-5 z-[200]">
@@ -19,10 +22,12 @@ const TestMethodDescriptionModal = ({ setTestMethodDescription, showDetail }) =>
                                     Test Method Description
                                 </h3>
 
-                                <Image src={imagePath} alt="overlay" width={300} height={300} className="rounded-lg" />
+                                {imagePath && (
+                                    <Image src={imagePath} alt="overlay" width={300} height={300} className="rounded-lg" />
+                                )}
 
                                 <p className="text-sm text-gray-500">
-                                    {showDetail.TestMethod}
+                                    {TestMethod || 'No test method description available.'}
                                 </p>
                                
                             </div>

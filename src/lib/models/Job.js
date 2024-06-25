@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { userSchema } from './User';
 
 const jobSchema = new mongoose.Schema({
     REVIEWS: { type: mongoose.Schema.Types.ObjectId, ref: "JobApproves", default: null },
@@ -11,6 +12,7 @@ const jobSchema = new mongoose.Schema({
     WORKGROUP_ID: { type: String, required: true },
     ACTIVATE_USER: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     TIMEOUT: { type: String, required: true },
+    SUBMITTED_BY: { type: userSchema , default: null },
 }, { timestamps: true });
 
 const Job = mongoose.models?.Job || mongoose.model("Job", jobSchema);

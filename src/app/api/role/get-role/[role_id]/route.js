@@ -2,12 +2,13 @@
 import { Role } from "@/lib/models/Role.js";
 import { NextResponse } from 'next/server';
 import { connectToDb } from "@/app/api/mongo/index.js";
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, {params}) => {
     await connectToDb();
     const { role_id } = params;
     try {
-        const role = await Role.findById(role_id);
+        //sort by l;astest updated
+        const role = await Role.findById(role_id).sort({updatedAt: 1});
         if (!role) {
             return NextResponse.json({ message: "Role not found", file: __filename });
         }

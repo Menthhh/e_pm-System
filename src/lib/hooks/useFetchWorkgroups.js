@@ -12,7 +12,7 @@ const useFetchWorkgroups = (refresh) => {
         setLoading(true);
         const fetchData = async () => {
             try {
-                const res = await fetch(`${config.host}/api/workgroup/get-workgroups`);
+                const res = await fetch(`/api/workgroup/get-workgroups`, { next: { revalidate: 10 } });
                 const json = await res.json();
                 setWorkgroups(json.workgroups);
                 setLoading(false);

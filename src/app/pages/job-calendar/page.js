@@ -1,6 +1,6 @@
 "use client";
 import Layout from "@/components/Layout";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -24,12 +24,20 @@ const Page = () => {
   const [view, setView] = useState('month');
   const [date, setDate] = useState(new Date());
   const [refresh, setRefresh] = useState(false)
-  const [selectedWorkgroup, setSelectedWorkgroup] = useState("all")
+  const [selectedWorkgroup, setSelectedWorkgroup] = useState("")
   const { user, isLoading: userLoading, error: userError } = useFetchUser();
   const { workgroups, isLoading: workgroupLoading, error: workgroupError } = useFetchWorkgroups();
   const { events, loading, error } = useFetchJobEvents(selectedWorkgroup, refresh);
   const [open, setOpen] = useState(false)
   const [eventData, setEventData] = useState({})
+
+  useEffect(() => {
+    if (user && user.workgroup_id) {
+      setSelectedWorkgroup(user.workgroup_id);
+      setRefresh(!refresh);
+    }
+  }, [user.workgroup_id]);
+  
 
   const handleViewChange = (newView) => {
     setView(newView);
@@ -76,6 +84,18 @@ const Page = () => {
       else if (event.status_name === 'ongoing') {
         router.push(`/pages/view-jobs?job_id=${event.job_id}&view=false`);
       }
+      else if (event.status_name === 'waiting for approval') {
+        Swal.fire({
+          title: 'Checklist is waiting for approval',
+          text: 'You cannot view the Checklist in waiting for approval status',
+          icon: 'warning',
+          confirmButtonText: 'OK'
+        });
+      }
+      else if (event.status_name === 'renew') {
+        router.push(`/pages/job-renew?job_id=${event.job_id}`);
+      }
+
       else {
         router.push(`/pages/view-jobs?job_id=${event.job_id}&view=true`);
       }
@@ -84,7 +104,6 @@ const Page = () => {
 
   const handleShowmore = (events, date) => {
     setEventData({ events, date: date.toString() });
-    console.log(events, date);
     setOpen(true)
   }
 
@@ -110,15 +129,18 @@ const Page = () => {
               onChange={handleDateChange}
             />
           </label>
-          <select 
-          className="text-sm border border-gray-300 rounded-md p-1 ml-2"
-          onChange={(e) => handleChangeWorkgroup(e.target.value)}
+          <select
+            className="text-sm border border-gray-300 rounded-md p-1 ml-2"
+            onChange={(e) => handleChangeWorkgroup(e.target.value)}
           >
             <option value="" disabled>Select workgroups</option>
             <option value="all">All</option>
             {
               workgroups.map((workgroup) => (
-                <option key={workgroup._id} value={workgroup._id}>{workgroup.WORKGROUP_NAME}</option>
+                <option key={workgroup._id} value={workgroup._id} selected={user.workgroup_id === workgroup._id}>
+                  {workgroup.WORKGROUP_NAME}
+                </option>
+
               ))
             }
           </select>

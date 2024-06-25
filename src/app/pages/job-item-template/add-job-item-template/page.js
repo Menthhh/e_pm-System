@@ -112,9 +112,10 @@ const Page = ({ searchParams }) => {
         }
 
         try {
-            const response = await fetch(`${config.host}/api/job-item-template/create-job-item-template`, {
+            const response = await fetch(`/api/job-item-template/create-job-item-template`, {
                 method: "POST",
                 body: formData,
+                next: { revalidate: 10 },
             });
 
             const result = await response.json();
@@ -137,12 +138,13 @@ const Page = ({ searchParams }) => {
         console.log(jobItemTemplate_id)
 
         try {
-            const response = await fetch(`${config.host}/api/job-item-template/remove-job-item-template`, {
+            const response = await fetch(`/api/job-item-template/remove-job-item-template`, {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ jobItemTemplate_id }),
+                next: { revalidate: 10 },
             });
             const data = await response.json();
             console.log(data)

@@ -47,7 +47,7 @@ const Page = () => {
 
     const fetchMachines = async () => {
         try {
-            const response = await fetch(`${config.host}/api/machine/get-machines`);
+            const response = await fetch(`/api/machine/get-machines`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -64,9 +64,7 @@ const Page = () => {
 
     const fetchUser = async (userId) => {
         try {
-            const response = await fetch(
-                `${config.host}/api/user/get-user/${userId}`
-            );
+            const response = await fetch(`/api/user/get-user/${userId}`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -80,7 +78,7 @@ const Page = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch(`${config.host}/api/user/get-users`);
+            const response = await fetch(`/api/user/get-users`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -160,12 +158,13 @@ const Page = () => {
         };
 
         try {
-            const res = await fetch(`${config.host}/api/job-template/create-job-template`, {
+            const res = await fetch(`/api/job-template/create-job-template`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(data),
+                next: { revalidate: 10 },
             });
             const response = await res.json();
             if (response.status === 500) {
@@ -197,23 +196,25 @@ const Page = () => {
         setDueDate(formattedDate);
     };
 
-  
+
     return (
-        <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
-            <h1 className="text-2xl font-bold">Checklist Template</h1>
-            <Link
-                href="/pages/job-item-template"
-                className={`align-left text-white bg-blue-600 hover:bg-blue-800 w-60 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center
+        <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-20">
+            <div className="flex justify-between items-center">
+                <h1 className="text-2xl font-bold text-slate-900">Create Checklist Template</h1>
+                <Link
+                    href="/pages/job-item-template"
+                    className={`align-left text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center
                 ${!userEnableFunctions.some(
-                    action => action._id === enabledFunction["view-all-job-templates"]
-                ) && "opacity-50 cursor-not-allowed"
-                    }`}
-            >
-                <div className="flex gap-3 items-center">
-                    <p>View all Checklist Templates</p>
-                    <NextPlanIcon />
-                </div>
-            </Link>
+                        action => action._id === enabledFunction["view-all-job-templates"]
+                    ) && "opacity-50 cursor-not-allowed"
+                        }`}
+                >
+                    <div className="flex gap-3 items-center">
+                        <p>View all Checklist Templates</p>
+                        <NextPlanIcon />
+                    </div>
+                </Link>
+            </div>
             <form onSubmit={handleSubmit}>
                 <div className="grid gap-6 mb-6 md:grid-cols-3">
                     <div>
@@ -334,12 +335,12 @@ const Page = () => {
                                     { value: "3 mounths", label: "3 mounths" },
                                     { value: "6 months", label: "6 months" },
                                     { value: "12 months", label: "12 months" },
-                                   
+
                                 ]
                             }
                             isSearchable={true}
                             name="timeout"
-                        
+
                         />
                     </div>
                     <div className="flex gap-5 ">
@@ -392,7 +393,7 @@ const Page = () => {
                 datas={dataApprover}
                 TableName="Approver List"
             />
-           
+
 
         </Layout>
     );
