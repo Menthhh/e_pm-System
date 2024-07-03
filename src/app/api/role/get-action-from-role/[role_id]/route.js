@@ -1,11 +1,11 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { Role } from "@/lib/models/Role.js";
 import { RoleHasAction } from "@/lib/models/RoleHasAction";
 import { NextResponse } from 'next/server';
 import { Action } from "@/lib/models/Action.js";
 import { ObjectId } from "mongodb";
-
-
+import { connectToDb } from "@/app/api/mongo/index.js";
+export const dynamic = 'force-dynamic';
 export const GET = async (req, {params}) => {
     await connectToDb();
     const { role_id } = params;

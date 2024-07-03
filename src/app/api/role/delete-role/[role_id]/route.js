@@ -1,6 +1,7 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { Role } from "@/lib/models/Role.js";
 import { NextResponse } from 'next/server';
+import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const DELETE = async (req, {params}) => {
     await connectToDb();

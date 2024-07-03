@@ -1,8 +1,7 @@
-import { connectToDb } from "../../../../lib/utils/utils.js";
+
 import { Machine } from "../../../../lib/models/Machine.js";
 import { NextResponse } from 'next/server.js';
-
-
+import { connectToDb } from "@/app/api/mongo/index.js";
 /**
  * @swagger
  * /api/machine/create-machine:

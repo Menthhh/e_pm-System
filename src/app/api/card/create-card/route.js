@@ -1,6 +1,7 @@
 import { Card } from '../../../../lib/models/Card.js';
-import { connectToDb } from "@/lib/utils/utils.js"; 
+ 
 import { NextResponse } from 'next/server';
+import { connectToDb } from "@/app/api/mongo/index.js";
 
 /**
  * @swagger

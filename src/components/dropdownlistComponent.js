@@ -6,7 +6,6 @@ const Dropdown = ({data}) => {
     const options = data;
 
     const handleChange = (selectedOption) => {
-        // console.log('Selected Option:', selectedOption);
     };
 
     return (

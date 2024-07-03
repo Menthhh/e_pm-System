@@ -1,17 +1,15 @@
 "use client";
 import SALayout from "@/components/SALayout";
-import { useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import TableComponent from "@/components/TableComponent";
-import { config } from "../../../../config/config.js";
+import { config } from "@/config/config.js";
 
 const workgroupHeader = ["id","EMP_number", "Email" ,"Name", "Role", "Action"];
 const userHeader = ["id","EMP_number", "Email", "Name", "Role", "Action"];
 
 
-const Page = () => {
-  const searchParams = useSearchParams();
-  const workgroup_id = searchParams.get("workgroup_id");
+const Page = ({searchParams}) => {
+  const workgroup_id = searchParams.workgroup_id
   const [refresh, setRefresh] = useState(false);
 
   const [workgroup, setWorkgroup] = useState({});
@@ -28,7 +26,7 @@ const Page = () => {
   const fetchWorkgroup = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/workgroup/get-workgroup/${workgroup_id}`
+        `/api/workgroup/get-workgroup/${workgroup_id}`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch workgroup");
@@ -43,7 +41,7 @@ const Page = () => {
   const fetchUsersWorkgroup = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/workgroup/get-users-from-workgroup/${workgroup_id}`
+        `/api/workgroup/get-users-from-workgroup/${workgroup_id}`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -59,7 +57,7 @@ const Page = () => {
   const fetchUsers = async () => {
     try {
       const response = await fetch(
-        `${config.host}/api/user/get-users`
+        `/api/user/get-users`, { next: { revalidate: 10 } }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch users");
@@ -75,7 +73,7 @@ const Page = () => {
   }
 
   const handleDelete = async (user_id) => {
-    await fetch(`${config.host}/api/workgroup/remove-user-from-workgroup`, {
+    await fetch(`/api/workgroup/remove-user-from-workgroup`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -84,12 +82,13 @@ const Page = () => {
         user_id,
         workgroup_id,
       }),
+      next: { revalidate: 10 },
     });
     setRefresh(!refresh);
   }
 
   const handleAdd = async (user_id) => {
-    await fetch(`${config.host}/api/workgroup/add-user-to-workgroup`, {
+    await fetch(`/api/workgroup/add-user-to-workgroup`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -98,6 +97,7 @@ const Page = () => {
         user_id,
         workgroup_id,
       }),
+      next: { revalidate: 10 },
     });
     setRefresh(!refresh);
   }

@@ -1,8 +1,9 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { NextResponse } from 'next/server';
 import { JobTemplate } from "@/lib/models/JobTemplate";
 import { Machine } from "@/lib/models/Machine";
-
+import { connectToDb } from "@/app/api/mongo/index.js";
+export const dynamic = 'force-dynamic';
 export const GET = async (req, {params}) => {
     await connectToDb();
     const { workgroup_id } = params;
@@ -22,6 +23,7 @@ export const GET = async (req, {params}) => {
                 DUE_DATE: jobTemplate.DUE_DATE,
                 CHECKLIST_VERSION: jobTemplate.CHECKLIST_VERSION,
                 MACHINE_ID: jobTemplate.MACHINE_ID,
+                JobTemplateCreateID: jobTemplate.JobTemplateCreateID,
                 MACHINE_NAME: machineName,
                 WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
                 createdAt: createdAt,

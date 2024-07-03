@@ -16,9 +16,12 @@ const userSchema = new mongoose.Schema({
     NOTIFIED_GROUP_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'NotifiedGroup', default: [] }],
     SCHEDULE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Schedule', default: [] }],
     WORKGROUP_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Workgroup', default: [] }],
-    APPROVE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ApproveList', default: [] }]
+    APPROVE_LIST: [{ type: mongoose.Schema.Types.ObjectId, ref: 'ApproveList', default: [] }],
+    USER_IMAGE: { type: String, default: "/user-profile/default-user.png" },
 }, { timestamps: true });
 
-export const User = mongoose.models?.User || mongoose.model('User', userSchema);
+const User = mongoose.models?.User || mongoose.model('User', userSchema);
+
+export { User, userSchema}
 
 

@@ -1,7 +1,7 @@
-import { connectToDb } from "../../../../lib/utils/utils.js";
+
 import { Machine } from "../../../../lib/models/Machine.js";
 import { NextResponse } from 'next/server.js';
-
+import { connectToDb } from "@/app/api/mongo/index.js";
 /**
  * @swagger
  * /api/machine/get-machines:
@@ -40,7 +40,7 @@ import { NextResponse } from 'next/server.js';
  *                 error:
  *                   type: string
  */
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
     await connectToDb();
     try {

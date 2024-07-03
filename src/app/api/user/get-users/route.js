@@ -1,11 +1,10 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { User } from "@/lib/models/User.js";
 import { NextResponse } from "next/server";
 import { Role } from "@/lib/models/Role";
 import { getSession } from "@/lib/utils/utils.js";
-
-
-
+import { connectToDb } from "@/app/api/mongo/index.js";
+export const dynamic = 'force-dynamic';
 export const GET = async (req, paramress) => {
   await connectToDb();
   const session = await getSession();

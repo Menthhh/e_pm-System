@@ -5,6 +5,7 @@ import TableComponent from "@/components/TableComponent";
 import Link from "next/link";
 import {config} from "../../../../config/config.js";
 import SALayout from "@/components/SALayout";
+import Swal from "sweetalert2";
 
 const headers = ["ID", "Role", "Action"];
 
@@ -20,7 +21,7 @@ const Page = () => {
 
   const fetchRoles = async () => {
     try {
-      const response = await fetch(`${config.host}/api/role/get-roles`);
+      const response = await fetch(`/api/role/get-roles`, { next: { revalidate: 10 } });
       if (!response.ok) {
         throw new Error("Failed to fetch roles");
       }
@@ -63,7 +64,7 @@ const Page = () => {
 
   const createRole = async () => {
     try {
-      await fetch(`${config.host}/api/role/create-role`, {
+      await fetch(`/api/role/create-role`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,6 +72,7 @@ const Page = () => {
         body: JSON.stringify({
           ROLE_NAME: newRoleInput.current.value,
         }),
+        next: { revalidate: 10 },
       });
       setRefresh(!refresh);
     } catch (error) {
@@ -79,36 +81,40 @@ const Page = () => {
   };
 
   const handleDelete = async (id) => {
-    try {
-      await fetch(`${config.host}/api/role/delete-role/${id}`, {
-        method: "DELETE",
-      });
-      setRefresh(!refresh);
-    } catch (error) {
-      console.error("Error deleting role:", error);
-    }
+    // Display confirmation dialog
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!"
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          // Send delete request if confirmed
+          await fetch(`/api/role/delete-role/${id}`, {
+            method: "DELETE",
+            next: { revalidate: 10 }
+          });
+          // Update UI after successful deletion
+          setRefresh(!refresh);
+          // Show success message
+          Swal.fire({
+            title: "Deleted!",
+            text: "The role has been deleted.",
+            icon: "success"
+          });
+        } catch (error) {
+          console.error("Error deleting role:", error);
+        }
+      }
+    });
   };
+  
 
-  const newRoleFormInput = (
-    <form onSubmit={createRole} className="flex gap-4 ">
-      <input
-        type="text"
-        placeholder="Role Name"
-        ref={newRoleInput}
-        className="py-2 px-4 ring-1 ring-black rounded-md"
-      />
-      <button className="bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-md">
-        Add Role
-      </button>
-      <button
-        className="bg-red-500 hover:bg-red-600 text-white font-bold px-4 py-2 rounded-md"
-        onClick={() => setNewRoles(!newRoles)}
-      >
-        Cancel
-      </button>
-    </form>
-  );
-
+ 
   return (
     <SALayout className="w-full h-screen flex flex-col gap-4 items-center justify-start font-sans">
       <div className="w-full h-full bg-white container px-8  rounded-lg flex flex-col gap-8">

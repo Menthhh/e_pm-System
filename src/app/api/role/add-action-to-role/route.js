@@ -1,6 +1,7 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { RoleHasAction } from "@/lib/models/RoleHasAction.js";
 import { NextResponse } from 'next/server';
+import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const POST = async (req, res) => {
     await connectToDb();

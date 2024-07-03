@@ -8,7 +8,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { config } from "../../../config/config.js";
 import { getSession } from "@/lib/utils/utils.js";
-
+import Swal from "sweetalert2";
+import Image from "next/image";
 
 const enabledFunction = {
     "create-job-template": "6632f9e4eccb576a719dfa7a",
@@ -47,7 +48,7 @@ const Page = () => {
 
     const fetchMachines = async () => {
         try {
-            const response = await fetch(`${config.host}/api/machine/get-machines`);
+            const response = await fetch(`/api/machine/get-machines`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -64,9 +65,7 @@ const Page = () => {
 
     const fetchUser = async (userId) => {
         try {
-            const response = await fetch(
-                `${config.host}/api/user/get-user/${userId}`
-            );
+            const response = await fetch(`/api/user/get-user/${userId}`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -80,7 +79,7 @@ const Page = () => {
 
     const fetchUsers = async () => {
         try {
-            const response = await fetch(`${config.host}/api/user/get-users`);
+            const response = await fetch(`/api/user/get-users`, { next: { revalidate: 10 } });
             if (!response.ok) {
                 throw new Error(response.statusText);
             }
@@ -145,7 +144,7 @@ const Page = () => {
         const DOC_NUMBER = formData.get("doc_num");
         const DUE_DATE = formData.get("due_date");
         const CHECKLIST_VERSION = formData.get("checklist_ver");
-        const MACHINE_ID = selectedMachine.value;
+        const TIMEOUT = formData.get("timeout");
         const WORKGROUP_ID = user.workgroup_id;
         const APPROVERS_ID = approvers.map((approver) => approver.user_id);
         const data = {
@@ -154,29 +153,42 @@ const Page = () => {
             DOC_NUMBER,
             DUE_DATE,
             CHECKLIST_VERSION,
-            MACHINE_ID,
+            TIMEOUT,
             WORKGROUP_ID,
             APPROVERS_ID,
         };
-        const res = await fetch(`${config.host}/api/job-template/create-job-template`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-        });
-        const response = await res.json();
-        if (response.status === 500) {
-            console.log(response.error);
+
+        try {
+            const res = await fetch(`/api/job-template/create-job-template`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+                next: { revalidate: 10 },
+            });
+            const response = await res.json();
+            if (response.status === 500) {
+                console.error(response.error);
+            } else {
+                Swal.fire({
+                    title: "Good job!",
+                    text: "You have successfully created a Checklist template!",
+                    icon: "success"
+                });
+                e.target.reset();
+                setApprovers([]);
+                setDueDate("");
+                setSelectedMachine(null);
+                setSelectedApprover(null);
+                setOptions([]);
+                setRefresh((prev) => !prev);
+            }
+        } catch (error) {
+            console.error("Error creating Checklist template:", error);
         }
-        e.target.reset();
-        setApprovers([]);
-        setDueDate("");
-        setSelectedMachine(null);
-        setSelectedApprover(null);
-        setOptions([]);
-        setRefresh(!refresh);
     };
+
 
     const calculateDueDate = () => {
         const currentDate = new Date();
@@ -185,23 +197,44 @@ const Page = () => {
         setDueDate(formattedDate);
     };
 
-    console.log(userEnableFunctions)
+
     return (
-        <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-5">
-            <h1 className="text-2xl font-bold">Job Template</h1>
+        <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6 gap-20">
+            <div className="flex justify-between items-center">
+                <div className="flex flex-col items-start gap-4 mb-4 p-4 bg-white ">
+                    <div className="flex items-center ">
+                        <Image src="/assets/card-logo/template.png" alt="wd logo" width={50} height={50} className="rounded-full" />
+                        <h1 className="text-3xl font-bold text-slate-900">Create Checklist Template</h1>
+                    </div>
+                    <p className="text-sm font-bold text-secondary flex  items-center">Manage Checklist Template and its items</p>
+                </div>
+                <Link
+                    href="/pages/job-item-template"
+                    className={`align-left text-white bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center
+                ${!userEnableFunctions.some(
+                        action => action._id === enabledFunction["view-all-job-templates"]
+                    ) && "opacity-50 cursor-not-allowed"
+                        }`}
+                >
+                    <div className="flex gap-3 items-center">
+                        <p>View all Checklist Templates</p>
+                        <NextPlanIcon />
+                    </div>
+                </Link>
+            </div>
             <form onSubmit={handleSubmit}>
                 <div className="grid gap-6 mb-6 md:grid-cols-3">
                     <div>
                         <label
                             for="author"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Author
                         </label>
                         <input
                             type="text"
                             id="author"
-                            class="bg-gray-200 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 opacity-50 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-200 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 opacity-50 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             value={user.name}
                             name="author"
                             required
@@ -211,14 +244,14 @@ const Page = () => {
                     <div>
                         <label
                             for="workgroup"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Workgroup
                         </label>
                         <input
                             type="text"
                             id="workgroup"
-                            class="bg-gray-200 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 opacity-50 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-200 border border-gray-300 text-gray-600 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 opacity-50 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             value={user.workgroup}
                             name="workgroup"
                             required
@@ -229,7 +262,7 @@ const Page = () => {
                     <div>
                         <label
                             for="due_date"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Due Date
                         </label>
@@ -238,7 +271,7 @@ const Page = () => {
                             id="due_date"
                             value={dueDate}
                             onChange={(e) => setDueDate(e.target.value)}
-                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             name="due_date"
                             required
                         />
@@ -246,14 +279,14 @@ const Page = () => {
                     <div>
                         <label
                             for="job_template_name"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Job Template Name
+                            Checklist Template Name
                         </label>
                         <input
                             type="text"
                             id="job_template_name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="Template Name"
                             name="job_template_name"
                             required
@@ -262,14 +295,14 @@ const Page = () => {
                     <div>
                         <label
                             for="doc_num"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Document no.
                         </label>
                         <input
                             type="text"
                             id="doc_num"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="1234"
                             name="doc_num"
                             required
@@ -278,14 +311,14 @@ const Page = () => {
                     <div>
                         <label
                             for="checklist_ver"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Checklist Version
                         </label>
                         <input
                             type="text"
                             id="checklist_ver"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             placeholder="1234"
                             name="checklist_ver"
                             required
@@ -293,16 +326,28 @@ const Page = () => {
                     </div>
                     <div className="z-50">
                         <label
-                            for="visitors"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white "
+                            for="timeout"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
-                            Test on Machine Name
+                            Timeout
                         </label>
                         <Select
-                            options={machinesOptions}
-                            value={selectedMachine}
-                            onChange={setSelectedMachine}
+                            options={
+                                [
+                                    { value: "12 hrs", label: "12 hrs" },
+                                    { value: "1 days", label: "1 days" },
+                                    { value: "7 days", label: "7 days" },
+                                    { value: "15 days", label: "15 days" },
+                                    { value: "30 days", label: "30 days" },
+                                    { value: "3 mounths", label: "3 mounths" },
+                                    { value: "6 months", label: "6 months" },
+                                    { value: "12 months", label: "12 months" },
+
+                                ]
+                            }
                             isSearchable={true}
+                            name="timeout"
+
                         />
                     </div>
                     <div className="flex gap-5 ">
@@ -318,6 +363,7 @@ const Page = () => {
                                 value={selectedApprover}
                                 onChange={setSelectedApprover}
                                 isSearchable={true}
+                                className="z-50"
                             />
                         </div>
                         <button
@@ -330,13 +376,13 @@ const Page = () => {
                     </div>
                 </div>
                 {
-                    // check if user has permission to create job template
+                    // check if user has permission to create Checklist template
                     userEnableFunctions.some(action => action._id === enabledFunction["create-job-template"]) ? (
                         <button
                             type="submit"
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                         >
-                            Create Job Template
+                            Create Checklist Template
                         </button>
                     ) : (
                         <button
@@ -344,7 +390,7 @@ const Page = () => {
                             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 cursor-not-allowed"
                             disabled
                         >
-                            Create Job Template
+                            Create Checklist Template
                         </button>
                     )
                 }
@@ -354,19 +400,7 @@ const Page = () => {
                 datas={dataApprover}
                 TableName="Approver List"
             />
-            <Link
-                href="/pages/job-item-template"
-                className={`align-left text-white bg-yellow-700 hover:bg-yellow-800 w-60 focus:ring-4 focus:outline-none focus:ring-yellow-300 font-bold rounded-lg text-sm px-5 py-2.5 text-center dark:bg-yellow-600 dark:hover:bg-yellow-700 dark:focus:ring-yellow-800 
-                ${!userEnableFunctions.some(
-                    action => action._id === enabledFunction["view-all-job-templates"]
-                ) && "opacity-50 cursor-not-allowed"
-                    }`}
-            >
-                <div className="flex gap-3 items-center">
-                    <p>View all Job Templates</p>
-                    <NextPlanIcon />
-                </div>
-            </Link>
+
 
         </Layout>
     );

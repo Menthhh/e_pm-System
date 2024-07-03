@@ -1,10 +1,11 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { User } from "@/lib/models/User.js";
 import { NextResponse } from 'next/server';
 import { Workgroup } from "@/lib/models/Workgroup";
-import mongoose from 'mongoose';
 import { RoleHasAction } from "@/lib/models/RoleHasAction";
-
+import { connectToDb } from "@/app/api/mongo/index.js";
+import mongoose from 'mongoose';
+export const dynamic = 'force-dynamic';
 export const GET = async (req, { params }) => {
     await connectToDb();
     
@@ -57,7 +58,6 @@ export const GET = async (req, { params }) => {
 
         let workgroupName = workgroupData.length > 0 ? workgroupData[0].workgroup : "No workgroup";
 
-        //get user's actions
         const user_roleID = new mongoose.Types.ObjectId(user.ROLE);
 
         const userActions = await RoleHasAction.aggregate([
@@ -83,9 +83,9 @@ export const GET = async (req, { params }) => {
             }
         ]);
 
-
         let data = {
             _id: user._id,
+            username: user.USERNAME,
             emp_number: user.EMP_NUMBER,
             email: user.EMAIL,
             name: user.EMP_NAME,
@@ -93,7 +93,8 @@ export const GET = async (req, { params }) => {
             team: user.TEAM,
             workgroup: workgroupName,
             workgroup_id: workgroupId,
-            actions: userActions 
+            actions: userActions,
+            image: user.USER_IMAGE || null 
         };
         
         return NextResponse.json({ status: 200, user: data });

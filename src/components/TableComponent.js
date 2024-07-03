@@ -1,7 +1,8 @@
+'use client'
 import React, { useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 
-const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) => {
+const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize, searchHidden=null}) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState('');
     const pageSize = PageSize || 4; 
@@ -29,28 +30,28 @@ const TableComponent = ({ headers, datas, searchColumn , TableName, PageSize}) =
 
     return (
         <div className="flex flex-col justify-center gap-5 items-center relative ">
-            <div className='my-8 '>
+
+            <div className='my-8 ' hidden={searchHidden}>
                 <SearchIcon className="absolute left-2  top-10 z-40"/>
                 <input
-                    className="border border-gray-300 rounded-md p-2 pl-9 absolute left-0 w-64 z-20"
+                    className="border border-gray-300 rounded-md p-2 pl-9 absolute left-0 w-52 z-20"
                     type="text"
                     placeholder="Search..."
                     value={searchTerm}
                     onChange={handleSearch}
                 />
             </div>
-
-            <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start shadow-inner drop-shadow-md">
-            <h1 className="p-2 text-slate-700 text-lg">{TableName || "Table Name"}</h1>
-            <table className="table-auto w-full">
-                <thead className=" bg-[#F6F6F6] text-[#878787]">
+            <div className="w-full bg-white rounded-lg font-sans flex flex-col justify-center items-start overflow-x-auto shadow-md ">
+            <h1 className="p-2 text-sm text-secondary font-bold">{TableName || "Table Name"}</h1>
+            <table className="table-auto w-full text-[12px] ipadmini:text-sm ">
+                <thead className=" bg-[#347EC2]  text-white text-sm">
                     <tr>
                         {headers.map((header) => (
-                            <th key={header} className="px-4 py-1">{header}</th>
+                            <th key={header} className="px-2 py-2 ">{header}</th>
                         ))}
                     </tr>
                 </thead>
-                <tbody className="text-center">
+                <tbody className="text-center ">
                     {currentPageData.map((item) => (
                         <tr key={item.id} className="hover:shadow-lg  bg-white h-16 border-b boder-solid border-[#C6C6C6] hover:bg-gray-100 font-bold">
                             {Object.keys(item).map((key) => (

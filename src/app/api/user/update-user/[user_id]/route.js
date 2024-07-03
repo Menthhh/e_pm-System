@@ -1,6 +1,7 @@
-import { connectToDb } from "@/lib/utils/utils.js";
+
 import { User } from "@/lib/models/User.js";
 import { NextResponse } from 'next/server';
+import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const PUT = async (req, {params}) => {
     await connectToDb();

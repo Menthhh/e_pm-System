@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server.js';
 import { Card } from '../../../../lib/models/Card.js';
-import { connectToDb } from "@/lib/utils/utils.js"; 
-
+import { connectToDb } from "@/app/api/mongo/index.js";
 /**
  * @swagger
  * /api/card/get-cards:
@@ -62,7 +61,7 @@ import { connectToDb } from "@/lib/utils/utils.js";
  *                   description: Error message
  */
 
-
+export const dynamic = 'force-dynamic';
 export const GET = async (req, res) => {
    
     await connectToDb();
