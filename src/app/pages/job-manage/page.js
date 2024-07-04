@@ -27,7 +27,7 @@ const Page = () => {
                 <h1 className="text-sm font-bold text-secondary flex  items-center">Acitvate Checklist, plan Checklist, and remvoe Checklist </h1>
             </div>
 
-            <Link className=" rounded-full bg-blue-600 text-white shadow-xl h-12 w-1/3  flex flex-row gap-4 items-center font-sans font-bold text-lg px-8 hover:drop-shadow-2xl hover:shadow-2xl"
+            <Link className=" rounded-full bg-blue-600 text-white shadow-lg h-12 w-96  flex flex-row gap-4 items-center font-sans text-md px-8 hover:drop-shadow-2xl hover:shadow-2xl"
                 href="/pages/activate-remove-job">
                 <KeyboardTabIcon /> Activate, or Remove The Checklists.
             </Link>

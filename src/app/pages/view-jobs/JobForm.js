@@ -144,9 +144,9 @@ const JobForm = (
                 <h1 className="text-3xl font-bold text-primary flex items-center cursor-pointer" >
                     Checklist Items Information
                     {isShowJobItem ?
-                    <ArrowDropUpIcon style={{ fontSize: "5rem" }} onClick={toggleJobItem} /> :
-                    <ArrowDropDownIcon style={{ fontSize: "5rem" }} onClick={toggleJobItem} />
-                }
+                        <ArrowDropUpIcon style={{ fontSize: "5rem" }} onClick={toggleJobItem} /> :
+                        <ArrowDropDownIcon style={{ fontSize: "5rem" }} onClick={toggleJobItem} />
+                    }
                 </h1>
                 <div className={`overflow-x-auto ${isShowJobItem ? "" : "hidden"} flex flex-col gap-5`}>
                     <table className="table-auto border-collapse w-full text-sm">
@@ -168,10 +168,15 @@ const JobForm = (
                                 <tr key={index}>
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.JobItemTitle} </div>
-
                                         <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowJobItemDescription(item)}
+
+                                        />
+
+                                        <InfoIcon
+                                            className="absolute right-1 bottom-0 text-blue-600 size-4 cursor-pointer text-orange-600"
+                                            onClick={() => handleShowTestMethodDescription(item)}
 
                                         />
                                     </td>

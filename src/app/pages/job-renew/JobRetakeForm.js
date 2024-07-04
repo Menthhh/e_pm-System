@@ -115,9 +115,16 @@ const JobRetakeForm = (
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.JobItemTitle} </div>
 
-                                        <InfoIcon
+                                       
+                                          <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowJobItemDescription(item)}
+
+                                        />
+
+                                        <InfoIcon
+                                            className="absolute right-1 bottom-0 text-blue-600 size-4 cursor-pointer text-orange-600"
+                                            onClick={() => handleShowTestMethodDescription(item)}
 
                                         />
                                     </td>

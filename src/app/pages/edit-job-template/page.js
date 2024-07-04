@@ -27,7 +27,13 @@ const Page = ({ searchParams }) => {
 
     useEffect(() => {
         calculateDueDate();
-        setOptions(users.map((user) => ({ value: user._id, label: user.name })));
+        //user must not be SuperAdmin
+
+
+        setOptions(users
+            .filter((user) => user.name !== "SuperAdmin")
+            .map((user) => ({ value: user._id, label: user.name })));
+
     }, [refresh, users]);
 
 
@@ -207,14 +213,14 @@ const Page = ({ searchParams }) => {
                     <div>
                         <label
                             for="job_template_name"
-                            className ="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Checklist Template Name
                         </label>
                         <input
                             type="text"
                             id="job_template_name"
-                            className ="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             defaultValue={jobTemplate.JOB_TEMPLATE_NAME}
                             name="job_template_name"
                             required
@@ -223,7 +229,7 @@ const Page = ({ searchParams }) => {
                     <div>
                         <label
                             for="doc_num"
-                            className ="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Document no.
                         </label>
@@ -239,14 +245,14 @@ const Page = ({ searchParams }) => {
                     <div>
                         <label
                             for="checklist_ver"
-                            className ="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Checklist Version
                         </label>
                         <input
                             type="text"
                             id="checklist_ver"
-                            className ="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                             name="checklist_ver"
                             defaultValue={jobTemplate.CHECKLIST_VERSION}
                             required
@@ -255,7 +261,7 @@ const Page = ({ searchParams }) => {
                     <div className="z-50">
                         <label
                             for="timeout"
-                            className ="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         >
                             Timeout
                         </label>
@@ -317,7 +323,7 @@ const Page = ({ searchParams }) => {
                 datas={dataApprover}
                 TableName="Approver List"
             />
-        
+
         </Layout>
     );
 };
