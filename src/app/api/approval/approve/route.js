@@ -29,9 +29,8 @@ export const POST = async (req, res) => {
             IS_APPROVE: isApproved,
             COMMENT: comment
         });
+
         await jobApprove.save();
-
-
         return NextResponse.json({ status: 200,  message: isApproved ? "Job has been approved" : "Job has been rejected" });
     }
     catch (err) {

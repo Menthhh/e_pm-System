@@ -17,11 +17,11 @@ const MqttTestComponent = () => {
 
   useEffect(() => {
     mqttClient.on('connect', () => {
-      console.log('Connected to MQTT broker');
+      
     });
 
     mqttClient.on('error', (err) => {
-      console.error('Connection error: ', err);
+      
       mqttClient.end();
     });
 
@@ -37,7 +37,7 @@ const MqttTestComponent = () => {
   const handleSendMessage = () => {
     if (client) {
       client.publish(topic_adrrees, document.getElementById('display-name').value + " Say " + message);
-      console.log('Message sent: ', message);
+     
     }
   };
 
@@ -48,7 +48,6 @@ const MqttTestComponent = () => {
 
     mqttClient.subscribe(topic_adrrees, (err) => {
       if (!err) {
-        console.log('Subscribed to ' + topic_adrrees);
         document.getElementById('btn-connect').style.border = "1px solid green";
         document.getElementById('btn-connect').disabled = true;
 
@@ -60,8 +59,6 @@ const MqttTestComponent = () => {
   };
   
   mqttClient.on('message', (topic, message) => {
-    console.log("Topic: ", topic.toString());
-    console.log('Received message:', message.toString());
     const receivedMessage = message.toString();
   });
 

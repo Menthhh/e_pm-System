@@ -135,7 +135,6 @@ const Page = ({ searchParams }) => {
 
 
     const handleRemove = async (jobItemTemplate_id) => {
-        console.log(jobItemTemplate_id)
 
         try {
             const response = await fetch(`/api/job-item-template/remove-job-item-template`, {
@@ -147,7 +146,6 @@ const Page = ({ searchParams }) => {
                 next: { revalidate: 10 },
             });
             const data = await response.json();
-            console.log(data)
 
             setRefresh((prev) => !prev);
 
@@ -250,7 +248,7 @@ const Page = ({ searchParams }) => {
                             type="text"
                             id="job_item_template_title"
                             className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="title"
+                            placeholder="Item Title"
                             name="job_item_template_title"
                             required
                         />
@@ -266,7 +264,7 @@ const Page = ({ searchParams }) => {
                             type="text"
                             id="job_item_template_name"
                             className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="1234"
+                            placeholder="Item Name"
                             name="job_item_template_name"
                             required
                         />
@@ -282,7 +280,7 @@ const Page = ({ searchParams }) => {
                             type="text"
                             id="upper_spec"
                             className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="321"
+                            placeholder="Upper Spec"
                             name="upper_spec"
                             required
                         />
@@ -298,7 +296,7 @@ const Page = ({ searchParams }) => {
                             type="text"
                             id="lower_spec"
                             className="bg-white border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            placeholder="1234"
+                            placeholder="Lower Spec"
                             name="lower_spec"
                             required
                         />

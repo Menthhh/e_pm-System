@@ -1,17 +1,20 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const jobTemplateSchema = new mongoose.Schema({
+const jobTemplateSchema = new mongoose.Schema(
+  {
     JobTemplateCreateID: { type: String, required: true },
     JOB_TEMPLATE_NAME: { type: String, required: true },
     AUTHOR_ID: { type: String, required: true },
     DOC_NUMBER: { type: String, required: true },
+    LINE_NAME: { type: String, required: true },
     DUE_DATE: { type: Date, required: true },
     CHECKLIST_VERSION: { type: String, required: true },
     WORKGROUP_ID: { type: String, required: true },
-    TIMEOUT : { type: String, required: true },
-}, { timestamps: true });
+    TIMEOUT: { type: String, required: true },
+  },
+  { timestamps: true }
+);
 
-export const JobTemplate = mongoose.models?.JobTemplate || mongoose.model('JobTemplate', jobTemplateSchema);
-
-
-
+export const JobTemplate =
+  mongoose.models?.JobTemplate ||
+  mongoose.model("JobTemplate", jobTemplateSchema);

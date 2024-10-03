@@ -5,7 +5,7 @@ import { AuthContextProvider } from './../lib/context/AuthContext';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "e_pm",
+  title: "e - PM System",
   description: "A project management tool for everyone",
 };
 

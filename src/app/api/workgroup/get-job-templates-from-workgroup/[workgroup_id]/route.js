@@ -20,6 +20,7 @@ export const GET = async (req, {params}) => {
                 AUTHOR_ID: jobTemplate.AUTHOR_ID,
                 JOB_TEMPLATE_NAME: jobTemplate.JOB_TEMPLATE_NAME,
                 DOC_NUMBER: jobTemplate.DOC_NUMBER,
+                LINE_NAME: jobTemplate.LINE_NAME,
                 DUE_DATE: jobTemplate.DUE_DATE,
                 CHECKLIST_VERSION: jobTemplate.CHECKLIST_VERSION,
                 MACHINE_ID: jobTemplate.MACHINE_ID,

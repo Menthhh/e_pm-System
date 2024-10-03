@@ -24,7 +24,6 @@ export const POST = async (req, res) => {
             text, // plain text body
         });
 
-        console.log("Message sent: %s", info.messageId);
 
         return NextResponse.json({ status: 200, message: 'Email sent' });
     } catch (error) {

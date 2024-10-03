@@ -22,7 +22,7 @@ const options = {
 const Page = ({ searchParams }) => {
   const router = useRouter();
   const job_id = searchParams.job_id;
-  const [view, setView] = useState("true");
+  const [view, setView] = useState(searchParams.view);
   const [refresh, setRefresh] = useState(false);
   const { jobData, jobItems, isLoading, error } = useFetchJobValue(job_id, refresh);
   const { machines, isLoading: machinesLoading, error: machinesError } = useFetchMachines();
@@ -65,39 +65,35 @@ const Page = ({ searchParams }) => {
   useEffect(() => {
     const asyncEffect = async () => {
       if (user && jobData) {
-        // Ensure user and jobData are loaded
-        console.log("user.workgroup_id: ", user.workgroup_id);
-        console.log("jobData.WorkGroupID: ", jobData.WorkGroupID);
+
 
         // Ensure both user.workgroup_id and jobData.WorkGroupID are defined
         if (user.workgroup_id && jobData.WorkGroupID) {
           if (user.workgroup_id.toString() !== jobData.WorkGroupID.toString()) {
             setView("true");
           } else {
-            setView("false");
+            if (searchParams.view === "false") {
+              setView("false");
+            }
+            if (searchParams.view === "true") {
+              setView("true");
+            }
           }
         } else {
-          console.error("One of the IDs is undefined:", {
-            userWorkgroupId: user.workgroup_id,
-            jobWorkgroupId: jobData.WorkGroupID,
-          });
+
         }
       }
 
       mqttClient.on("connect", () => {
-        console.log("Connected to MQTT broker");
       });
 
       mqttClient.on("error", (err) => {
-        console.error("Connection error: ", err);
         mqttClient.end();
       });
 
       jobItems.forEach((item) => {
-        console.log("item.JobItemID: ", item.JobItemID);
         mqttClient.subscribe(item.JobItemID, (err) => {
           if (!err) {
-            console.log("Subscribed to " + item.JobItemID);
           } else {
             console.error("Subscription error: ", err);
           }
@@ -122,8 +118,6 @@ const Page = ({ searchParams }) => {
 
 
   mqttClient.on("message", (topic, message) => {
-    console.log("Topic received:", topic.toString());
-    console.log("Received message:", message.toString());
     document.getElementById(topic.toString()).placeholder = message.toString();
   });
 
@@ -212,6 +206,8 @@ const Page = ({ searchParams }) => {
   };
 
   const handleSubmit = async (e) => {
+    //alert('Submit jobs !!');
+    //return;
     e.preventDefault();
     const wdTag = e.target.wd_tag.value;
 
@@ -247,11 +243,10 @@ const Page = ({ searchParams }) => {
       });
 
       const data = await response.json();
-      console.log(data.status);
       if (data.status === 455) {
         Swal.fire({
           title: "Error!",
-          text: "This Checklist is not the latest revision. Check the latest revision number and try again!",
+          text: data.message,
           icon: "error",
         });
       } else {

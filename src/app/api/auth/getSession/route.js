@@ -7,7 +7,7 @@ const db_url = process.env.MONGODB_URI;
 const connection = {};
 
 const connectToDb = async () => {
-  console.log("Connecting to DB");
+  console.log("Connecting to DB A");
   try {
     if (connection.isConnected) {
       console.log("Using existing connection");

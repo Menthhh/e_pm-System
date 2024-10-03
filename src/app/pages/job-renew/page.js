@@ -43,9 +43,6 @@ const Page = ({ searchParams }) => {
     useEffect(() => {
 
         if (user && jobData) {
-            // Ensure user and jobData are loaded
-            console.log("user.workgroup_id: ", user.workgroup_id);
-            console.log("jobData.WorkGroupID: ", jobData.WorkGroupID);
 
             // Ensure both user.workgroup_id and jobData.WorkGroupID are defined
             if (user.workgroup_id && jobData.WorkGroupID) {
@@ -55,19 +52,16 @@ const Page = ({ searchParams }) => {
                     setView(false);
                 }
             } else {
-                console.error("One of the IDs is undefined:", {
-                    userWorkgroupId: user.workgroup_id,
-                    jobWorkgroupId: jobData.WorkGroupID,
-                });
+
             }
         }
 
         mqttClient.on('connect', () => {
-            console.log('Connected to MQTT broker');
+           
         });
 
         mqttClient.on('error', (err) => {
-            console.error('Connection error: ', err);
+            
             mqttClient.end();
         });
 
@@ -91,8 +85,6 @@ const Page = ({ searchParams }) => {
 
 
     mqttClient.on('message', (topic, message) => {
-        console.log('Topic received:', topic.toString());
-        console.log('Received message:', message.toString());
         document.getElementById(topic.toString()).placeholder = message.toString();
     });
 
@@ -170,11 +162,10 @@ const Page = ({ searchParams }) => {
                 next: { revalidate: 10 }
             });
             const data = await response.json();
-            console.log(data.status)
             if (data.status === 455) {
                 Swal.fire({
                     title: "Error!",
-                    text: "This Checklist is not the latest revision Check the latest revision number and try again!",
+                    text: data.message,
                     icon: "error"
                 });
             }

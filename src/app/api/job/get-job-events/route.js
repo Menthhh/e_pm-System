@@ -53,11 +53,12 @@ export const GET = async (req, res) => {
             const status = await Status.findOne({ _id: job.JOB_STATUS_ID });
             const statusColor = status ? status.color : null;
             const statusName = status ? status.status_name : null;
-
+            //console.log("test->",job.LINE_NAME+" : "+jobName);
             return {
-                title: jobName,
+                title: job.LINE_NAME+" : "+jobName,
                 job_id: job._id,
                 status_name: statusName,
+//                line_name: job.LINE_NAME,
                 start: new Date(createdAtDate.getFullYear(), createdAtDate.getMonth(), createdAtDate.getDate()),
                 end: new Date(createdAtDate.getFullYear(), createdAtDate.getMonth(), createdAtDate.getDate()),
                 color: statusColor,
@@ -72,11 +73,16 @@ export const GET = async (req, res) => {
             const activateDate = new Date(schedule.ACTIVATE_DATE);
             const status = await Status.findOne({ status_name: schedule.STATUS });
             const statusColor = status ? status.color : null;
+            //console.log('schedule',schedule);
+            const LineName=await JobTemplate.findOne({JobTemplateCreateID:schedule.JOB_TEMPLATE_CREATE_ID});
+            const Line_Name=LineName?.LINE_NAME || 'Unknown';
 
+            //console.log("test->",schedule.LINE_NAME+" : "+schedule.JOB_TEMPLATE_NAME);    
             return {
-                title: schedule.JOB_TEMPLATE_NAME,
+                title: Line_Name+" : "+schedule.JOB_TEMPLATE_NAME,
                 job_id: schedule.JOB_TEMPLATE_ID,
                 status_name: schedule.STATUS,
+                //line_name: schedule.LINE_NAME,
                 start: new Date(activateDate.getFullYear(), activateDate.getMonth(), activateDate.getDate()),
                 end: new Date(activateDate.getFullYear(), activateDate.getMonth(), activateDate.getDate()),
                 color: statusColor,
@@ -86,7 +92,7 @@ export const GET = async (req, res) => {
         // Combine valid activation events and schedule events
         const resolvedEvents = [...validActivationEvents, ...await Promise.all(scheduleEvents)];
 
-        console.log("Resolved events:", resolvedEvents);
+        //console.log("Resolved events:", resolvedEvents);
 
         return NextResponse.json({ status: 200, events: resolvedEvents });
     } catch (error) {

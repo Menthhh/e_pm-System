@@ -1,11 +1,7 @@
-import LoginForm from "@/components/LoginForm";
+import LoginForm from "./LoginForm";
 
-
-const Home =  () => {
-
-  return (
-     <LoginForm />
-  );
+const Home = () => {
+  return <LoginForm />;
 };
 
 export default Home;

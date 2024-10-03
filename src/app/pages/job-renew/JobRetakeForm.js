@@ -99,14 +99,14 @@ const JobRetakeForm = (
                         <thead className="text-center">
                             <tr className="bg-gray-200">
                                 <th className="w-[50px]">Item Title </th>
-                                <th className="w-[50px] px-4 py-2">
+                                {/* <th className="w-[50px] px-4 py-2">
                                     Test Method
-                                </th>
+                                </th> */}
                                 <th className="w-[50px] px-4 py-2">Upper Spec</th>
                                 <th className="w-[50px] px-4 py-2">Lower Spec</th>
                                 <th className="w-[150px] py-2">Before Value</th>
                                 <th className="w-[150px] px-4 py-2">Actual Value</th>
-                                <th className="w-[10px] py-2">Add images</th>
+                                {/* <th className="w-[10px] py-2">Add images</th> */}
                             </tr>
                         </thead>
                         <tbody className="text-center">
@@ -115,13 +115,20 @@ const JobRetakeForm = (
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.JobItemTitle} </div>
 
-                                        <InfoIcon
+                                       
+                                          <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowJobItemDescription(item)}
 
                                         />
+
+                                        <InfoIcon
+                                            className="absolute right-1 bottom-0 text-blue-600 size-4 cursor-pointer text-orange-600"
+                                            onClick={() => handleShowTestMethodDescription(item)}
+
+                                        />
                                     </td>
-                                    <td className="border px-4 py-2 relative">
+                                    {/* <td className="border px-4 py-2 relative">
                                         <div>{item.TestMethod} </div>
 
                                         <InfoIcon
@@ -129,7 +136,7 @@ const JobRetakeForm = (
                                             onClick={() => handleShowTestMethodDescription(item)}
 
                                         />
-                                    </td>
+                                    </td> */}
                                     <td className="border px-4 py-2">{item.UpperSpec}</td>
                                     <td className="border px-4 py-2">{item.LowerSpec}</td>
                                     <td className="border  py-2 relative">
@@ -153,11 +160,11 @@ const JobRetakeForm = (
                                             onClick={() => toggleAddComment(item)}
                                         />
                                     </td>
-                                    <td className="border py-2 relative">
+                                    {/* <td className="border py-2 relative">
                                         <div className="cursor-pointer" >
                                             <ImageIcon className="text-blue-600 size-15" />
                                         </div>
-                                    </td>
+                                    </td> */}
 
                                 </tr>
                             ))}
@@ -166,7 +173,7 @@ const JobRetakeForm = (
                 </div>
                 <div>
                     {
-                        view ? "" : <button type="submit" className="bg-primary text-white rounded-md px-2 py-1">Submit</button>
+                        view ? "" : <button type="submit" className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-14 py-3 bg-primary text-base font-medium text-white hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm">Submit</button>
                     }
                 </div>
             </div>

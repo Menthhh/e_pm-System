@@ -42,18 +42,15 @@ const convertTimeout = async (timeout, createdAt) => {
 
 const logText = async () => {
     const currentTime = new Date();
-    const currentRevisionNumber = await getRevisionNo();
     const totalJobs = await Job.countDocuments();
     console.log("-----------------------------------------------------------")
     console.log("Checking for overdue jobs: ", currentTime.toLocaleString());
-    console.log("Current Revision Number: ", currentRevisionNumber);
     console.log("Total Jobs Today: ", totalJobs);
     console.log("-----------------------------------------------------------")
 }
 
 export const POST = async (req, res) => {
     await connectToDb();
-    // await logText();
 
     try {
         const jobs = await Job.find();

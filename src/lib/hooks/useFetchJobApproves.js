@@ -10,7 +10,6 @@ const useFetchJobApproves = (user_id, refresh=null) => {
         setLoading(true);
         const fetchData = async () => {
             try {
-                console.log(user_id)
                 const res = await fetch(`/api/approval/get-await-job-approving?user_id=${user_id}`, { next: { revalidate: 10 } });
                 const json = await res.json();
                 setjobApproves(json.data);

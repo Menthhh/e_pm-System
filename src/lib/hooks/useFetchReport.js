@@ -17,7 +17,6 @@ const useFetchReport = (refresh) => {
                     next : { revalidate: 10 }
                 });
                 const data = await response.json();
-                console.log('data:', data); 
                 setReport(data);
             } catch (error) {
                 console.error('Error:', error);

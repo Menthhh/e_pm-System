@@ -19,6 +19,8 @@ export const GET = async (req, res) => {
     const JobTemplateID = searchParams.get("jobTemID");
     const JobTemplateCreateID = searchParams.get("jobTemCreateID");
     const ACTIVATER_ID = searchParams.get("actID");
+    //const ACTIVE_LINE_NAME = searchParams.get("LineName");
+
 
     try {
         //1 create job
@@ -38,15 +40,18 @@ export const GET = async (req, res) => {
             return NextResponse.json({ status: 404, file: __filename, error: "Status not found" });
         }
         //1.3 create job
+        console.log("jobTemplate relmote Activate=>", jobTemplate)
         const job = new Job({
             JOB_NAME: jobTemplate.JOB_TEMPLATE_NAME,
             JOB_STATUS_ID: newID._id,
             DOC_NUMBER: jobTemplate.DOC_NUMBER,
+            LINE_NAME:jobTemplate.LINE_NAME,
             CHECKLIST_VERSION: jobTemplate.CHECKLIST_VERSION,
             WORKGROUP_ID: jobTemplate.WORKGROUP_ID,
             ACTIVATE_USER: ACTIVATER_ID,
             JOB_APPROVERS: approvers.map((approver) => approver.USER_ID),
             TIMEOUT: jobTemplate.TIMEOUT,
+            
         });
         await job.save();
 
@@ -78,6 +83,7 @@ export const GET = async (req, res) => {
                 TEST_LOCATION_ID: jobItemTemplate.TEST_LOCATION_ID,
                 JOB_ITEM_TEMPLATE_ID: jobItemTemplate._id,
                 FILE: jobItemTemplate.FILE,
+                createdAt : jobItemTemplate.createdAt
             });
             await jobItem.save();
 

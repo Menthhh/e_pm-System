@@ -38,14 +38,17 @@ const JobForm = (
         setShowWebcam(false);
     };
 
-
+   // console.log("jobData",jobData);
     return (
         <form className="flex flex-col gap-8"
             onSubmit={handleSubmit}
         >
             <h1 className="text-3xl font-bold text-primary flex items-center cursor-pointer" >
                 Checklist Information
-                {isShowJobInfo ? <ArrowDropUpIcon className="size-14" onClick={toggleJobInfo} /> : <ArrowDropDownIcon className="size-14" onClick={toggleJobInfo} />}
+                {isShowJobInfo ?
+                    <ArrowDropUpIcon style={{ fontSize: "5rem" }} onClick={toggleJobInfo} /> :
+                    <ArrowDropDownIcon style={{ fontSize: "5rem" }} onClick={toggleJobInfo} />
+                }
             </h1>
             <div className={`grid grid-cols-4 ipadmini:grid-cols-4 gap-x-6 w-full gap-y-2 ${isShowJobInfo ? "" : "hidden"}`}>
                 <div className="flex flex-col">
@@ -61,6 +64,10 @@ const JobForm = (
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.DocumentNo} disabled />
                 </div>
                 <div className="flex flex-col">
+                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Line Name.</label>
+                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.LINE_NAME} disabled />
+                </div>
+                <div className="flex flex-col">
                     <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Checklist Version</label>
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.ChecklistVer} disabled />
                 </div>
@@ -73,12 +80,25 @@ const JobForm = (
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.ActivatedBy} disabled />
                 </div>
                 <div className="flex flex-col">
+                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Submitted By</label>
+                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.SubmittedBy} disabled />
+                </div>
+
+                <div className="flex flex-col">
                     <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Timeout</label>
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.Timeout} disabled />
                 </div>
                 <div className="flex flex-col">
                     <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Activated At</label>
                     <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.ActivatedAt} disabled />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">LastestUpdate At</label>
+                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.LastestUpdate} disabled />
+                </div>
+                <div className="flex flex-col">
+                    <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Submitted At</label>
+                    <input type="text" id="disabled-input" aria-label="disabled input" className="mb-5 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 cursor-default" value={jobData.SubmitedAt} disabled />
                 </div>
                 <div className="flex flex-col">
                     <label htmlFor="text-input" className="text-sm ipadmini:text-md font-bold text-gray-600">Status</label>
@@ -140,21 +160,24 @@ const JobForm = (
             <div className="flex flex-col gap-8">
                 <h1 className="text-3xl font-bold text-primary flex items-center cursor-pointer" >
                     Checklist Items Information
-                    {isShowJobItem ? <ArrowDropUpIcon className="size-14" onClick={toggleJobItem} /> : <ArrowDropDownIcon className="size-14" onClick={toggleJobItem} />}
+                    {isShowJobItem ?
+                        <ArrowDropUpIcon style={{ fontSize: "5rem" }} onClick={toggleJobItem} /> :
+                        <ArrowDropDownIcon style={{ fontSize: "5rem" }} onClick={toggleJobItem} />
+                    }
                 </h1>
                 <div className={`overflow-x-auto ${isShowJobItem ? "" : "hidden"} flex flex-col gap-5`}>
                     <table className="table-auto border-collapse w-full text-sm">
                         <thead className="text-center">
                             <tr className="bg-gray-200">
                                 <th className="w-[50px]">Item Title </th>
-                                <th className="w-[50px] px-4 py-2">
+                                {/* <th className="w-[50px] px-4 py-2">
                                     Test Method
-                                </th>
+                                </th> */}
                                 <th className="w-[50px] px-4 py-2">Lower Spec</th>
                                 <th className="w-[50px] px-4 py-2">Upper Spec</th>
                                 <th className="w-[150px] py-2">Before Value</th>
                                 <th className="w-[150px] px-4 py-2">Actual Value</th>
-                                <th className="w-[5px] py-2">Add images</th>
+                                {/* <th className="w-[5px] py-2">Add images</th> */}
                             </tr>
                         </thead>
                         <tbody className="text-center">
@@ -162,14 +185,19 @@ const JobForm = (
                                 <tr key={index}>
                                     <td className="border px-4 py-2 relative">
                                         <div>{item.JobItemTitle} </div>
-
                                         <InfoIcon
                                             className="absolute right-1 top-1 text-blue-600 size-4 cursor-pointer "
                                             onClick={() => handleShowJobItemDescription(item)}
 
                                         />
+
+                                        <InfoIcon
+                                            className="absolute right-1 bottom-0 text-blue-600 size-4 cursor-pointer text-orange-600"
+                                            onClick={() => handleShowTestMethodDescription(item)}
+
+                                        />
                                     </td>
-                                    <td className="border px-4 py-2 relative">
+                                    {/* <td className="border px-4 py-2 relative">
                                         <div>{item.TestMethod} </div>
 
                                         <InfoIcon
@@ -177,7 +205,7 @@ const JobForm = (
                                             onClick={() => handleShowTestMethodDescription(item)}
 
                                         />
-                                    </td>
+                                    </td> */}
                                     <td className="border px-4 py-2">{item.UpperSpec}</td>
                                     <td className="border px-4 py-2">{item.LowerSpec}</td>
                                     <td className="border  py-2 relative">
@@ -189,17 +217,17 @@ const JobForm = (
                                                     value={item.BeforeValue}
                                                     className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-default"
                                                     disabled
-                                                     title={"Lastest Update: " + item.LastestUpdate}
+                                                    title={"Lastest Update: " + item.LastestUpdate}
 
                                                 />
                                                 :
                                                 (item.BeforeValue ?
-                                                    <input type="text" 
-                                                    id={`before_value_${item.JobItemID}`} 
-                                                    value={item.BeforeValue} 
-                                                    className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-default" 
-                                                    title={"Lastest Update: " + item.LastestUpdate}
-                                                    disabled />
+                                                    <input type="text"
+                                                        id={`before_value_${item.JobItemID}`}
+                                                        value={item.BeforeValue}
+                                                        className=" bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 text-center w-3/4 p-1.5 cursor-default"
+                                                        title={"Lastest Update: " + item.LastestUpdate}
+                                                        disabled />
                                                     :
                                                     <input
                                                         type="text"
@@ -207,7 +235,7 @@ const JobForm = (
                                                         onChange={(e) => handleBeforeValue(e, item)}
                                                         className="bg-white border border-gray-300 text-gray-900 text-sm rounded-sm ring-secondary ring-1 focus:ring-blue-500 focus:border-blue-500  w-full p-1.5"
                                                         placeholder="fill in value"
-                                                         title={"Lastest Update: " + item.LastestUpdate}
+                                                        title={"Lastest Update: " + item.LastestUpdate}
                                                     />
                                                 )
                                         }
@@ -244,9 +272,9 @@ const JobForm = (
                                         />
                                     </td>
 
-                                    <td className="border py-2 relative">
+                                    {/* <td className="border py-2 relative">
                                         <CameraAltIcon className="text-blue-600 size-8 cursor-pointer" onClick={handleAddImages} />
-                                    </td>
+                                    </td> */}
 
                                 </tr>
                             ))}

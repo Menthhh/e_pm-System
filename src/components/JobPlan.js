@@ -3,6 +3,9 @@ import CloseIcon from '@mui/icons-material/Close';
 import Swal from "sweetalert2";
 
 const JobPlan = ({ data, onClose, setRefresh }) => {
+
+
+
     const [dateType, setDateType] = useState('');
     const [showRecurring, setShowRecurring] = useState(false);
     const [recurrenceOption, setRecurrenceOption] = useState('');
@@ -35,7 +38,6 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
         let nextDate;
 
         if (dateType === 'dayOfWeek') {
-            console.log(selectedDayOfWeek)
             nextDate = getNextDayOfWeek(selectedDayOfWeek);
         } else if (dateType === 'dayOfMonth') {
             nextDate = getNextDayOfMonth(selectedDayOfMonth);
@@ -67,13 +69,7 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
             });
             return;
         }
-        // JobTemplateID,
-        // ACTIVATER_ID,
-        // JobTemplateCreateID,
-        // activationDate,
-        // recurrence,
 
-        console.log(requestData);
         try {
             const response = await fetch('/api/job/activate-job-template-plan', {
                 method: 'POST',
@@ -85,12 +81,9 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
             });
 
             if (!response.ok) {
-
-                console.log(response);
             }
 
             const data = await response.json();
-            console.log(data);
 
             Swal.fire({
                 icon: 'success',
@@ -135,7 +128,6 @@ const JobPlan = ({ data, onClose, setRefresh }) => {
         // if next month has fewer days then add the extra days to the next month in order to get the correct date
         // if next month does not have 30 or 31 then add another month until it does have 30 or 31
         if (nextDate.getMonth() !== currentMonth) {
-            console.log('Next month has fewer days');
             while (nextDate.getDate() < dayOfMonth) {
                 nextDate = new Date(currentYear, nextDate.getMonth() + 1, 0);
             }

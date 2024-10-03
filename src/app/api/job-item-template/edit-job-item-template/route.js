@@ -12,7 +12,7 @@ export const PUT = async (req, res) => {
     const { jobTemplate_id, jobItemTemplate_id, author, job_item_template_title, job_item_template_name, upper_spec, lower_spec, test_method, test_location } = body;
 
     try {
-        console.log(jobTemplate_id, jobItemTemplate_id, author, job_item_template_title, job_item_template_name, upper_spec, lower_spec, test_method, test_location)
+        //console.log(jobTemplate_id, jobItemTemplate_id, author, job_item_template_title, job_item_template_name, upper_spec, lower_spec, test_method, test_location)
         const newJobItemTemplateCreateID = await generateUniqueKey();
         const jobItemTemplate = await JobItemTemplate.findById(jobItemTemplate_id);
         const jobItemTemplateEdit = new JobItemTemplateEdit({

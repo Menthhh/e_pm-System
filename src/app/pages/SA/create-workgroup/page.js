@@ -38,7 +38,6 @@ const Page = () => {
         throw new Error("Failed to fetch roles");
       }
       const data = await response.json();
-      console.log(data)
       setWorkgroups(data.workgroups);
     } catch (error) {
       console.error(error);
@@ -75,7 +74,6 @@ const Page = () => {
   const createWorkgroup = async (e) => {
     e.preventDefault();
     const newWorkgroup = e.target.workgroup_name.value;
-    console.log(newWorkgroup);
     try {
       await fetch(`/api/workgroup/create-workgroup`, {
         method: "POST",

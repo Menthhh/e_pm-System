@@ -57,16 +57,16 @@ const Page = ({ searchParams }) => {
     }
 
     const toggleAddComment = (item) => {
-        console.log(item);
         setCommentDetail(item);
         setAddCommentForm(!AddCommentForm);
     }
 
 
     const handleApprove = async (e) => {
+        
         e.preventDefault();
-
         try {
+
             const response = await fetch(`/api/approval/approve`, {
                 method: 'POST',
                 headers: {
@@ -122,11 +122,11 @@ const Page = ({ searchParams }) => {
         setJobItemDetail(item);
     }
 
+    //console.log("jobData..", jobData);    
+
     const handleReject = async (e) => {
         e.preventDefault();
         const comment = e.target.comment.value;
-        console.log(commentDetail);
-        console.log(comment)
         try {
             const response = await fetch(`/api/approval/approve`, {
                 method: 'POST',
@@ -174,6 +174,7 @@ const Page = ({ searchParams }) => {
         }
     }
 
+    //console.log("jobData", jobData);
     return (
 
         <Layout className="container flex flex-col left-0 right-0 mx-auto justify-start font-sans mt-2 px-6">

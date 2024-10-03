@@ -37,6 +37,10 @@ import { Schedule } from "@/lib/models/Schedule.js";
 // export const Schedule = mongoose.models?.Schedule || mongoose.model('Schedule', scheduleSchema);
 
 export const POST = async (req, res) => {
+
+
+   // console.log("use job planning");
+
     await connectToDb();
     const body = await req.json();
 

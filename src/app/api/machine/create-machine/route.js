@@ -58,6 +58,9 @@ import { connectToDb } from "@/app/api/mongo/index.js";
  */
 
 export const POST = async (req, res) => {
+
+    //return NextResponse.json({ status: 200, message: 'Hello' });
+
     await connectToDb();
     const body = await req.json();
     const { WD_TAG, MACHINE_NAME } = body;

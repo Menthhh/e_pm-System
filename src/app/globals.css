@@ -4,3 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes textShine {
+    0% {
+      background-position: 0% center;
+    }
+    100% {
+      background-position: 100% center;
+    }
+  }
+  

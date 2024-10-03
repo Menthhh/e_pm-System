@@ -11,7 +11,9 @@ const useFetchJobs = (refresh = null) => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+        
         const fetchJobs = async (workgroup_id) => {
+            //console.log("use fetch job.");
             setIsLoading(true);
             setError(null);
             try {
@@ -19,6 +21,8 @@ const useFetchJobs = (refresh = null) => {
                 { next: { revalidate: 10 } }
                 );
                 const data = await response.json();
+                console.log(data);
+                //console.log("Data from await..");
                 if (data.status === 200) {
                     setJobs(data.jobs);
                 }

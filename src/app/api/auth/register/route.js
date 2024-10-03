@@ -1,38 +1,50 @@
-import { User } from '@/lib/models/User.js';
-import { NextResponse } from 'next/server';
+import { User } from "@/lib/models/User.js";
+import { NextResponse } from "next/server";
 import { connectToDb } from "@/app/api/mongo/index.js";
 
 export const POST = async (req, res) => {
   await connectToDb();
-  const {
-    emp_number,
-    emp_name,
-    email,
-    username,
-    password,
-    team
-  } = await req.json();
+  const { emp_number, emp_name, email, username, password, team } =
+    await req.json();
 
   try {
-    const user = new User({
-      EMP_NUMBER: emp_number,
-      EMP_NAME: emp_name,
-      EMAIL: email,
-      USERNAME: username,
-      PASSWORD: password,
-      TEAM: team
+    //if username already exists
+
+    var a_username = username.trim();
+    var a_password = password.trim();
+    var a_emp_number = emp_number.trim();
+
+    const user = await User.findOne({
+      USERNAME: a_username,
     });
 
-    //check EMP_NUMBER and USERNAME, and EMAIL if they already exist then return status 400 and its duplicate value, tell them which field is duplicate
-    const existing = await User.findOne({ $or: [{ EMP_NUMBER: emp_number }, { USERNAME: username }, { EMAIL: email }] });
-    if (existing) {
-      return NextResponse.json({ status: 400, message: 'User already exists', duplicateField: existing.EMP_NUMBER === emp_number ? 'EMP_NUMBER' : existing.USERNAME === username ? 'USERNAME' : 'EMAIL' });
+    if (user) {
+      return NextResponse.json({ status: 400, duplicateField: "Username" });
     }
-    
-    await user.save();
-    return NextResponse.json({ status: 200, message: 'User created successfully', user })
-  } catch (err) {
-    return NextResponse.json({ status: 500, file: __filename, error: err.message });
-  }
-}
 
+    const new_user = new User({
+      EMP_NUMBER: a_emp_number,
+      EMP_NAME: emp_name,
+      EMAIL: email,
+      USERNAME: a_username,
+      PASSWORD: a_password,
+      TEAM: team,
+    });
+
+    console.log("username", ":" + a_username + ":");
+    //return NextResponse.json({ status: 500 })
+
+    await new_user.save();
+    return NextResponse.json({
+      status: 200,
+      message: "User created successfully",
+      user,
+    });
+  } catch (err) {
+    return NextResponse.json({
+      status: 500,
+      file: __filename,
+      error: err.message,
+    });
+  }
+};

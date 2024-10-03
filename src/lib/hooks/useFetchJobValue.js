@@ -1,7 +1,5 @@
 
 import { useEffect, useState } from "react";
-import { config } from "@/config/config.js";
-
 
 const useFetchJobValue = (job_id, refresh=null) => {
     const [jobData, setJobData] = useState([]);

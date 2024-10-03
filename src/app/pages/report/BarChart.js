@@ -11,9 +11,6 @@ const BarChart = () => {
     const [refresh, setRefresh] = useState(false);
     const { report, isLoading, error } = useFetchReport(refresh);
 
-    useEffect(() => {
-        console.log('Report:', report);
-    }, [report]);
 
     if (isLoading) {
         return <div>Loading...</div>;

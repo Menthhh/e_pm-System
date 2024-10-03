@@ -19,10 +19,6 @@ const Camera = () => {
                 const top = (window.screen.height / 2) - (height / 2);
 
                 newWindow = window.open('https://172.17.70.201/e-pm/camera.html', '_blank', `width=${width},height=${height},top=${top},left=${left}`);
-                //  newWindow.addEventListener('load', () => {
-                //   console.log(newWindow);
-                // });
-
             });
         }
         const receiveMessage = (event) => {

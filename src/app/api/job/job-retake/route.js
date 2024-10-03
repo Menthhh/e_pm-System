@@ -26,10 +26,11 @@ export const PUT = async (req, res) => {
     try {
         const job = await Job.findOne({ _id: jobID });
         const submitteduser = await User.findById(submitUser);
-        console.log(submitteduser)
-        const latestDocNo = await getRevisionNo();
-        if (job.CHECKLIST_VERSION !== latestDocNo) {
-            console.log("This job is not the latest revision")
+        const latestDocNo = await getRevisionNo(job.DOC_NUMBER);
+        if (latestDocNo.message){
+            return NextResponse.json({ status: 455, message: latestDocNo.message });
+        }
+        else if (job.CHECKLIST_VERSION !== latestDocNo) {
             return NextResponse.json({ status: 455, message: "This job is not the latest revision" });
         }
 
